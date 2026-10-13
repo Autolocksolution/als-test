@@ -921,6 +921,11 @@ function h(tag,props,...kids){const e=document.createElement(tag);for(const k in
 const p2=n=>String(n).padStart(2,"0");
 const num=v=>Math.max(0,Math.floor(Number(v))||0);
 function parseNum(v){const n=Number(String(v).trim().replace(/\s/g,"").replace(",","."));return isFinite(n)?n:NaN}
+let myName="";
+/* Notification à envoyer par le robot (collection outbox). to:"others" = l'associé, "all" = tout le monde. Ne bloque jamais l'appli. */
+function notify(kind,title,body,to){
+  try{if(!db||!uid||OFFLINE)return;db.collection("outbox").add({kind,title:String(title).slice(0,80),body:String(body||"").slice(0,200),to:to||"others",by:uid,byName:myName,sent:false,at:Date.now()}).catch(()=>{})}catch(e){}
+}
 function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2600)}
 function ago(ms){if(!ms)return"";const s=(Date.now()-ms)/1000;if(s<60)return"à l'instant";if(s<3600)return"il y a "+Math.floor(s/60)+" min";if(s<86400)return"il y a "+Math.floor(s/3600)+" h";const d=Math.floor(s/86400);return d===1?"hier":"il y a "+d+" j"}
 const KEY_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3.5M15 12v2.5"/></svg>';
@@ -1153,7 +1158,9 @@ async function flush(id){
   const p=pend[id];if(!p||p.busy)return;p.busy=true;
   while(p.dirty){
     p.dirty=false;
-    try{const ex=items.some(x=>x.id===id);if(ex||!p.doc)await db.doc("items/"+id).update({qty:p.qty,by:uid,at:Date.now()});else await db.doc("items/"+id).set({...p.doc,qty:p.qty,by:uid,at:Date.now()})}
+    try{const cur=items.find(x=>x.id===id),ex=!!cur,wasLow=cur?isLow(cur):true,sent=p.qty;
+      if(ex||!p.doc)await db.doc("items/"+id).update({qty:p.qty,by:uid,at:Date.now()});else await db.doc("items/"+id).set({...p.doc,qty:p.qty,by:uid,at:Date.now()});
+      const ref=cur||p.doc;if(ref&&!wasLow&&isLow({...ref,qty:sent}))notify("stock","Stock bas : "+(ref.name||"pièce"),"Il en reste "+sent+" (seuil "+thrOf(ref)+")"+(myName?" · "+myName:""),"all")}
     catch(e){
       if(!navigator.onLine){OFFLINE=true;const cur=items.find(x=>x.id===id);const dd=p.qty-(cur?cur.qty:0);delete pend[id];if(dd)offAdd(id,dd,p.doc||null);sRender();return}
       toast("Modification refusée");delete pend[id];sRender();return}
@@ -2488,6 +2495,7 @@ async function dcPersist(){
     const pre=num.slice(0,num.lastIndexOf("-")+1),n=parseInt(num.slice(pre.length),10)+1;num=pre+String(n).padStart(4,"0");
   }
   data.num=num;await db.doc("docs/"+num).set(data);
+  notify("doc",(data.type==="facture"?"Nouvelle facture ":"Nouveau devis ")+num,(data.clientName||"")+(myName?" ("+myName+")":""));
   return {id:num,...data};
 }
 $("dcForm").addEventListener("submit",async ev=>{
@@ -2912,7 +2920,7 @@ $("oSave").addEventListener("click",async()=>{
   if(!db||!canWrite){toast("Enregistrement impossible");return}
   const lines=ordLines();if(!lines.length){toast("Aucune ligne à enregistrer");return}
   $("oSave").disabled=true;
-  try{await db.collection("orders").add({date:TODAY,status:"passee",lines,by:uid,at:Date.now()});$("oScrim").hidden=true;toast("Commande enregistrée : suivez-la dans « Commandes »")}
+  try{await db.collection("orders").add({date:TODAY,status:"passee",lines,by:uid,at:Date.now()});notify("commande","Nouvelle commande de pièces",lines.length+" ligne"+(lines.length>1?"s":"")+(myName?" ("+myName+")":""));$("oScrim").hidden=true;toast("Commande enregistrée : suivez-la dans « Commandes »")}
   catch(e){toast("Enregistrement impossible, réessayez")}
   $("oSave").disabled=false;
 });
@@ -3221,7 +3229,9 @@ $("rvForm").addEventListener("submit",async ev=>{
   const data={date,time:$("rvTime").value||"",title,clientId:$("rvClient").value||"",address:$("rvAddr").value.trim(),phone:$("rvPhone").value.trim(),note:$("rvNote").value.trim(),by:uid,at:Date.now()};
   $("rvSave").disabled=true;
   try{
+    const fresh=!rvEditing,moved=rvEditing&&(rvEditing.date!==date||(rvEditing.time||"")!==data.time);
     if(rvEditing)await db.doc("rdv/"+rvEditing.id).update(data);else await db.collection("rdv").add({...data,done:false});
+    if(fresh||moved)notify("rdv",(fresh?"Nouveau RDV":"RDV modifié")+" · "+fmtDate(date)+(data.time?" "+data.time:""),title+(data.address?" · "+data.address:"")+(myName?" ("+myName+")":""));
     pDay=date;rvClose();toast("Rendez-vous enregistré");pRender();
   }catch(err){toast("Enregistrement impossible, réessayez")}
   $("rvSave").disabled=false;
@@ -3229,7 +3239,7 @@ $("rvForm").addEventListener("submit",async ev=>{
 $("rvDel").addEventListener("click",async()=>{
   const b=$("rvDel");
   if(!rvDelArmed){rvDelArmed=true;b.textContent="Confirmer la suppression";b.classList.add("sure");return}
-  try{await db.doc("rdv/"+rvEditing.id).delete();rvClose();toast("Rendez-vous supprimé")}catch(e){toast("Suppression impossible")}
+  try{const gone=rvEditing;await db.doc("rdv/"+gone.id).delete();notify("rdv","RDV supprimé · "+fmtDate(gone.date)+(gone.time?" "+gone.time:""),(gone.title||"")+(myName?" ("+myName+")":""));rvClose();toast("Rendez-vous supprimé")}catch(e){toast("Suppression impossible")}
 });
 
 /* ================= ACTU ================= */
@@ -3286,6 +3296,7 @@ $("adForm").addEventListener("submit",async ev=>{
   const url=safeUrl($("adUrl").value);if(!url){toast("Le lien doit commencer par https://");return}
   try{
     await db.collection("news").add({title:$("adTitle").value.trim(),url,source:hostOf(url),kind:$("adKind").value,note:$("adNote").value.trim(),state:"saved",date:TODAY,by:uid,at:Date.now()});
+    notify("actu","Nouveau lien gardé",$("adTitle").value.trim()+(myName?" ("+myName+")":""));
     $("adScrim").hidden=true;aTab="gardees";store("als-atab",aTab);toast("Lien gardé");aRender();
   }catch(err){toast("Enregistrement impossible, réessayez")}
 });
@@ -3320,6 +3331,7 @@ async function boot(){
   if(!db&&hadCache){OFFLINE=true;canWrite=true;$("ro").hidden=true;setSync(false,"Hors ligne");offBar();render();return}
   if(!db){setSync(false,"Hors synchro");loaded=true;canWrite=false;$("ro").hidden=false;$("ro").textContent="Synchronisation indisponible. Connectez-vous pour voir les données.";render();return}
   try{uid=user?await user.id():null}catch(e){}
+  try{const m=user&&user.me?await user.me():null;if(m&&m.name)myName=m.name}catch(e){}
   try{const w=user?await user.can("data.write"):null;canWrite=w!==false}catch(e){}
   lkSync();
   $("ro").hidden=canWrite;

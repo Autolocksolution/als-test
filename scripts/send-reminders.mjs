@@ -1,7 +1,7 @@
 // Envoie les rappels de planning par notification (FCM). Lancé par GitHub Actions.
 import fs from "node:fs";
 import admin from "firebase-admin";
-import { parisNow, addDays, due } from "./plan.mjs";
+import { parisNow, addDays, due, planOutbox } from "./plan.mjs";
 
 const keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(keyFile, "utf8"))) });
@@ -11,9 +11,10 @@ const MODE = process.env.MODE || "normal";
 const devices = (await db.collection("devices").get()).docs.map(d => ({ id: d.id, ...d.data() })).filter(d => d.token);
 console.log(`${devices.length} appareil(s) enregistré(s)`);
 
-async function broadcast(n) {
+async function broadcast(n, only) {
   let ok = 0, gone = 0, err = 0;
-  await Promise.all(devices.map(async d => {
+  const list = only ? devices.filter(d => only.includes(d.id)) : devices;
+  await Promise.all(list.map(async d => {
     try {
       await fcm.send({
         token: d.token,
@@ -38,13 +39,12 @@ if (MODE === "test") {
   process.exit(r.ok ? 0 : 1);
 }
 
-if (!devices.length) process.exit(0);
 const now = parisNow();
 const days = [now.date, addDays(now.date, 1)];
 const rdvs = (await db.collection("rdv").where("date", "in", days).get()).docs.map(d => ({ id: d.id, ...d.data() }));
 const sentSnap = await db.collection("notified").where("day", "in", days).get();
 const sent = new Set(sentSnap.docs.map(d => d.id));
-const todo = due(rdvs, now, sent);
+const todo = devices.length ? due(rdvs, now, sent) : [];
 console.log(`Paris ${now.date} ${Math.floor(now.minutes / 60)}h${String(now.minutes % 60).padStart(2, "0")} · ${rdvs.length} RDV · ${todo.length} notification(s) à envoyer`);
 
 for (const n of todo) {
@@ -54,3 +54,21 @@ for (const n of todo) {
   const r = await broadcast(n);
   if (!r.ok && r.err) await ref.delete().catch(() => {});
 }
+
+// Messages envoyés par l'appli (stock bas, changements faits par l'associé…)
+const ob = (await db.collection("outbox").where("sent", "==", false).limit(60).get()).docs.map(d => ({ id: d.id, ...d.data() }));
+if (ob.length) {
+  const { sends, skip } = planOutbox(ob, devices, Date.now());
+  console.log(`${ob.length} message(s) de l'appli · ${sends.length} à envoyer`);
+  const mark = id => db.collection("outbox").doc(id).update({ sent: true, sentAt: Date.now() }).catch(() => {});
+  await Promise.all(skip.map(mark));
+  for (const m of sends) {
+    await Promise.all([m.id, ...(m.also || [])].map(mark));
+    if (m.deviceIds.length) await broadcast({ title: m.title, body: m.body, tag: m.tag }, m.deviceIds);
+  }
+}
+// ménage : messages envoyés depuis plus de 3 jours
+try {
+  const old = await db.collection("outbox").where("sentAt", "<", Date.now() - 3 * 86400e3).limit(100).get();
+  await Promise.all(old.docs.map(d => d.ref.delete()));
+} catch (e) { console.log("ménage ignoré:", e.message); }

@@ -53,3 +53,21 @@ export function due(rdvs, now, sent) {
   }
   return out;
 }
+
+export const OUTBOX_MAX = 5, STALE_MS = 12 * 3600 * 1000;
+
+/** events : [{id,title,body,to,by,at}], devices : [{id,uid}]. Retourne {sends:[{id,title,body,tag,deviceIds}], skip:[ids]} */
+export function planOutbox(events, devices, nowMs) {
+  const fresh = [], skip = [];
+  for (const e of [...events].sort((a, b) => (a.at || 0) - (b.at || 0))) {
+    if (!e.title || nowMs - (e.at || 0) > STALE_MS) skip.push(e.id); else fresh.push(e);
+  }
+  const target = e => devices.filter(d => e.to === "all" || d.uid !== e.by).map(d => d.id);
+  const sends = fresh.slice(0, OUTBOX_MAX).map(e => ({ id: e.id, title: e.title, body: e.body || "", tag: "ob_" + e.id, deviceIds: target(e) }));
+  const rest = fresh.slice(OUTBOX_MAX);
+  if (rest.length) {
+    const ids = new Set(rest.flatMap(target));
+    sends.push({ id: rest[0].id, also: rest.slice(1).map(e => e.id), title: `${rest.length} autres changements`, body: rest.map(e => e.title).slice(0, 3).join(" · "), tag: "ob_more", deviceIds: [...ids] });
+  }
+  return { sends, skip };
+}
