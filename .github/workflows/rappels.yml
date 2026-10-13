@@ -1,0 +1,47 @@
+name: Rappels du planning
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "normal = rappels du planning, test = notification de test"
+        default: normal
+        type: choice
+        options: [normal, test]
+
+concurrency:
+  group: rappels
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  envoi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: Préparer la clé (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Envoyer les notifications
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          MODE: ${{ github.event.inputs.mode || 'normal' }}
+        run: node send-reminders.mjs
+      - name: Supprimer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

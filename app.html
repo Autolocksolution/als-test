@@ -793,6 +793,9 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
     <div class="f"><span class="lab">Mode</span><div class="seg" id="stMode"><button type="button" data-v="auto" aria-pressed="false">Auto</button><button type="button" data-v="light" aria-pressed="false">Clair</button><button type="button" data-v="dark" aria-pressed="false">Sombre</button></div></div>
     <div class="f"><span class="lab">Couleur</span><div class="swatches" id="stAcc"></div></div>
     <p class="hint">« Auto » suit le réglage de ton appareil. Le thème est mémorisé sur cet appareil.</p>
+    <div id="stPushBox" hidden><h3 class="h3">Notifications</h3>
+    <div class="acts"><button type="button" class="btn" id="stPush">Activer les notifications</button><button type="button" class="btn" id="stPushTest" hidden>Tester</button></div>
+    <p class="hint" id="stPushT"></p></div>
     <h3 class="h3">Sécurité</h3>
     <div class="acts"><button type="button" class="btn" id="stLock">Code de verrouillage</button></div>
     <div class="acts" id="stOutBox" hidden><button type="button" class="btn" id="stOut">Se déconnecter</button></div>
@@ -2869,10 +2872,34 @@ function stPaint(){
     h("i",{style:"background:"+palette(a,false)["--accent"]},a.id===TH.acc?"✓":""),a.label)));
 }
 $("stMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;TH.mode=b.dataset.v;store("als-theme",JSON.stringify(TH));applyTheme();stPaint()});
-$("bkBtn").addEventListener("click",()=>{stPaint();$("stScrim").hidden=false});
+$("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();$("stScrim").hidden=false});
 $("stClose").addEventListener("click",()=>$("stScrim").hidden=true);
 $("stScrim").addEventListener("click",e=>{if(e.target===$("stScrim"))$("stScrim").hidden=true});
 $("stBk").addEventListener("click",()=>{$("stScrim").hidden=true;bkOpen()});
+let pushApi=null;
+async function pushPaint(){
+  if(!pushApi)return;
+  const st=await pushApi.status().catch(()=>({state:"unsupported"}));
+  const T={on:"Activées sur cet appareil : rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
+    off:"Rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
+    blocked:"Notifications refusées. Réglages de l'iPhone > Notifications > AutoLock pour les autoriser.",
+    install:"Pour recevoir les notifications sur iPhone : ouvrir l'appli depuis son icône sur l'écran d'accueil (pas depuis Safari).",
+    unsupported:"Ce navigateur ne gère pas les notifications.",
+    nokey:"Notifications pas encore configurées côté serveur."};
+  $("stPushT").textContent=T[st.state]||"";
+  const b=$("stPush");b.disabled=!(st.state==="on"||st.state==="off");
+  b.textContent=st.state==="on"?"Désactiver les notifications":"Activer les notifications";
+  $("stPushTest").hidden=st.state!=="on";
+}
+$("stPush").addEventListener("click",async()=>{
+  const b=$("stPush");b.disabled=true;
+  try{const st=await pushApi.status();
+    if(st.state==="on"){await pushApi.disable();toast("Notifications désactivées")}
+    else{await pushApi.enable();toast("Notifications activées")}}
+  catch(e){toast(e&&e.message?e.message:"Activation impossible")}
+  pushPaint();
+});
+$("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Notification envoyée")}catch(e){toast("Test impossible")}});
 $("stLock").addEventListener("click",()=>{$("stScrim").hidden=true;$("lkBtn").click()});
 /* ================= SUIVI DES COMMANDES FOURNISSEUR ================= */
 const ORD_ST={passee:"Commandée",recue:"Reçue",annulee:"Annulée"};
@@ -3289,6 +3316,7 @@ async function boot(){
   scanInit(c);
   const [d,u]=await Promise.all([c.use("db"),c.use("user")]);
   user=u;db=d?guardDb(d):null;
+  try{pushApi=await c.use("push");if(pushApi)$("stPushBox").hidden=false}catch(e){}
   if(!db&&hadCache){OFFLINE=true;canWrite=true;$("ro").hidden=true;setSync(false,"Hors ligne");offBar();render();return}
   if(!db){setSync(false,"Hors synchro");loaded=true;canWrite=false;$("ro").hidden=false;$("ro").textContent="Synchronisation indisponible. Connectez-vous pour voir les données.";render();return}
   try{uid=user?await user.id():null}catch(e){}
@@ -3439,6 +3467,47 @@ showWait("Connexion en cours…");
     setTimeout(()=>URL.revokeObjectURL(url),30000);
   }
 
+  /* ---------- notifications (FCM) ---------- */
+  const VAPID="__VAPID__";
+  const PUSH_KEY="als-push-token";
+  const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+  const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+  async function msgLib(){return window.__ALS_SDK&&window.__ALS_SDK.M?window.__ALS_SDK.M:await import(SDK_BASE+"firebase-messaging.js")}
+  function pushApi(u){
+    const reg=async()=>{
+      if(!("serviceWorker" in navigator))throw new Error("Service worker indisponible");
+      const r=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(()=>j(new Error("Appli pas encore prête, réessayez dans un instant")),8000))]);
+      return r;
+    };
+    return{
+      status:async()=>{
+        if(!("Notification" in window)||!("serviceWorker" in navigator))return{state:"install"};
+        if(!("PushManager" in window))return{state:/iPhone|iPad|iPod/.test(navigator.userAgent)?"install":"unsupported"};
+        if(!VAPID||VAPID.startsWith("__"))return{state:"nokey"};
+        if(Notification.permission==="denied")return{state:"blocked"};
+        return{state:Notification.permission==="granted"&&lsGet(PUSH_KEY)?"on":"off"};
+      },
+      enable:async()=>{
+        const perm=await Notification.requestPermission();
+        if(perm!=="granted")throw new Error("Autorisation refusée");
+        const [M,r]=await Promise.all([msgLib(),reg()]);
+        let token;
+        try{token=await M.getToken(M.getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:r})}
+        catch(e){throw new Error("Activation impossible ("+((e&&e.code)||"erreur")+")")}
+        if(!token)throw new Error("Aucun jeton reçu");
+        await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)}));
+        lsSet(PUSH_KEY,token);
+      },
+      disable:async()=>{
+        const t=lsGet(PUSH_KEY);
+        try{const M=await msgLib();await M.deleteToken(M.getMessaging(app))}catch(e){}
+        if(t){try{await soon(F.deleteDoc(F.doc(fs,"devices/"+t)))}catch(e){}}
+        lsSet(PUSH_KEY,null);
+      },
+      test:async()=>{const r=await reg();await r.showNotification("AutoLockSolution",{body:"Les notifications fonctionnent sur cet appareil.",icon:"als-192.png",badge:"als-192.png",tag:"als-test"})}
+    };
+  }
+
   /* ---------- connexion ---------- */
   const FR={
     "auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/wrong-password":"E-mail ou mot de passe incorrect.",
@@ -3467,6 +3536,7 @@ showWait("Connexion en cours…");
       if(name==="db")return dbApi;
       if(name==="user")return userApi(u);
       if(name==="downloads")return{save};
+      if(name==="push")return pushApi(u);
       return null;
     }};
     /* enregistre le prénom affiché pour les autres utilisateurs (une seule fois) */

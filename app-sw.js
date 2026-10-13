@@ -35,7 +35,7 @@ self.addEventListener("fetch",e=>{
   }
 });
 self.addEventListener("push",e=>{let d={};try{d=e.data?e.data.json():{}}catch(x){}
-  const n=d.notification||d;
-  e.waitUntil(self.registration.showNotification(n.title||"AutoLockSolution",{body:n.body||"Nouvelle notification",icon:"als-192.png",badge:"als-192.png",data:{url:(d.data&&d.data.url)||"./"}}))});
+  const n=d.data||d.notification||d;
+  e.waitUntil(self.registration.showNotification(n.title||"AutoLockSolution",{body:n.body||"Nouvelle notification",icon:"als-192.png",badge:"als-192.png",tag:n.tag||undefined,data:{url:n.url||"./app.html"}}))});
 self.addEventListener("notificationclick",e=>{e.notification.close();
-  e.waitUntil(self.clients.matchAll({type:"window",includeUncontrolled:true}).then(l=>{for(const c of l){if("focus" in c)return c.focus()}return self.clients.openWindow("./")}))});
+  e.waitUntil(self.clients.matchAll({type:"window",includeUncontrolled:true}).then(l=>{for(const c of l){if("focus" in c)return c.focus()}return self.clients.openWindow(e.notification.data&&e.notification.data.url||"./app.html")}))});
