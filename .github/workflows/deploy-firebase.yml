@@ -1,0 +1,33 @@
+name: Déployer les règles Firebase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "firestore.rules"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/deploy-firebase.yml"
+  workflow_dispatch:
+
+jobs:
+  regles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Préparer la clé (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Déployer les règles Firestore
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: npx --yes firebase-tools@13 deploy --only firestore:rules --project autlocksolution --non-interactive
+      - name: Supprimer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
