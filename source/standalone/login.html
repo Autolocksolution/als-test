@@ -1,0 +1,27 @@
+<style>
+#lgScrim{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
+#lgScrim[hidden]{display:none}
+.lg-in{width:100%;max-width:340px;text-align:center}
+.lg-in h2{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0 0 6px;letter-spacing:.01em}
+.lg-in p{color:var(--muted);margin:0 0 20px;font-size:15px}
+.lg-in label{display:block;text-align:left;font-size:13px;color:var(--muted);margin:0 0 12px}
+.lg-in input{display:block;width:100%;height:50px;margin-top:4px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:17px}
+.lg-in .btn{width:100%;margin-top:6px}
+.lg-in .btn:disabled{opacity:.6}
+.lg-link{background:none;border:0;color:var(--acc-ink);margin-top:14px;padding:8px;font-size:15px;text-decoration:underline}
+.lg-bad{min-height:20px;margin:10px 0 0;color:var(--out);font-size:14px}
+.lg-spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);margin:0 auto 14px;animation:lgsp .9s linear infinite}
+@keyframes lgsp{to{transform:rotate(360deg)}}
+</style>
+<div id="lgScrim">
+  <div class="lg-in" id="lgWait"><div class="lg-spin"></div><p id="lgWaitT">Connexion en cours…</p><button type="button" class="btn" id="lgRetry" hidden>Réessayer</button></div>
+  <form class="lg-in" id="lgForm" autocomplete="on" hidden>
+    <h2>AutoLockSolution</h2>
+    <p id="lgMsg">Connectez-vous pour accéder à l'atelier</p>
+    <label>E-mail<input id="lgMail" name="email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" required></label>
+    <label>Mot de passe<input id="lgPass" name="password" type="password" autocomplete="current-password" required></label>
+    <button type="submit" class="btn pri" id="lgGo">Se connecter</button>
+    <div class="lg-bad" id="lgBad" role="alert"></div>
+    <button type="button" class="lg-link" id="lgForgot">Mot de passe oublié</button>
+  </form>
+</div>
