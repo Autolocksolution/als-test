@@ -798,7 +798,7 @@ main{padding-top:10px}
     <div id="cgD" hidden>
       <div class="tkrow" id="cgT" hidden><img id="tkPrev" alt=""><button type="button" class="lnk" id="tkView">Voir le ticket</button><button type="button" class="lnk" id="tkDel">Retirer</button></div>
       <div class="tkwarn" id="cTkHint" hidden></div>
-      <div class="f"><span class="lab">Type</span><div class="seg" id="cCatSeg"><button type="button" data-v="essence" aria-pressed="true">Essence</button><button type="button" data-v="divers" aria-pressed="false">Divers</button></div></div>
+      <div class="f"><span class="lab">Type</span><div class="seg" id="cCatSeg"><button type="button" data-v="essence" aria-pressed="true">Essence</button><button type="button" data-v="achat" aria-pressed="false">Achat</button><button type="button" data-v="divers" aria-pressed="false">Divers</button></div></div>
       <div class="f"><label for="cLabel" id="cLblL">Détail</label><input id="cLabel" maxlength="120"></div>
       <div class="f" id="cgL"><label for="cLit">Litres (facultatif)</label><input id="cLit" inputmode="decimal" placeholder="42,5"></div>
     </div>
@@ -1598,8 +1598,8 @@ function cJournal(inYear){
   const out=[],tot=sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase(),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
-  else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence")))),card("Lignes",String(mine.length))));
-  if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket (essence / péage)"));
+  else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length))));
+  if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
   const nd=new Date(Y,M+1,0).getDate(),ul=h("ul",{class:"days"});
   for(let d=1;d<=nd;d++){
@@ -1635,7 +1635,7 @@ function cEntry(e){
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
-  {title=e.label||(e.cat==="essence"?"Essence":"Dépense diverse");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):"Divers")+(e.vat!=null&&e.vat!==""?" · TVA "+money(Math.round(e.vat*100)):"")+(e.photoId?" · 🧾":"")+by}
+  {title=e.label||(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat fournisseur":"Dépense diverse");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):e.cat==="achat"?"Achat":"Divers")+(e.vat!=null&&e.vat!==""?" · TVA "+money(Math.round(e.vat*100)):"")+(e.photoId?" · 🧾":"")+by}
   return h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
     h("div",{class:"ent-l"},h("div",{class:"ent-t"},title),h("div",{class:"ent-m"},meta)),
     h("div",{class:"ent-r"},h("div",{class:"ent-a",style:"color:var(--"+(e.kind==="recette"?"in":"out")+")"},(e.kind==="recette"?"+":"−")+money(cents(e))),
@@ -1646,7 +1646,7 @@ function cBilan(inYear){
   const R=sum(r),D=sum(d),res=R-D,cash=sum(r.filter(e=>e.pay==="especes"))-sum(d.filter(e=>e.pay==="especes"));
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   const rc=r.filter(e=>e.cost!=null&&e.cost!==""),Rc=sum(rc),Cc=rc.reduce((a,e)=>a+eurosC(e.cost),0);
-  const out=[h("div",{class:"sum"},card("Recettes "+Y,money(R)),card("Dépenses "+Y,money(D)),card("Résultat",money(res),res>=0?"pos":"neg"),card("Espèces en main",money(cash)),card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence")))),card("Coût des pièces",money(Cc)),card("Marge pièces ("+rc.length+"/"+r.length+")",money(Rc-Cc),Rc-Cc>=0?"pos":"neg"))];
+  const out=[h("div",{class:"sum"},card("Recettes "+Y,money(R)),card("Dépenses "+Y,money(D)),card("Résultat",money(res),res>=0?"pos":"neg"),card("Espèces en main",money(cash)),card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Coût des pièces",money(Cc)),card("Marge pièces ("+rc.length+"/"+r.length+")",money(Rc-Cc),Rc-Cc>=0?"pos":"neg"))];
   out.push(h("h2",{class:"h2"},"Mois par mois"));
   const rows=MS.map((n,i)=>{
     const mm=p2(i+1),a=sum(r.filter(e=>e.date.slice(5,7)===mm)),b=sum(d.filter(e=>e.date.slice(5,7)===mm));
@@ -1662,7 +1662,7 @@ function cBilan(inYear){
 }
 function cDetail(d){
   const blocks=[h("h2",{class:"h2"},"Détail des dépenses "+Y)];
-  [["essence","Dépenses essence",e=>e.cat==="essence"],["divers","Dépenses diverses",e=>e.cat!=="essence"]].forEach(([id,title,fn])=>{
+  [["essence","Dépenses essence",e=>e.cat==="essence"],["achat","Achats stock / matériel",e=>e.cat==="achat"],["divers","Dépenses diverses",e=>e.cat!=="essence"&&e.cat!=="achat"]].forEach(([id,title,fn])=>{
     const l=d.filter(fn).sort((a,b)=>b.date.localeCompare(a.date)||(b.at||0)-(a.at||0));
     const lit=l.reduce((a,e)=>a+(Number(e.litres)||0),0);
     const sub=l.length?l.length+(l.length>1?" lignes":" ligne")+(id==="essence"&&lit?" · "+lit.toFixed(1).replace(".",",")+" L":""):"Aucune dépense";
@@ -1670,7 +1670,7 @@ function cDetail(d){
       h("div",{class:"dhead"},h("div",null,h("b",null,title),h("small",null,sub)),h("strong",null,money(sum(l)))),
       l.length?h("div",{class:"dscroll"},h("table",null,h("tbody",null,l.map(e=>h("tr",null,
         h("td",null,e.date.slice(8,10)+"/"+e.date.slice(5,7)),
-        h("td",{class:"lbl"},e.label||(id==="essence"?"Essence":"Divers")),
+        h("td",{class:"lbl"},e.label||(id==="essence"?"Essence":id==="achat"?"Achat":"Divers")),
         h("td",{style:"color:var(--out)"},money(cents(e)))))))):null));
   });
   return blocks;
@@ -1738,7 +1738,7 @@ $("cBrand").addEventListener("change",()=>{brandAuto=false});
 $("cModel").addEventListener("input",()=>{if(brandAuto&&canWrite){$("cBrand").value=inferBrand($("cModel").value)||""}});
 $("cStSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite)setSeg("cStSeg",b.dataset.v,v=>cSt=v)});
 $("cCatSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b){setSeg("cCatSeg",b.dataset.v,v=>cCat=v);cCatUi()}});
-function cCatUi(){$("cgL").hidden=cCat!=="essence";$("cLblL").textContent=cCat==="essence"?"Station / détail (facultatif)":"Détail (péage, outils, repas…)"}
+function cCatUi(){$("cgL").hidden=cCat!=="essence";$("cLblL").textContent=cCat==="essence"?"Station / détail (facultatif)":cCat==="achat"?"Fournisseur / n° de facture":"Détail (péage, outils, repas…)"}
 function lastCity(){const l=entries.filter(e=>e.kind==="recette"&&e.city).sort((a,b)=>(b.at||0)-(a.at||0))[0];return l?l.city:""}
 function cOpen(e,date){
   if(!canWrite&&!e)return;
@@ -1800,7 +1800,7 @@ async function tkStart(file){
   if(!p||p.total==null){
     $("cTkHint").textContent=err?"Lecture automatique indisponible (connexion ?) : la photo est jointe, saisissez le montant.":"Ticket illisible : la photo est jointe, saisissez le montant.";$("cTkHint").hidden=false;tkMark("cAmt",true);return;
   }
-  if(p.kind==="peage"){cCat="divers";setSeg("cCatSeg","divers",v=>cCat=v)}else{cCat="essence";setSeg("cCatSeg","essence",v=>cCat=v)}
+  {const c=p.kind==="peage"?"divers":p.kind==="essence"?"essence":"achat";cCat=c;setSeg("cCatSeg",c,v=>cCat=v)}
   cCatUi();
   $("cLabel").value=p.label||"";
   $("cAmt").value=String(p.total.toFixed(2)).replace(".",",");
@@ -1811,7 +1811,7 @@ async function tkStart(file){
   const f=p.flags||[],warn=[];
   if(f.includes("total")){tkMark("cAmt",true);warn.push("montant")}
   if(f.includes("litres")){tkMark("cLit",true);warn.push("litres")}
-  if(f.includes("kind")){warn.push("type")}
+  if(f.includes("kind")){tkMark("cLabel",true);warn.push("fournisseur")}
   if(!p.date){warn.push("date")}
   if(p.kind==="peage"&&!p.vendor){tkMark("cLabel",true)}
   const notes=(p.notes||[]).length&&warn.length?" ("+p.notes.join(" ; ")+")":"";
@@ -2287,7 +2287,7 @@ async function exportCsv(sel){
   const nfr=n=>Number(n).toFixed(2).replace(".",",");
   const rows=list.map(e=>e.kind==="recette"
     ?["Recette",fmtDate(e.date),e.time||"",brandLabel(entryBrand(e)),e.model||"",e.year||"",e.plate||"",e.city||"","","",nfr(e.amount),e.pay==="especes"?"Espèces":"Carte",e.usedId&&e.usedId!=="none"?e.usedLabel||"":"",e.note||"",e.cost!=null&&e.cost!==""?nfr(e.cost):"",e.cost!=null&&e.cost!==""?nfr(e.amount-e.cost):"",e.clientName||""]
-    :["Dépense",fmtDate(e.date),"","","","","","",(e.cat==="essence"?"Essence":"Divers")+(e.label?" - "+e.label:""),e.litres?String(e.litres).replace(".",","):"",nfr(e.amount),e.pay==="especes"?"Espèces":"Carte","","","","",""]);
+    :["Dépense",fmtDate(e.date),"","","","","","",(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat":"Divers")+(e.label?" - "+e.label:""),e.litres?String(e.litres).replace(".",","):"",nfr(e.amount),e.pay==="especes"?"Espèces":"Carte","","","","",""]);
   const csv="﻿"+[head,...rows].map(r=>r.map(csvCell).join(";")).join("\r\n");
   try{await dl.save({filename:"comptes-autolocksolution-"+Y+(sel==="all"?"":"-"+p2(+sel+1))+".csv",data:csv});toast("Tableau prêt")}
   catch(err){if(!err||err.code!=="declined")toast("Téléchargement impossible sur cet appareil")}
@@ -3774,7 +3774,7 @@ setInterval(()=>{try{remindRender()}catch(e){}},60000);
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261014-2155";
+const ALS_BUILD="20261014-2207";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
