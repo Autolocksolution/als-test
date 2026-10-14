@@ -7,7 +7,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 SRC = HERE.parent / "autolocksolution.html"
 OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "dist"
 ICONS = HERE
-BUILD = datetime.date.today().strftime("%Y%m%d") + "a"
+BUILD = datetime.datetime.now().strftime("%Y%m%d-%H%M")
 
 src = SRC.read_text(encoding="utf-8")
 
