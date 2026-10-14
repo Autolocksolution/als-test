@@ -10,9 +10,14 @@ for (const cat of ["247-piles-lithium-oxyde-alcaline", "466-piles-lithium-cameli
     const r = await fetch(`https://neoriv.com/fr/${cat}?page=${p}&resultsPerPage=100`, { headers: { "User-Agent": "Mozilla/5.0" } });
     if (!r.ok) break;
     const html = await r.text();
-    const re = /<a[^>]+href="(https:\/\/neoriv\.com\/fr\/[^"#]+?\/(\d+)-([^"#]+?)\.html)[^"]*"[^>]*>\s*<img[^>]+?(?:data-src|src)="([^"]+)"/gi;
-    let m, n = 0;
-    while ((m = re.exec(html))) { n++; if (!seen.has(m[2])) seen.set(m[2], { url: m[1], slug: m[3], img: m[4] }); }
+    let n = 0;
+    for (const blk of html.split(/<article[^>]+product-miniature/).slice(1)) {
+      const a = /href="(https:\/\/neoriv\.com\/fr\/[^"#]+?\/(\d+)-([^"#]+?)\.html)/.exec(blk);
+      const im = /<img[^>]+src="([^"]+\.jpg)"/.exec(blk);
+      if (!a || !im) continue;
+      n++;
+      if (!seen.has(a[2])) seen.set(a[2], { url: a[1], slug: a[3], img: im[1].replace("home_default", "superlarge_default") });
+    }
     if (!n) break;
   }
 }
