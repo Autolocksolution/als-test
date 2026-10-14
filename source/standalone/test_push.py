@@ -38,7 +38,7 @@ async def main():
             ok(await page.evaluate("!!window.__shown")==True,"notification de test affichée")
             # --- messages sortants (outbox) ---
             await page.click("#stClose")
-            await page.click("#navPlus"); await page.click("#plusList button:nth-child(1)"); await page.click("#fab")
+            await page.evaluate("goMode('planning')"); await page.wait_for_timeout(200); await page.click("#fab")
             await page.fill("#rvWhat","Peugeot 208 clé"); await page.fill("#rvTime","14:30"); await page.click("#rvSave"); await page.wait_for_timeout(500)
             ob=await page.evaluate("Object.values(window.__fbdb.outbox||{})")
             ok(len(ob)==1 and ob[0]["kind"]=="rdv" and ob[0]["sent"] is False and ob[0]["to"]=="others" and ob[0]["by"]=="U1","nouveau RDV -> message pour l'associé dans outbox")

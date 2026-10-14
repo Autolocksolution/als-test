@@ -9,3 +9,10 @@
 - `scripts/` (à la racine) : le robot d'envoi des notifications, lancé par GitHub Actions.
 
 Données : tout est dans Firestore (projet `autlocksolution`). Les sauvegardes se font depuis Réglages > Sauvegarde. Le secret `FIREBASE_SERVICE_ACCOUNT` est dans GitHub > Settings > Secrets.
+
+## Important : d'où vient `autolocksolution.html`
+La base du design est l'artefact Claude « AutoLockSolution » (conçu dans une autre discussion).
+`apply_patches.py` y ajoute notre couche (restauration rapide, notifications, outbox). Si le design est
+modifié dans Claude, on récupère la nouvelle version de l'artefact (sans l'enveloppe `<html>…<body>`),
+on l'enregistre sous `new_base.html` et on relance `python3 apply_patches.py` (il signale toute ancre introuvable),
+puis `standalone/build.py`.

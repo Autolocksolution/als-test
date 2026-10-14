@@ -46,6 +46,7 @@ async def main():
             await page.fill("#lgPass","good"); await page.click("#lgGo")
             await page.wait_for_function('document.getElementById("syncT").textContent==="Synchronisé"',timeout=8000)
             ok(not await page.locator("#lgScrim").is_visible(),"connecté : le voile disparaît")
+            await page.click("#navStock"); await page.wait_for_timeout(300)
             ok(await page.locator("#list li").count()>=1,"stock chargé depuis la base")
             # écriture : fiche véhicule + rdv
             await page.click("#navBase"); await page.click("#fab")
@@ -53,7 +54,7 @@ async def main():
             await page.fill("#vf_from","2012"); await page.fill("#vf_to","2019"); await page.click("#vhSave"); await page.wait_for_timeout(500)
             ok("Renault Clio" in await page.inner_text("#vBody"),"fiche véhicule créée via Firestore")
             ok(await page.evaluate("Object.keys(window.__fbdb.vehicles||{}).length")==1,"fiche présente en base")
-            await page.click("#navPlus"); await page.click("#plusList button:nth-child(1)"); await page.click("#fab")
+            await page.evaluate("goMode('planning')"); await page.wait_for_timeout(200); await page.click("#fab")
             await page.fill("#rvWhat","Test"); await page.click("#rvSave"); await page.wait_for_timeout(400)
             ok(await page.evaluate("Object.keys(window.__fbdb.rdv||{}).length")==1,"rendez-vous présent en base")
             ok(await page.evaluate("Object.values(window.__fbdb.rdv)[0].by")=="U1","auteur = identifiant du compte connecté")
