@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -289,6 +289,14 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .dst-payee,.dst-accepte{background:var(--in-bg);color:var(--in);border-color:transparent}
 .dst-apayer,.dst-envoye{background:var(--warn-bg);color:var(--warn);border-color:transparent}
 .dst-refuse,.dst-annulee{background:var(--out-bg);color:var(--out);border-color:transparent}
+.tkbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0 0 12px;padding:13px;border:1.5px dashed var(--accent);border-radius:12px;background:none;color:var(--accent);font:600 15px inherit}
+.tkbtn:active{background:var(--today)}
+.chk{border-color:var(--warn)!important;background:var(--warn-bg)!important}
+.tkwarn{font-size:13px;color:var(--warn);background:var(--warn-bg);border-radius:10px;padding:8px 10px;margin:0 0 12px}
+.tkrow{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.tkrow img{width:44px;height:58px;object-fit:cover;border-radius:6px;border:1px solid var(--line,#ccc)}
+.tkrow .lnk{font-size:14px}
+.tkimg{max-width:70vw;max-height:40vh;border-radius:10px;display:block;margin:10px auto}
 .lnk{background:none;border:0;padding:0;color:var(--accent);font-weight:600;text-decoration:underline}
 .h3{font-family:var(--f-display);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.03em;margin:14px 0 6px}
 .hlist{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
@@ -788,11 +796,14 @@ main{padding-top:10px}
       <div class="acts" id="cMkRow" hidden><button type="button" class="btn" id="cMkDevis">Créer un devis</button><button type="button" class="btn" id="cMkFact">Créer une facture</button></div>
     </div>
     <div id="cgD" hidden>
+      <div class="tkrow" id="cgT" hidden><img id="tkPrev" alt=""><button type="button" class="lnk" id="tkView">Voir le ticket</button><button type="button" class="lnk" id="tkDel">Retirer</button></div>
+      <div class="tkwarn" id="cTkHint" hidden></div>
       <div class="f"><span class="lab">Type</span><div class="seg" id="cCatSeg"><button type="button" data-v="essence" aria-pressed="true">Essence</button><button type="button" data-v="divers" aria-pressed="false">Divers</button></div></div>
       <div class="f"><label for="cLabel" id="cLblL">Détail</label><input id="cLabel" maxlength="120"></div>
       <div class="f" id="cgL"><label for="cLit">Litres (facultatif)</label><input id="cLit" inputmode="decimal" placeholder="42,5"></div>
     </div>
     <div class="f"><label for="cAmt" id="cLamt">Tarif (€)</label><input id="cAmt" inputmode="decimal" required placeholder="0,00"></div>
+    <div class="f" id="cgV" hidden><label for="cVat">dont TVA (€, facultatif)</label><input id="cVat" inputmode="decimal" placeholder="0,00"></div>
     <div class="f"><span class="lab">Moyen de paiement</span><div class="seg" id="cPaySeg"><button type="button" data-v="carte" aria-pressed="true">Carte</button><button type="button" data-v="especes" aria-pressed="false">Espèces</button></div></div>
     <div class="acts">
       <button type="button" class="btn del" id="cDel" hidden>Supprimer</button>
@@ -800,6 +811,14 @@ main{padding-top:10px}
       <button type="submit" class="btn pri" id="cSave">Enregistrer</button>
     </div>
   </form>
+</div>
+<div class="scrim" id="tkScrim" hidden>
+  <div class="sheet" style="text-align:center">
+    <h2>Lecture du ticket</h2>
+    <img id="tkImg" class="tkimg" alt="">
+    <p class="hint" id="tkState">Préparation…</p>
+    <div class="acts"><button type="button" class="btn" id="tkCancel">Annuler</button></div>
+  </div>
 </div>
 <div class="scrim" id="clScrim" hidden>
   <form class="sheet" id="clForm" autocomplete="off">
@@ -1580,6 +1599,7 @@ function cJournal(inYear){
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase(),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence")))),card("Lignes",String(mine.length))));
+  if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket (essence / péage)"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
   const nd=new Date(Y,M+1,0).getDate(),ul=h("ul",{class:"days"});
   for(let d=1;d<=nd;d++){
@@ -1615,7 +1635,7 @@ function cEntry(e){
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
-  {title=e.label||(e.cat==="essence"?"Essence":"Dépense diverse");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):"Divers")+by}
+  {title=e.label||(e.cat==="essence"?"Essence":"Dépense diverse");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):"Divers")+(e.vat!=null&&e.vat!==""?" · TVA "+money(Math.round(e.vat*100)):"")+(e.photoId?" · 🧾":"")+by}
   return h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
     h("div",{class:"ent-l"},h("div",{class:"ent-t"},title),h("div",{class:"ent-m"},meta)),
     h("div",{class:"ent-r"},h("div",{class:"ent-a",style:"color:var(--"+(e.kind==="recette"?"in":"out")+")"},(e.kind==="recette"?"+":"−")+money(cents(e))),
@@ -1730,18 +1750,77 @@ function cOpen(e,date){
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
   $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
+  tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(e.vat).replace(".",","):"";tkUi();
+  for(const id of["cLabel","cLit","cAmt","cVat"])$(id).classList.remove("chk");$("cTkHint").hidden=true;
   $("cLabel").value=e?e.label||"":"";$("cLit").value=e&&e.litres?String(e.litres).replace(".",","):"";
   $("cAmt").value=e?String(e.amount).replace(".",","):"";
   setSeg("cPaySeg",e&&e.pay?e.pay:"carte",v=>cPay=v);
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cAmt","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
   cMarginUi();cMdUi();
   $("cScrim").hidden=false;
   if(!e)setTimeout(()=>$(rec?"cModel":"cAmt").focus(),50);
 }
-function cClose(){$("cScrim").hidden=true;cEditing=null}
+function cClose(){$("cScrim").hidden=true;cEditing=null;tkData=null}
+/* ---- ticket (photo + lecture sur le téléphone) ---- */
+let tkData=null,tkPid="",tkAbort=false;
+function tkUi(){
+  const rec=(cEditing?cEditing.kind:cTab)==="recette";
+  $("cgV").hidden=rec;
+  const has=!!(tkData||tkPid);$("cgT").hidden=rec||!has;$("tkDel").hidden=!canWrite;
+  if(has){if(tkData)$("tkPrev").src=tkData;else getPhoto(tkPid).then(d=>{if(d&&tkPid)$("tkPrev").src=d})}
+}
+$("tkView").addEventListener("click",async()=>{const d=tkData||(tkPid?await getPhoto(tkPid):"");if(d)openLb(d)});
+$("tkDel").addEventListener("click",()=>{tkData=null;tkPid="";tkUi()});
+function tkLoad(){
+  if(window.ALSTicket)return Promise.resolve();
+  return new Promise((ok,ko)=>{const sc=document.createElement("script");sc.src="ticket.js";sc.onload=ok;sc.onerror=()=>ko(new Error("lecteur indisponible"));document.head.append(sc)});
+}
+function tkMark(id,on){const el=$(id);el.classList.toggle("chk",!!on)}
+async function tkStart(file){
+  if(!file||!canWrite)return;
+  tkAbort=false;
+  const url=URL.createObjectURL(file);$("tkImg").src=url;$("tkState").textContent="Chargement du lecteur…";$("tkScrim").hidden=false;
+  let res=null,err=null;
+  try{
+    await tkLoad();
+    res=await window.ALSTicket.scan(file,t=>{if(!tkAbort)$("tkState").textContent=t});
+  }catch(e){err=e}
+  URL.revokeObjectURL(url);
+  $("tkScrim").hidden=true;
+  if(tkAbort)return;
+  const date=res&&res.parsed&&res.parsed.date?res.parsed.date:null;
+  let img=res&&res.image;
+  if(!img){try{img=await new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.6))};im.onerror=ko;im.src=r.result};r.onerror=ko;r.readAsDataURL(file)})}catch(e){img=null}}
+  cOpen(null,date||null);
+  tkData=img;tkPid="";tkUi();
+  const p=res&&res.parsed;
+  if(!p||p.total==null){
+    $("cTkHint").textContent=err?"Lecture automatique indisponible (connexion ?) : la photo est jointe, saisissez le montant.":"Ticket illisible : la photo est jointe, saisissez le montant.";$("cTkHint").hidden=false;tkMark("cAmt",true);return;
+  }
+  if(p.kind==="peage"){cCat="divers";setSeg("cCatSeg","divers",v=>cCat=v)}else{cCat="essence";setSeg("cCatSeg","essence",v=>cCat=v)}
+  cCatUi();
+  $("cLabel").value=p.label||"";
+  $("cAmt").value=String(p.total.toFixed(2)).replace(".",",");
+  if(p.kind==="essence"&&p.litres)$("cLit").value=String(p.litres).replace(".",",");
+  if(p.vat!=null)$("cVat").value=String(p.vat.toFixed(2)).replace(".",",");
+  setSeg("cPaySeg",p.pay||"carte",v=>cPay=v);
+  cMarginUi();
+  const f=p.flags||[],warn=[];
+  if(f.includes("total")){tkMark("cAmt",true);warn.push("montant")}
+  if(f.includes("litres")){tkMark("cLit",true);warn.push("litres")}
+  if(f.includes("kind")){warn.push("type")}
+  if(!p.date){warn.push("date")}
+  if(p.kind==="peage"&&!p.vendor){tkMark("cLabel",true)}
+  const notes=(p.notes||[]).length&&warn.length?" ("+p.notes.join(" ; ")+")":"";
+  $("cTkHint").textContent=warn.length?"À vérifier : "+warn.join(", ")+notes+". Comparez avec la photo du ticket.":"Ticket lu : vérifiez d'un coup d'œil puis enregistrez.";
+  $("cTkHint").hidden=false;
+}
+const tkFileEl=document.createElement("input");tkFileEl.type="file";tkFileEl.accept="image/*";tkFileEl.capture="environment";tkFileEl.id="tkFile";tkFileEl.hidden=true;document.body.append(tkFileEl);
+tkFileEl.addEventListener("change",()=>{const f=tkFileEl.files[0];tkFileEl.value="";if(f)tkStart(f)});
+$("tkCancel").addEventListener("click",()=>{tkAbort=true;$("tkScrim").hidden=true});
 function cMarginUi(){
   const a=parseNum($("cAmt").value),cv=$("cCost").value.trim(),c=parseNum(cv);
   $("cMargin").textContent=cv!==""&&a>=0&&c>=0?"Marge sur cette intervention : "+money(Math.round(a*100)-Math.round(c*100)):"";
@@ -1766,7 +1845,8 @@ $("cForm").addEventListener("submit",async ev=>{
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
-  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null}
+  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
+    if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
   if(wasEditing){if(wasEditing.usedId)data.usedId=wasEditing.usedId;if(wasEditing.usedLabel)data.usedLabel=wasEditing.usedLabel;if(wasEditing.doneBy)data.doneBy=wasEditing.doneBy}
   $("cSave").disabled=true;
@@ -3694,7 +3774,7 @@ setInterval(()=>{try{remindRender()}catch(e){}},60000);
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261014-1908";
+const ALS_BUILD="20261014-2155";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",

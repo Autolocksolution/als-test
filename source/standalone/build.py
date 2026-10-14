@@ -24,6 +24,7 @@ head = ('<!doctype html><html lang="fr"><head><meta charset="utf-8">'
         '<meta name="theme-color" content="#2F7F7A">'
         '<style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style>'
         '<link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png">'
+        '<script>window.ALS_OCR="ocr/"</script>'
         '<script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>\n')
 assert src.lstrip().startswith("<title>")
 src = head + src
