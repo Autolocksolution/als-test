@@ -28,6 +28,17 @@ async def main():
             await page.fill("#lgMail","a@x.fr"); await page.fill("#lgPass","oops"); await page.click("#lgGo"); await page.wait_for_timeout(300)
             ok("incorrect" in await page.inner_text("#lgBad"),"mauvais mot de passe : message en français")
             ok(await page.locator("#lgScrim").is_visible(),"toujours verrouillé après échec")
+            # verrouillage anti-devinette : 5 mauvais essais
+            for k in range(3):
+                await page.fill("#lgPass","oops"+str(k)); await page.click("#lgGo"); await page.wait_for_timeout(200)
+            ok(not await page.locator("#lgGo").is_disabled(),"4 échecs au total : pas encore bloqué")
+            await page.fill("#lgPass","oops5"); await page.click("#lgGo"); await page.wait_for_timeout(300)
+            ok(await page.locator("#lgGo").is_disabled(),"5e échec : formulaire bloqué")
+            ok("Trop d'essais" in await page.inner_text("#lgBad"),"message « Trop d'essais » affiché")
+            await page.reload(); await page.wait_for_selector("#lgForm:not([hidden])"); await page.wait_for_timeout(300)
+            ok(await page.locator("#lgGo").is_disabled(),"le blocage survit au rechargement de la page")
+            await page.evaluate("localStorage.removeItem('als-login-fail')"); await page.reload(); await page.wait_for_selector("#lgForm:not([hidden])")
+            await page.fill("#lgMail","a@x.fr"); await page.fill("#lgPass","oops"); await page.click("#lgGo"); await page.wait_for_timeout(300)
             # oublié
             await page.click("#lgForgot"); await page.wait_for_timeout(150)
             ok("réinitialisation" in await page.inner_text("#lgBad"),"mot de passe oublié : demande envoyée")

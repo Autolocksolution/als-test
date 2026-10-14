@@ -14,7 +14,7 @@ const CFG={
 const G=id=>document.getElementById(id);
 const wait=G("lgWait"),form=G("lgForm"),scrim=G("lgScrim"),msg=G("lgMsg");
 function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false;G("lgWaitT").textContent=t;G("lgRetry").hidden=!retry}
-function showForm(){scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
+function showForm(){scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 showWait("Connexion en cours…");
@@ -147,17 +147,49 @@ showWait("Connexion en cours…");
     "auth/too-many-requests":"Trop d'essais. Patientez quelques minutes puis réessayez.",
     "auth/network-request-failed":"Pas de réseau. Vérifiez votre connexion.","auth/user-disabled":"Ce compte est désactivé."
   };
+  /* Anti-devinette : après 5 échecs, le formulaire se bloque (30 s, puis le double à chaque nouvel échec, jusqu'à 15 min).
+     Le compteur est mémorisé sur l'appareil. La vraie barrière est celle de Firebase (blocage côté serveur) : voir plus bas. */
+  const LK="als-login-fail";
+  const lkRead=()=>{try{return JSON.parse(localStorage.getItem(LK)||"{}")}catch(e){return{}}};
+  const lkWrite=o=>{try{localStorage.setItem(LK,JSON.stringify(o))}catch(e){}};
+  const fmtWait=ms=>{const s=Math.ceil(ms/1000);return s>=60?Math.ceil(s/60)+" min":s+" s"};
+  let lkTimer=null;
+  function lkPaint(){
+    clearInterval(lkTimer);
+    const st=lkRead(),left=(st.until||0)-Date.now(),b=G("lgGo");
+    if(left>0){
+      b.disabled=true;G("lgBad").textContent="Trop d'essais. Réessayez dans "+fmtWait(left)+".";
+      lkTimer=setInterval(()=>{const l=(lkRead().until||0)-Date.now();if(l<=0){clearInterval(lkTimer);b.disabled=false;G("lgBad").textContent=""}else G("lgBad").textContent="Trop d'essais. Réessayez dans "+fmtWait(l)+"."},1000);
+      return true;
+    }
+    b.disabled=false;return false;
+  }
+  function lkFail(){
+    const st=lkRead();st.n=(st.n||0)+1;
+    if(st.n>=5){const k=st.n-5;st.until=Date.now()+Math.min(30000*Math.pow(2,k),900000)}
+    lkWrite(st);
+  }
+  function lkOk(){lkWrite({})}
+  window.__lkPaint=lkPaint;
   form.addEventListener("submit",async e=>{
     e.preventDefault();
+    if(lkPaint())return;
     const b=G("lgGo");b.disabled=true;G("lgBad").textContent="";
-    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value)}
-    catch(err){G("lgBad").textContent=FR[err&&err.code]||"Connexion impossible ("+((err&&err.code)||"erreur")+").";G("lgPass").value=""}
-    finally{b.disabled=false}
+    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk()}
+    catch(err){
+      const c=err&&err.code;
+      if(c==="auth/invalid-credential"||c==="auth/wrong-password"||c==="auth/user-not-found"||c==="auth/too-many-requests")lkFail();
+      if(!lkPaint())G("lgBad").textContent=FR[c]||"Connexion impossible ("+(c||"erreur")+").";
+      G("lgPass").value="";
+    }
+    finally{if(!(((lkRead().until)||0)>Date.now()))b.disabled=false}
   });
   G("lgForgot").addEventListener("click",async()=>{
     const m=G("lgMail").value.trim();
     if(!m){G("lgBad").textContent="Entrez d'abord votre e-mail ci-dessus.";return}
-    try{await Au.sendPasswordResetEmail(auth,m);G("lgBad").textContent="Si ce compte existe, un e-mail de réinitialisation vient d'être envoyé."}
+    const last=+(localStorage.getItem("als-reset-at")||0);
+    if(Date.now()-last<60000){G("lgBad").textContent="Un e-mail vient d'être demandé. Patientez une minute.";return}
+    try{localStorage.setItem("als-reset-at",String(Date.now()));await Au.sendPasswordResetEmail(auth,m);G("lgBad").textContent="Si ce compte existe, un e-mail de réinitialisation vient d'être envoyé."}
     catch(err){G("lgBad").textContent=FR[err&&err.code]||"Envoi impossible."}
   });
 
