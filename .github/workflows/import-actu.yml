@@ -1,0 +1,39 @@
+name: Importer les actus
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "actu/import.json"
+      - "scripts/import-actu.mjs"
+      - ".github/workflows/import-actu.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: Préparer la clé (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Importer
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: node import-actu.mjs
+      - name: Supprimer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
