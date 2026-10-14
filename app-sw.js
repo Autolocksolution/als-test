@@ -1,5 +1,5 @@
 /* AutoLockSolution : service worker. Appli utilisable hors ligne + notifications. */
-const V="als-20261014-2215";
+const V="als-20261014-2221";
 const APP="app.html";
 const SHELL=[APP,"app.webmanifest","als-192.png","als-512.png","als-180.png"];
 self.addEventListener("install",e=>{
@@ -23,7 +23,7 @@ self.addEventListener("fetch",e=>{
   if(u.origin===location.origin){
     /* page et fichiers de l'appli : réseau d'abord (nouveautés immédiates), copie locale si le réseau est lent ou absent */
     e.respondWith(caches.open(V).then(async c=>{
-      const net=fetch(r).then(x=>{if(x&&x.ok)c.put(r,x.clone());return x});
+      const net=fetch(r,{cache:"no-cache"}).then(x=>{if(x&&x.ok)c.put(r,x.clone());return x});
       const slow=new Promise((res,rej)=>setTimeout(()=>rej(new Error("lent")),r.mode==="navigate"?4000:8000));
       try{return await Promise.race([net,slow])}
       catch(err){
