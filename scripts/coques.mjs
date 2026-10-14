@@ -39,7 +39,7 @@ while (queue.length) {
   }
 }
 // références
-const list = [...products.values()];
+const list = [...products.values()].filter(p => !/^MER/i.test(p.ref || ""));
 let idx = 0;
 await Promise.all(Array.from({ length: 8 }, async () => {
   while (idx < list.length) {
@@ -61,6 +61,8 @@ const sharp = (await import("sharp")).default;
 admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
 const db = admin.firestore();
 const exist = new Set((await db.collection("items").where("section", "==", "coque").get()).docs.map(d => d.data().nid));
+const MAP = { TY: "toyota", CP: "citroen-peugeot", DS: "citroen-peugeot", CI: "citroen-peugeot", RE: "renault", FD: "ford", HK: "hyundai-kia", BM: "bmw", HD: "honda", NI: "nissan", FI: "fiat", OP: "opel", VL: "volvo", MZ: "mazda", MC: "mercedes", MB: "mercedes", SU: "suzuki", VK: "volkswagen", MI: "mitsubishi", CV: "chevrolet", PS: "porsche", AU: "audi", MN: "mini", LR: "land-rover", JA: "land-rover", SM: "smart", CH: "chrysler", AR: "alfa-romeo", LE: "lexus" };
+const grpOf = ref => MAP[(/^[A-Za-z]+/.exec(ref || "") || [""])[0].toUpperCase()] || "autres";
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const res = { created: 0, skipped: 0, nophoto: 0, errors: [] };
 let k = 0;
@@ -76,7 +78,7 @@ await Promise.all(Array.from({ length: 5 }, async () => {
         pid = "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
         await db.collection("photos").doc(pid).set({ d: "data:image/jpeg;base64," + jpg.toString("base64"), by: "robot", at: Date.now() });
       } else res.nophoto++;
-      await db.collection("items").add({ section: "coque", group: slug(p.brand), series: "", name: p.name, ref: p.ref || "", compat: "", note: "", qty: 0, photoId: pid, nid: p.id, src: "neoriv", at: Date.now(), by: "robot" });
+      await db.collection("items").add({ section: "coque", group: grpOf(p.ref), series: "", name: p.ref || p.name, ref: p.ref || "", compat: p.name, note: "", qty: 0, photoId: pid, nid: p.id, src: "neoriv", at: Date.now(), by: "robot" });
       res.created++;
     } catch (e) { res.errors.push(p.id + " " + String(e).slice(0, 80)); }
   }

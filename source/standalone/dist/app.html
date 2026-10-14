@@ -1151,6 +1151,12 @@ const CATS=[
     {id:"autel",label:"Autel",series:["Clés Autel"]}]},
   {id:"aftermarket",label:"Clés aftermarket",compat:"Modèles compatibles",simple:true,groups:amGroups},
   {id:"renault",label:"Cartes Renault",compat:"Modèle Renault",fixed:true,groups:[{id:"cartes",label:"Cartes Renault",series:["7947 verte","7947 grise","7941","7952","7953","NCF","7953M"]}]},
+  {id:"coque",label:"Coque de clé",compat:"Modèles compatibles",simple:true,groups:[
+    {id:"alfa-romeo",label:"Alfa Romeo",series:[]},{id:"audi",label:"Audi",series:[]},{id:"bmw",label:"BMW",series:[]},{id:"chevrolet",label:"Chevrolet / Daewoo",series:[]},{id:"chrysler",label:"Chrysler",series:[]},
+    {id:"citroen-peugeot",label:"Citroën / Peugeot",series:[]},{id:"fiat",label:"Fiat",series:[]},{id:"ford",label:"Ford",series:[]},{id:"honda",label:"Honda",series:[]},{id:"hyundai-kia",label:"Hyundai / Kia",series:[]},
+    {id:"land-rover",label:"Land Rover / Jaguar",series:[]},{id:"lexus",label:"Lexus",series:[]},{id:"mazda",label:"Mazda",series:[]},{id:"mercedes",label:"Mercedes",series:[]},{id:"mini",label:"Mini",series:[]},
+    {id:"mitsubishi",label:"Mitsubishi",series:[]},{id:"nissan",label:"Nissan",series:[]},{id:"opel",label:"Opel",series:[]},{id:"porsche",label:"Porsche",series:[]},{id:"renault",label:"Renault",series:[]},
+    {id:"smart",label:"Smart",series:[]},{id:"suzuki",label:"Suzuki",series:[]},{id:"toyota",label:"Toyota",series:[]},{id:"volkswagen",label:"Volkswagen",series:[]},{id:"volvo",label:"Volvo",series:[]},{id:"autres",label:"Autres",series:[]}]},
   {id:"lcd",label:"Clés LCD",compat:"",simple:true,groups:[]},
   {id:"telecommande",label:"Boîtier à distance",compat:"",simple:true,groups:[]},
   {id:"lame_univ",label:"Lame universelle",compat:"",simple:true,groups:LAME_GROUPS()},
@@ -1203,7 +1209,7 @@ $("navPlus").addEventListener("click",()=>plusOpen());
 $("fab").addEventListener("click",()=>mode==="base"?vhOpen(null):mode==="planning"?rvOpen(null):mode==="actu"?adOpen():mode==="devis"?(dvTab==="clients"?clOpen(null):dcOpen(null)):mode==="stock"?sOpen(null):mode==="decodage"?dOpen(null):cTab==="idees"?iOpen(null):cOpen(null));
 
 /* ================= STOCK ================= */
-const TABMENUS=[{label:"Clés",ids:["universelle","aftermarket","renault","lcd"]},{label:"Lames",ids:["lame_univ","lame_after","lame_m"]}];
+const TABMENUS=[{label:"Clés",ids:["universelle","aftermarket","renault","coque","lcd"]},{label:"Lames",ids:["lame_univ","lame_after","lame_m"]}];
 let stkOpen=-1;
 function inCat(i){return i.section===sCat}
 function sRender(){
@@ -3801,7 +3807,7 @@ setInterval(()=>{try{remindRender()}catch(e){}},60000);
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261014-2221";
+const ALS_BUILD="20261014-2247";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
