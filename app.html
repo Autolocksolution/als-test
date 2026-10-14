@@ -86,6 +86,7 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .it-note{font-size:14px;margin-top:4px;overflow-wrap:anywhere}
 .it-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;font-size:12px;color:var(--muted)}
 .badge{font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px}
+.thrbtn{border:0;font:inherit;cursor:pointer}
 .badge.low{background:var(--warn-bg);color:var(--warn)}
 .badge.out{background:var(--out-bg);color:var(--out)}
 .badge.path{background:var(--tint);color:var(--muted);border:1px solid var(--line)}
@@ -1142,7 +1143,7 @@ const curCat=()=>CATS.find(c=>c.id===sCat);
 const inGroup=(i,gid)=>i.group===gid||(Array.isArray(i.also)&&i.also.includes(gid));
 const grpLabel=gid=>{const g=amGroups.find(x=>x.id===gid);return g?g.label:gid};
 const curGroup=()=>curCat().groups.find(g=>g.id===sGroup)||null;
-const thrOf=i=>(i.section==="aftermarket"&&i.thr!==undefined&&i.thr!==null&&i.thr!=="")?num(i.thr):LOW;
+const thrOf=i=>(i.thr!==undefined&&i.thr!==null&&i.thr!=="")?num(i.thr):LOW;
 const isLow=i=>i.qty<=thrOf(i);
 const qtyOf=i=>pend[i.id]?pend[i.id].qty:i.qty;
 
@@ -1266,6 +1267,18 @@ function virtualSeries(){
   return out;
 }
 function gotoGroup(i){sCat=i.section;sGroup=i.group;sSeries="";store("als-cat",sCat);store("als-group",sGroup);render();scrollTo(0,0)}
+async function editThr(r){
+  if(!canWrite||!db||OFFLINE){toast("Seuil modifiable seulement en ligne");return}
+  const nm=r.custom?(r.name||"cette pièce"):(r.series||r.name||"cette pièce");
+  const v=prompt("Seuil d'alerte pour « "+nm+" » : à recommander quand il en reste autant ou moins.",String(thrOf(r)));
+  if(v===null)return;const n=parseInt(String(v).trim(),10);
+  if(!(n>=0)){toast("Entrez un nombre (0 ou plus)");return}
+  try{
+    if(r.virtual&&!items.some(x=>x.id===r.id))await db.doc("items/"+r.id).set({section:r.section,group:r.group,series:r.series,name:r.name,qty:qtyOf(r),thr:n,by:uid,at:Date.now()});
+    else await db.doc("items/"+r.id).update({thr:n});
+    toast("Seuil enregistré : "+n)
+  }catch(e){toast("Seuil non enregistré, réessayez")}
+}
 function crow(r){
   const q=qtyOf(r),nm=r.custom?(r.name||"Sans nom"):(r.series||r.name);
   const thumb=h("button",{class:"cthumb",type:"button","aria-label":hasPhoto(r)?"Agrandir la photo de "+nm:"Ajouter une photo pour "+nm,onclick:()=>pickPhoto(r)});
@@ -1274,6 +1287,7 @@ function crow(r){
   const nameBox=h("div",{class:"cmain"},
     r.virtual?h("div",{class:"cname"},nm):h("button",{class:"cname btnlink",type:"button",onclick:()=>{const it=items.find(i=>i.id===r.id);if(it)sOpen(it)},"aria-label":"Détails de "+nm},nm),
     r.path?h("div",{class:"cinfo"},h("span",{class:"badge path"},r.path)):null,
+    canWrite?h("div",{class:"cinfo"},h("button",{type:"button",class:"badge thrbtn"+(q<=thrOf(r)?" low":""),onclick:()=>editThr(r),"aria-label":"Modifier le seuil d'alerte de "+nm},"seuil "+thrOf(r))):null,
     Array.isArray(r.also)&&r.also.length?h("div",{class:"cinfo"},h("span",{class:"badge link"},"Aussi : "+[r.group,...r.also].filter(x=>x!==sGroup).map(grpLabel).join(", "))):null,
     info?h("div",{class:"cinfo"},info):null,
     r.custom&&r.note?h("div",{class:"cinfo cnote"},r.note):null);
@@ -1297,21 +1311,21 @@ function sUniversal(group,mineCat){
   const custom=inG.filter(i=>!used.has(i.id)).sort((a,b)=>(a.name||"").localeCompare(b.name||"","fr",{numeric:true})).map(i=>({...i,custom:true}));
   const all=[...rows,...custom];
   const total=all.reduce((a,r)=>a+qtyOf(r),0);
-  $("stats").replaceChildren(h("span",null,h("b",null,String(total))," en stock"+(cat.groups.length>1?" chez "+group.label:"")),h("span",null,"alerte à "+LOW+" ou moins"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(total))," en stock"+(cat.groups.length>1?" chez "+group.label:"")),h("span",null,"seuil réglable par pièce (défaut "+LOW+")"));
   if(!loaded){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Chargement du stock…"),"Synchronisation avec votre associé."));return}
   list.replaceChildren(...all.map(crow));
 }
 function sUrgent(){
   const low=items.concat(virtualSeries()).map(i=>({...i,qty:qtyOf(i)})).filter(isLow).sort((a,b)=>a.qty-b.qty||(a.name||"").localeCompare(b.name||"","fr",{numeric:true}));
-  $("stats").replaceChildren(h("span",null,h("b",null,String(low.length))," références à recommander"),h("span",null,LOW+" exemplaires ou moins"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(low.length))," références à recommander"),h("span",null,"selon le seuil de chaque pièce"));
   const list=$("list");
   if(!loaded){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Chargement du stock…"),"Synchronisation avec votre associé."));return}
-  if(!low.length){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Rien d'urgent"),"Tout le stock saisi dépasse "+LOW+" exemplaires."));return}
+  if(!low.length){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Rien d'urgent"),"Toutes les pièces sont au-dessus de leur seuil d'alerte."));return}
   list.replaceChildren(...low.map(i=>{
     const cat=CATS.find(c=>c.id===i.section)||{label:"",groups:[]};
     const g=cat.groups.find(x=>x.id===i.group);
     const solo=cat.groups.length===1;
-    const path=(cat.fixed?[cat.label,!solo&&g&&g.label]:[cat.label,g&&g.label,i.series&&"Série "+i.series]).filter(Boolean).join(" · ")+(i.section==="aftermarket"?" · seuil "+thrOf(i):"");
+    const path=(cat.fixed?[cat.label,!solo&&g&&g.label]:[cat.label,g&&g.label,i.series&&"Série "+i.series]).filter(Boolean).join(" · ")+" · seuil "+thrOf(i);
     const nm=cat.fixed&&i.series?((!solo&&g)?g.label+" ":"")+i.series:(i.name||"Sans nom");
     const thumb=h("button",{class:"thumb",type:"button","aria-label":hasPhoto(i)?"Agrandir la photo":"Modifier",onclick:()=>pickPhoto(i)});
     if(hasPhoto(i))thumb.append(photoImg(i));else thumb.innerHTML=KEY_SVG+(canWrite?'<span class="plusbadge">+</span>':'');
@@ -1391,7 +1405,7 @@ function sOpen(it){
   fillSeries(cat.groups.length?$("sBrand").value:"",it?it.series:sSeries);
   sAlso=new Set(it&&Array.isArray(it.also)?it.also:[]);$("sAlsoWrap").hidden=cat.id!=="aftermarket";drawAlso();
   $("sName").value=it?it.name||"":"";$("sCompat").value=it?it.compat||"":"";$("sRef").value=it?it.ref||"":"";
-  $("sThrWrap").hidden=cat.id!=="aftermarket";$("sThr").value=it&&it.thr!=null&&it.thr!==""?it.thr:LOW;
+  $("sThrWrap").hidden=false;$("sThr").value=it&&it.thr!=null&&it.thr!==""?it.thr:LOW;
   $("sQty").value=it?qtyOf(it):0;$("sCost").value=it&&it.cost!=null&&it.cost!==""?String(it.cost).replace(".",","):"";$("sNote").value=it?it.note||"":"";
   sPhoto=null;sPhotoDirty=false;showPhoto();
   if(it&&hasPhoto(it)){const cur=it;photoSrc(cur).then(d=>{if(d&&sEditing&&sEditing.id===cur.id&&!sPhotoDirty){sPhoto=d;showPhoto()}})}
@@ -1428,7 +1442,7 @@ $("sForm").addEventListener("submit",async ev=>{
   ev.preventDefault();if(!db||!canWrite)return;
   const cat=CATS.find(c=>c.id===(sEditing?sEditing.section:sCat));
   const data={name:$("sName").value.trim(),group:cat.groups.length?$("sBrand").value:"",series:$("sSeriesWrap").hidden?"":$("sSeries").value,
-    compat:$("sCompat").value.trim(),ref:$("sRef").value.trim(),qty:num($("sQty").value),thr:cat.id==="aftermarket"?num($("sThr").value):null,cost:(()=>{const v=$("sCost").value.trim(),n=parseNum(v);return v===""||!(n>=0)?null:Math.round(n*100)/100})(),note:$("sNote").value.trim(),also:cat.id==="aftermarket"?[...sAlso].filter(x=>x!==$("sBrand").value):[],by:uid,at:Date.now()};
+    compat:$("sCompat").value.trim(),ref:$("sRef").value.trim(),qty:num($("sQty").value),thr:$("sThr").value.trim()===""?null:num($("sThr").value),cost:(()=>{const v=$("sCost").value.trim(),n=parseNum(v);return v===""||!(n>=0)?null:Math.round(n*100)/100})(),note:$("sNote").value.trim(),also:cat.id==="aftermarket"?[...sAlso].filter(x=>x!==$("sBrand").value):[],by:uid,at:Date.now()};
   if(!data.name)return;
   $("sSave").disabled=true;
   try{
