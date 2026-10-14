@@ -1174,7 +1174,7 @@ function sRender(){
   let shown=view.filter(i=>(!lowOnly||isLow(i))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
   const lame=sCat.startsWith("lame_")&&cat.groups.length>0;
   if(lame)shown=lameOrder(shown,group&&group.id==="autres"&&!needle);
-  else shown.sort((a,b)=>(isLow(b)-isLow(a))||(a.name||"").localeCompare(b.name||"","fr",{numeric:true}));
+  else shown.sort((a,b)=>(a.name||"").localeCompare(b.name||"","fr",{numeric:true}));
   const list=$("list");
   if(!loaded){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Chargement du stock…"),"Synchronisation avec votre associé."));return}
   if(!shown.length){
