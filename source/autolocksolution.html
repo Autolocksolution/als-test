@@ -56,6 +56,12 @@ button{cursor:pointer}
 .mo[aria-selected="true"] span{color:var(--on-accent)}
 main{max-width:720px;margin:0 auto;padding:16px}
 .ro{background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.catmenu{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.catmenu button{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:600;font-size:15px;color:var(--ink)}
+.catmenu button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.catmenu .q{font-family:var(--f-mono);font-size:12px;font-weight:500;opacity:.7}
+.tab .car{font-size:11px;opacity:.8;transition:transform .15s}
+.tab .car.up{transform:rotate(180deg)}
 .chips{display:flex;gap:6px;overflow-x:auto;margin:0 -16px 10px;padding:0 16px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip2{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px}
@@ -643,6 +649,7 @@ main{padding-top:10px}
     <ul class="list" id="dList"></ul>
 </section>
   <section id="stk">
+    <div class="catmenu" id="catMenu" hidden></div>
     <div class="chips" id="grpChips"></div>
     <div class="chips series" id="serChips"></div>
     <p class="stats" id="stats"></p>
@@ -1165,13 +1172,33 @@ $("navPlus").addEventListener("click",()=>plusOpen());
 $("fab").addEventListener("click",()=>mode==="base"?vhOpen(null):mode==="planning"?rvOpen(null):mode==="actu"?adOpen():mode==="devis"?(dvTab==="clients"?clOpen(null):dcOpen(null)):mode==="stock"?sOpen(null):mode==="decodage"?dOpen(null):cTab==="idees"?iOpen(null):cOpen(null));
 
 /* ================= STOCK ================= */
+const TABMENUS=[{label:"Clés",ids:["universelle","aftermarket","renault","lcd"]},{label:"Lames",ids:["lame_univ","lame_after","lame_m"]}];
+let stkOpen=-1;
 function inCat(i){return i.section===sCat}
 function sRender(){
   const cat=curCat(),group=curGroup(),mineCat=items.filter(inCat);
-  $("stkTabs").replaceChildren(...CATS.map(c=>{
-    const its=c.urgent?items.filter(isLow).concat(virtualSeries()):items.filter(i=>i.section===c.id);
-    return h("button",{class:"tab",role:"tab","aria-selected":String(c.id===sCat),onclick:()=>{sCat=c.id;sGroup=firstGroup(c);sSeries="";lowOnly=false;q="";$("q").value="";store("als-cat",sCat);store("als-group",sGroup);render()}},
-      c.label,its.length?h("span",{class:"n"+(c.urgent?" alert":"")},String(its.length)):null,!c.urgent&&(c.fixed?its.concat(virtualSeries().filter(v=>v.section===c.id)):its).some(isLow)?h("span",{class:"low",title:"Stock bas"}):null)}));
+  const lowIn=c=>(c.fixed?items.filter(i=>i.section===c.id).concat(virtualSeries().filter(v=>v.section===c.id)):items.filter(i=>i.section===c.id)).some(isLow);
+  const nIn=c=>c.urgent?items.filter(isLow).concat(virtualSeries()).length:items.filter(i=>i.section===c.id).length;
+  const pick=c=>{sCat=c.id;sGroup=firstGroup(c);sSeries="";lowOnly=false;q="";$("q").value="";stkOpen=-1;store("als-cat",sCat);store("als-group",sGroup);render()};
+  const tabs=[],menus=[],rest=[],doneIds=new Set();
+  const catBy=id=>CATS.find(c=>c.id===id);
+  const mkTab=c=>h("button",{class:"tab",role:"tab","aria-selected":String(c.id===sCat),onclick:()=>pick(c)},c.label,nIn(c)?h("span",{class:"n"+(c.urgent?" alert":"")},String(nIn(c))):null,!c.urgent&&lowIn(c)?h("span",{class:"low",title:"Stock bas"}):null);
+  const mkMenuTab=(g,gi)=>{const cs=g.ids.map(catBy),cur=cs.find(c=>c.id===sCat),open=stkOpen===gi;
+    return h("button",{class:"tab",role:"tab","aria-selected":String(!!cur),"aria-expanded":String(open),onclick:()=>{stkOpen=open?-1:gi;sRender()}},
+      g.label,cur?h("span",{class:"n"},cur.label.replace(/^(Clés? |Lame |Cartes? )/i,"")):null,cs.some(lowIn)?h("span",{class:"low",title:"Stock bas"}):null,h("span",{class:"car"+(open?" up":"")},"▾"))};
+  CATS.forEach(c=>{
+    if(doneIds.has(c.id))return;
+    const gi=TABMENUS.findIndex(g=>g.ids.includes(c.id));
+    if(gi<0){(c.urgent?tabs:rest).push(mkTab(c));return}
+    TABMENUS[gi].ids.forEach(id=>doneIds.add(id));
+    menus.push(mkMenuTab(TABMENUS[gi],gi));
+  });
+  $("stkTabs").replaceChildren(...tabs,...menus,...rest);
+  const cm=$("catMenu");
+  if(stkOpen>=0&&TABMENUS[stkOpen]){
+    cm.hidden=false;
+    cm.replaceChildren(...TABMENUS[stkOpen].ids.map(catBy).map(c=>h("button",{type:"button","aria-pressed":String(c.id===sCat),onclick:()=>pick(c)},c.label,h("span",{class:"q"},String(items.filter(i=>i.section===c.id).reduce((a,i)=>a+qtyOf(i),0))))));
+  }else cm.hidden=true;
   if(cat.urgent){$("grpChips").hidden=true;$("serChips").hidden=true;$("tools").hidden=true;sUrgent();return}
   $("tools").hidden=false;
   const pieces=l=>l.reduce((a,i)=>a+qtyOf(i),0);
