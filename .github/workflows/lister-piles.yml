@@ -1,0 +1,30 @@
+name: Lister les piles
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  liste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: Préparer la clé
+        env: { CLE: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" }
+        run: printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Lister
+        working-directory: scripts
+        env: { GOOGLE_APPLICATION_CREDENTIALS: "${{ runner.temp }}/sa.json" }
+        run: node list-piles.mjs
+      - name: Publier la liste sur une branche à part
+        run: |
+          git config user.name "robot"; git config user.email "robot@users.noreply.github.com"
+          git checkout --orphan data-piles; git rm -rf . -q; git add -f piles.json
+          git commit -qm "liste des piles"; git push -f origin data-piles
+      - name: Supprimer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
