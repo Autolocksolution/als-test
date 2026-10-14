@@ -1,5 +1,5 @@
 /* AutoLockSolution : service worker. Appli utilisable hors ligne + notifications. */
-const V="als-20261013a";
+const V="als-20261014a";
 const APP="app.html";
 const SHELL=[APP,"app.webmanifest","als-192.png","als-512.png","als-180.png"];
 self.addEventListener("install",e=>{
