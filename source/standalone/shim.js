@@ -14,7 +14,7 @@ const CFG={
 const G=id=>document.getElementById(id);
 const wait=G("lgWait"),form=G("lgForm"),scrim=G("lgScrim"),msg=G("lgMsg");
 function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false;G("lgWaitT").textContent=t;G("lgRetry").hidden=!retry}
-function showForm(){scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
+function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 showWait("Connexion en cours…");
@@ -175,7 +175,7 @@ showWait("Connexion en cours…");
     e.preventDefault();
     if(lkPaint())return;
     const b=G("lgGo");b.disabled=true;G("lgBad").textContent="";
-    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk()}
+    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk();try{localStorage.setItem("als-last-mail",G("lgMail").value.trim())}catch(e){}}
     catch(err){
       const c=err&&err.code;
       if(c==="auth/invalid-credential"||c==="auth/wrong-password"||c==="auth/user-not-found"||c==="auth/too-many-requests")lkFail();
@@ -221,7 +221,7 @@ showWait("Connexion en cours…");
     if(!outArmed){outArmed=true;b.textContent="Confirmer la déconnexion";b.classList.add("sure");setTimeout(()=>{outArmed=false;b.textContent="Se déconnecter";b.classList.remove("sure")},4000);return}
     try{await Au.signOut(auth)}catch(e){}
     try{indexedDB.deleteDatabase("als-cache")}catch(e){}
-    try{localStorage.clear()}catch(e){}
+    try{const m=localStorage.getItem("als-last-mail");localStorage.clear();if(m)localStorage.setItem("als-last-mail",m)}catch(e){}
     location.reload();
   });
   Au.onAuthStateChanged(auth,u=>{

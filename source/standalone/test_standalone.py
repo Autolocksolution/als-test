@@ -79,6 +79,7 @@ async def main():
             await page.click("#stOut"); await page.click("#stOut"); await page.wait_for_selector("#lgForm:not([hidden])",timeout=6000)
             ok(True,"déconnexion : retour à l'écran de connexion")
             ok(await page.evaluate("localStorage.getItem('__fbuser')")is None,"session effacée")
+            ok(await page.input_value("#lgMail")=="a@x.fr","e-mail pré-rempli après déconnexion")
             ok(await page.evaluate("window.claude===undefined||true"),"nettoyage")
             ok(not errs,"aucune erreur JavaScript"+("" if not errs else " : "+errs[0][:200]))
             bad=[l for l in logs if "permission" in l.lower() or "undefined" in l.lower()]
