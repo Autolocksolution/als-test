@@ -38,7 +38,7 @@ const cases = [
   T("sans compte lit items", null, "items/a", "get", "DENY"),
   T("sans compte écrit items", null, "items/a", "create", "DENY", { a: 1 }),
 ];
-const r = await fetch("https://firebaserules.googleapis.com/v1/projects/autlocksolution:test", { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + tok }, body: JSON.stringify({ source: { files: [{ name: "firestore.rules", content: rules }] }, testSuite: { testCases: cases.map(c => ({ expectation: c.expectation, request: c.request, resource: c.request.resource, pathEncoding: "ENCODED_PATH" })) } }) });
+const r = await fetch("https://firebaserules.googleapis.com/v1/projects/autlocksolution:test", { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + tok }, body: JSON.stringify({ source: { files: [{ name: "firestore.rules", content: rules }] }, testSuite: { testCases: cases.map(c => ({ expectation: c.expectation, request: c.request })) } }) });
 const j = await r.json();
 if (!r.ok) { console.error("Test impossible :", JSON.stringify(j).slice(0, 500)); process.exit(1); }
 if (j.issues && j.issues.length) { console.error("Erreurs dans les règles :", JSON.stringify(j.issues)); process.exit(1); }
