@@ -795,7 +795,6 @@ main{padding-top:10px}
           <div class="f"><label for="cKm">Distance aller (km)</label><input id="cKm" inputmode="decimal" placeholder="auto"></div>
           <div class="f"><label class="chk2" style="margin-top:26px"><input type="checkbox" id="cRT" checked> Aller-retour</label></div>
         </div>
-        <div class="f"><label for="cToll">Péages aller (€, facultatif)</label><input id="cToll" inputmode="decimal" placeholder="0,00"></div>
         <button type="button" class="btn" id="cTripBtn" style="width:100%">Calculer le trajet</button>
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
@@ -1630,6 +1629,15 @@ function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
 const sum=list=>list.reduce((a,e)=>a+cents(e),0);
 const stat=e=>e.status||"reussi";
+/* Péages : les tickets scannés (Dépenses > divers > « Péage … ») sont répartis sur les interventions réussies du jour */
+const isToll=e=>e.kind==="depense"&&e.cat!=="essence"&&/p[ée]age/i.test(e.label||"");
+function tollShare(e,date){
+  const d=date||(e&&e.date);if(!d)return 0;
+  const tot=entries.filter(x=>isToll(x)&&x.date===d).reduce((a,x)=>a+cents(x),0);if(!tot)return 0;
+  const jobs=entries.filter(x=>x.kind==="recette"&&x.date===d&&stat(x)==="reussi");
+  const n=jobs.length+(e&&!jobs.some(x=>x.id===e.id)?1:0);
+  return n?Math.round(tot/n):0;
+}
 /* ---- Trajets : distance (adresse.data.gouv.fr + OSRM) et coût d'après la conso ---- */
 const CONSO_DEF=7.0,PRIX_DEF=1.80;
 const numS=k=>{const v=parseNum(load(k)||"");return v>0?v:0};
@@ -1648,7 +1656,7 @@ function tripParams(){
 const frN=(n,d=1)=>(Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace(".",",");
 function tripCalc(km1,rt){
   const t=tripParams(),km=km1*(rt?2:1),lit=km*t.conso/100,fuel=lit*t.prix,use=km*t.usure;
-  const tl=Math.max(0,parseNum($("cToll").value)||0)*(rt?2:1);
+  const tl=0;
   return{km,lit,fuel,use,toll:tl,cost:Math.round((fuel+use+tl)*100)/100,t}}
 async function geo(q){
   const r=await fetch("https://api-adresse.data.gouv.fr/search/?limit=1&q="+encodeURIComponent(q));
@@ -1684,7 +1692,7 @@ async function cTrip(){
 }
 $("cTripBtn").addEventListener("click",cTrip);
 ["cAddr","cCity"].forEach(id=>$(id).addEventListener("change",()=>{if(!cEditing||cEditing.kind==="recette")cTrip()}));
-$("cRT").addEventListener("change",()=>cTripUi(""));$("cToll").addEventListener("input",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
+$("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
 const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"?Math.round(cents(e)*RESERVE):0;
@@ -1746,7 +1754,8 @@ function cEntry(e){
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
         h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
           e.clientId&&clientById(e.clientId)?h("div",{class:"ent-m"},"Client : "+clientById(e.clientId).name):null,
-          e.tripCost>0?h("div",{class:"ent-m"},"🚗 "+frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100))+(s==="reussi"?" · net "+money(cents(e)-Math.round(e.tripCost*100)):"")):null,
+          (()=>{const pg=s==="reussi"?tollShare(e):0;if(!(e.tripCost>0)&&!pg)return null;
+            return h("div",{class:"ent-m"},"🚗 "+(e.tripCost>0?frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100)):"")+(pg?(e.tripCost>0?" + ":"")+"péages "+money(pg):"")+(s==="reussi"?" · net "+money(cents(e)-Math.round((e.tripCost||0)*100)-pg):""))})(),
           e.idOk||e.cgOk?h("div",{class:"ent-m idok"},"Contrôle : "+[e.idOk?"identité ✓":"",e.cgOk?"carte grise ✓":""].filter(Boolean).join(" · ")):null,
           s==="reussi"&&e.cost!=null&&e.cost!==""?h("div",{class:"ent-m mg"},"Marge sur pièce : "+money(cents(e)-eurosC(e.cost))):null,
           (()=>{const dd=docs.find(x=>x.entryId===e.id);return dd?h("div",{class:"ent-m"},(dd.type==="devis"?"Devis ":"Facture ")+dd.num):null})()),
@@ -1872,7 +1881,7 @@ function cOpen(e,date){
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
   $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
-  $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;$("cToll").value=e&&e.toll>0?String(e.toll).replace(".",","):"";tripMin=null;
+  $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;tripMin=null;
   $("cOdo").value=e&&e.odo>0?String(e.odo):"";$("cFull").checked=e&&e.cat==="essence"?e.full!==false:true;
   tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(e.vat).replace(".",","):"";tkUi();
   for(const id of["cLabel","cLit","cAmt","cVat"])$(id).classList.remove("chk");$("cTkHint").hidden=true;
@@ -1882,7 +1891,7 @@ function cOpen(e,date){
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cToll","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
   cMarginUi();cMdUi();cTripUi("");
   $("cScrim").hidden=false;
   if(!e)setTimeout(()=>$(rec?"cModel":"cAmt").focus(),50);
@@ -1947,8 +1956,8 @@ tkFileEl.addEventListener("change",()=>{const f=tkFileEl.files[0];tkFileEl.value
 $("tkCancel").addEventListener("click",()=>{tkAbort=true;$("tkScrim").hidden=true});
 function cMarginUi(){
   const a=parseNum($("cAmt").value),cv=$("cCost").value.trim(),c=parseNum(cv);
-  const km1=parseNum($("cKm").value),tc=km1>0?tripCalc(km1,$("cRT").checked).cost:0;
-  $("cMargin").textContent=(cv!==""&&a>=0&&c>=0)||tc>0?"Marge sur cette intervention : "+money(Math.round(a*100)-Math.round((c>0?c:0)*100)-Math.round(tc*100))+(tc>0?" (trajet déduit : "+money(Math.round(tc*100))+")":""):"";
+  const km1=parseNum($("cKm").value),tc=km1>0?tripCalc(km1,$("cRT").checked).cost:0,pg=(cEditing&&cEditing.kind==="recette"&&cSt==="reussi")?tollShare(cEditing):0;
+  $("cMargin").textContent=(cv!==""&&a>=0&&c>=0)||tc>0||pg>0?"Marge sur cette intervention : "+money(Math.round(a*100)-Math.round((c>0?c:0)*100)-Math.round(tc*100)-pg)+(tc>0||pg>0?" (déduit : "+[tc>0?"trajet "+money(Math.round(tc*100)):"",pg>0?"péages "+money(pg):""].filter(Boolean).join(" + ")+")":""):"";
 }
 $("cAmt").addEventListener("input",cMarginUi);$("cCost").addEventListener("input",cMarginUi);
 function cMk(type){
@@ -1969,7 +1978,7 @@ $("cForm").addEventListener("submit",async ev=>{
   const amount=Math.round(parseNum($("cAmt").value)*100)/100;
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
-  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;{const tl=parseNum($("cToll").value);data.toll=tl>0?Math.round(tl*100)/100:null}if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
+  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
@@ -3905,7 +3914,7 @@ setInterval(()=>{try{remindRender()}catch(e){}},60000);
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261015-2234";
+const ALS_BUILD="20261015-2236";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
