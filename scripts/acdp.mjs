@@ -45,6 +45,7 @@ admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSy
 const db = admin.firestore();
 const keep = new Set((process.env.IDS || "").split(",").map(x => x.trim()).filter(Boolean));
 const exist = new Set((await db.collection("items").where("section", "==", "acdp").get()).docs.map(d => d.data().nid));
+const grp = n => /^Pack/i.test(n) ? "packs" : /Mini ACDP 2 - programmeur/i.test(n) ? "programmeur" : /Module/i.test(n) ? "modules" : /Adaptateur/i.test(n) ? "adaptateurs" : "kits";
 const res = { created: 0, skipped: 0, errors: [] };
 for (const p of list.filter(p => keep.has(p.id))) {
   if (exist.has(p.id)) { res.skipped++; continue; }
@@ -56,7 +57,7 @@ for (const p of list.filter(p => keep.has(p.id))) {
       pid = "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
       await db.collection("photos").doc(pid).set({ d: "data:image/jpeg;base64," + jpg.toString("base64"), by: "robot", at: Date.now() });
     }
-    await db.collection("items").add({ section: "acdp", group: "", series: "", name: p.name, ref: p.ref || "", compat: "", note: "", qty: 0, photoId: pid, nid: p.id, src: "neoriv", at: Date.now(), by: "robot" });
+    await db.collection("items").add({ section: "acdp", group: grp(p.name), series: "", name: p.name.replace(/\s*[-–]\s*Yanhua(?: ACDP ?2)?\s*$/i, ""), ref: p.ref || "", compat: "", note: "", qty: 0, photoId: pid, nid: p.id, src: "neoriv", at: Date.now(), by: "robot" });
     res.created++;
   } catch (e) { res.errors.push(p.id + " " + String(e).slice(0, 80)); }
 }

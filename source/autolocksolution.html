@@ -1126,6 +1126,7 @@ const CATS=[
     {id:"land-rover",label:"Land Rover / Jaguar",series:[]},{id:"lexus",label:"Lexus",series:[]},{id:"mazda",label:"Mazda",series:[]},{id:"mercedes",label:"Mercedes",series:[]},{id:"mini",label:"Mini",series:[]},
     {id:"mitsubishi",label:"Mitsubishi",series:[]},{id:"nissan",label:"Nissan",series:[]},{id:"opel",label:"Opel",series:[]},{id:"porsche",label:"Porsche",series:[]},{id:"renault",label:"Renault",series:[]},
     {id:"smart",label:"Smart",series:[]},{id:"suzuki",label:"Suzuki",series:[]},{id:"toyota",label:"Toyota",series:[]},{id:"volkswagen",label:"Volkswagen",series:[]},{id:"volvo",label:"Volvo",series:[]},{id:"autres",label:"Autres",series:[]}]},
+  {id:"acdp",label:"Yanhua ACDP 2",compat:"",simple:true,groups:[{id:"modules",label:"Modules",series:[]},{id:"adaptateurs",label:"Adaptateurs",series:[]},{id:"packs",label:"Packs",series:[]},{id:"kits",label:"Kits et accessoires",series:[]},{id:"programmeur",label:"Programmeur",series:[]}]},
   {id:"lcd",label:"Clés LCD",compat:"",simple:true,groups:[]},
   {id:"telecommande",label:"Boîtier à distance",compat:"",simple:true,groups:[]},
   {id:"lame_univ",label:"Lame universelle",compat:"",simple:true,groups:LAME_GROUPS()},
@@ -1145,7 +1146,8 @@ const inGroup=(i,gid)=>i.group===gid||(Array.isArray(i.also)&&i.also.includes(gi
 const grpLabel=gid=>{const g=amGroups.find(x=>x.id===gid);return g?g.label:gid};
 const curGroup=()=>curCat().groups.find(g=>g.id===sGroup)||null;
 const thrOf=i=>(i.thr!==undefined&&i.thr!==null&&i.thr!=="")?num(i.thr):LOW;
-const isLow=i=>i.qty<=thrOf(i);
+const isLow=i=>i.section==='acdp'?false:i.qty<=thrOf(i);
+const isMiss=i=>i.section==='acdp'&&i.qty<=0;
 const qtyOf=i=>pend[i.id]?pend[i.id].qty:i.qty;
 
 /* ---------- rendu général ---------- */
@@ -1220,10 +1222,11 @@ function sRender(){
   let base=mineCat;
   if(!needle){if(cat.groups.length)base=base.filter(i=>inGroup(i,sGroup));if(showSer&&sSeries)base=base.filter(i=>i.series===sSeries)}
   const view=base.map(i=>({...i,qty:qtyOf(i)}));
-  const lows=view.filter(isLow).length;
-  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," références"),h("span",null,h("b",null,String(view.reduce((a,i)=>a+i.qty,0)))," en stock"),h("span",null,h("b",null,String(lows))," à recommander"));
+  const acdp=sCat==="acdp",lows=view.filter(acdp?isMiss:isLow).length;
+  $("lowBtn").textContent=acdp?"À acheter":"5 ou moins";
+  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," références"),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"));
   $("lowBtn").setAttribute("aria-pressed",String(lowOnly));
-  let shown=view.filter(i=>(!lowOnly||isLow(i))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
+  let shown=view.filter(i=>(!lowOnly||(acdp?isMiss(i):isLow(i)))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
   const lame=sCat.startsWith("lame_")&&cat.groups.length>0;
   if(lame)shown=lameOrder(shown,group&&group.id==="autres"&&!needle);
   else shown.sort((a,b)=>(a.name||"").localeCompare(b.name||"","fr",{numeric:true}));
@@ -1308,7 +1311,7 @@ function crow(r){
   const nameBox=h("div",{class:"cmain"},
     r.virtual?h("div",{class:"cname"},nm):h("button",{class:"cname btnlink",type:"button",onclick:()=>{const it=items.find(i=>i.id===r.id);if(it)sOpen(it)},"aria-label":"Détails de "+nm},nm),
     r.path?h("div",{class:"cinfo"},h("span",{class:"badge path"},r.path)):null,
-    canWrite?h("div",{class:"cinfo"},h("button",{type:"button",class:"badge thrbtn"+(q<=thrOf(r)?" low":""),onclick:()=>editThr(r),"aria-label":"Modifier le seuil d'alerte de "+nm},"seuil "+thrOf(r))):null,
+    r.section==="acdp"?h("div",{class:"cinfo"},h("span",{class:"badge"+(q<=0?" low":""),style:q>0?"background:var(--in-bg);color:var(--in)":""},q>0?"✓ Je l'ai":"À acheter")):canWrite?h("div",{class:"cinfo"},h("button",{type:"button",class:"badge thrbtn"+(q<=thrOf(r)?" low":""),onclick:()=>editThr(r),"aria-label":"Modifier le seuil d'alerte de "+nm},"seuil "+thrOf(r))):null,
     Array.isArray(r.also)&&r.also.length?h("div",{class:"cinfo"},h("span",{class:"badge link"},"Aussi : "+[r.group,...r.also].filter(x=>x!==sGroup).map(grpLabel).join(", "))):null,
     info?h("div",{class:"cinfo"},info):null,
     r.custom&&r.note?h("div",{class:"cinfo cnote"},r.note):null);
