@@ -1,6 +1,9 @@
 // Génère firestore.rules (liste des comptes autorisés) et le TESTE sans le publier. Échec = on ne publie pas.
 import fs from "node:fs";
 import admin from "firebase-admin";
+const LOG = [];
+for (const k of ["log", "error"]) { const o = console[k].bind(console); console[k] = (...a) => { LOG.push(a.join(" ")); o(...a); }; }
+process.on("exit", () => { try { fs.writeFileSync("../regles-rapport.txt", LOG.join("\n")); } catch (e) {} });
 const SRC = "../firestore.rules";
 const cred = admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8")));
 admin.initializeApp({ credential: cred });
