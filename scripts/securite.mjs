@@ -29,6 +29,26 @@ await probe("comptes", async () => {
   const us = (await admin.auth().listUsers(1000)).users;
   return { total: us.length, comptes: us.map(u => ({ id: u.uid.slice(0, 6) + "…", email: mask(u.email), verifie: u.emailVerified, desactive: u.disabled, fournisseurs: u.providerData.map(p => p.providerId), anonyme: u.providerData.length === 0 && !u.email, cree: u.metadata.creationTime, dernierLogin: u.metadata.lastSignInTime, mfa: (u.multiFactor && u.multiFactor.enrolledFactors || []).length })) };
 });
+const viaToken = async uid => {
+  const ct = await admin.auth().createCustomToken(uid);
+  const r = await fetch(`${IT}:signInWithCustomToken?key=${KEY}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: ct, returnSecureToken: true }) });
+  return (await r.json()).idToken;
+};
+await probe("acces_reel_membre_et_inconnu", async () => {
+  const users = (await admin.auth().listUsers(1000)).users, res = {};
+  const A = t => ({ authorization: "Bearer " + t, "content-type": "application/json" });
+  for (const [who, uid] of [["membre", users[0].uid], ["inconnu", "inconnu-" + Date.now()]]) {
+    const t = await viaToken(uid); if (!t) { res[who] = "pas de jeton"; continue; }
+    const r = {};
+    for (const c of ["items", "entries", "rdv", "clients", "docs", "vehicles", "news", "codes", "ideas", "meta", "orders", "locks", "outbox", "photos", "team", "devices"]) r["lire_" + c] = (await st(`${FS}/${c}?pageSize=1`, { headers: A(t) })).status;
+    r.ecrire_ideas = (await st(`${FS}/ideas?documentId=zz-probe`, { method: "POST", headers: A(t), body: JSON.stringify({ fields: { a: { stringValue: "x" } } }) })).status;
+    r.supprimer_ideas = (await st(`${FS}/ideas/zz-probe`, { method: "DELETE", headers: A(t) })).status;
+    r.ecrire_collection_inconnue = (await st(`${FS}/pirate?documentId=zz`, { method: "POST", headers: A(t), body: JSON.stringify({ fields: { a: { stringValue: "x" } } }) })).status;
+    res[who] = r;
+  }
+  await admin.firestore().doc("ideas/zz-probe").delete().catch(() => {});
+  return res;
+});
 await probe("collections", async () => {
   const db = admin.firestore(); const cols = await db.listCollections(); const r = {};
   for (const c of cols) { const s = await c.count().get(); r[c.id] = s.data().count; }
