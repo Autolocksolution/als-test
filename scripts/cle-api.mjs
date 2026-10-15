@@ -7,7 +7,13 @@ admin.initializeApp({ credential: cred });
 const tok = (await cred.getAccessToken()).access_token, H = { authorization: "Bearer " + tok, "content-type": "application/json" };
 const out = { mode: MODE };
 const call = async (url, opt = {}) => { const r = await fetch(url, { headers: H, ...opt }); const t = await r.text(); let j; try { j = JSON.parse(t); } catch (e) { j = t.slice(0, 300); } return { status: r.status, j }; };
-const list = await call(`https://apikeys.googleapis.com/v2/projects/${PROJECT}/locations/global/keys`);
+let list = await call(`https://apikeys.googleapis.com/v2/projects/${PROJECT}/locations/global/keys`);
+if (list.status === 403 && /has not been used|disabled/i.test(JSON.stringify(list.j))) {
+  const en = await call(`https://serviceusage.googleapis.com/v1/projects/${PROJECT}/services/apikeys.googleapis.com:enable`, { method: "POST", body: "{}" });
+  out.activation_api = { status: en.status, resp: JSON.stringify(en.j).slice(0, 300) };
+  await new Promise(r => setTimeout(r, 25000));
+}
+list = await call(`https://apikeys.googleapis.com/v2/projects/${PROJECT}/locations/global/keys`);
 out.list_status = list.status;
 if (list.status !== 200) { out.erreur = JSON.stringify(list.j).slice(0, 400); }
 else {
