@@ -1,9 +1,38 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Accès réservé aux comptes connectés (les inscriptions sont désactivées dans Firebase).
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // Seuls les comptes de l'équipe (liste d'identifiants générée au déploiement) accèdent aux données.
+    // Les inscriptions sont de plus désactivées dans Firebase.
+    function membre() {
+      return request.auth != null && request.auth.uid in [__UIDS__];
+    }
+
+    // Fiche personnelle : chacun n'écrit que la sienne.
+    match /team/{uid} {
+      allow read: if membre();
+      allow write: if membre() && request.auth.uid == uid;
+    }
+
+    // Jetons de notification : le compte ne peut enregistrer que ses propres appareils.
+    match /devices/{token} {
+      allow read, delete: if membre();
+      allow create, update: if membre() && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Photos : texte uniquement, taille bornée (anti-bourrage de la base).
+    match /photos/{id} {
+      allow read, delete: if membre();
+      allow create, update: if membre()
+        && request.resource.data.d is string
+        && request.resource.data.d.size() < 900000;
+    }
+
+    // Données métier : liste blanche de collections ; tout le reste est refusé.
+    match /{col}/{doc=**} {
+      allow read, write: if membre() && col in [
+        'clients', 'codes', 'docs', 'entries', 'ideas', 'items', 'locks',
+        'meta', 'news', 'orders', 'outbox', 'rdv', 'vehicles'
+      ];
     }
   }
 }

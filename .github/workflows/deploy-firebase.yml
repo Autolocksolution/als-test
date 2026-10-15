@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "firestore.rules"
+      - "scripts/gen-rules.mjs"
       - "firebase.json"
       - ".firebaserc"
       - ".github/workflows/deploy-firebase.yml"
@@ -24,6 +25,11 @@ jobs:
         run: |
           if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
           printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Générer et tester les règles (échec = rien n'est publié)
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: npm install --no-audit --no-fund && node gen-rules.mjs
       - name: Déployer les règles Firestore
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
