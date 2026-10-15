@@ -984,6 +984,7 @@ main{padding-top:10px}
       <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="6,2"></div>
       <div class="f"><label for="stPrix">Prix du litre (€)</label><input id="stPrix" inputmode="decimal" placeholder="auto"></div>
     </div>
+    <div class="f"><label for="stUsure">Usure en plus par km (€, facultatif)</label><input id="stUsure" inputmode="decimal" placeholder="0,10"><span class="hint" style="margin:2px 0 0">Pneus, huile, freins, entretien. À 0, seul le carburant est compté.</span></div>
     <p class="hint" id="stTripHint"></p>
     <h3 class="h3">Sécurité</h3>
     <div class="acts"><button type="button" class="btn" id="stLock">Code de verrouillage</button></div>
@@ -1598,7 +1599,7 @@ const cents=e=>Math.round((Number(e.amount)||0)*100);
 const sum=list=>list.reduce((a,e)=>a+cents(e),0);
 const stat=e=>e.status||"reussi";
 /* ---- Trajets : distance (adresse.data.gouv.fr + OSRM) et coût d'après la conso ---- */
-const CONSO_DEF=6.2,PRIX_DEF=1.80;
+const CONSO_DEF=6.8,PRIX_DEF=1.80;
 const numS=k=>{const v=parseNum(load(k)||"");return v>0?v:0};
 function realConso(){
   const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essence"&&e.full&&Number(e.litres)>0&&Number(e.odo)>0).sort((a,b)=>a.odo-b.odo);
@@ -1610,10 +1611,10 @@ function lastPrix(){const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essen
 function tripParams(){
   const rc=realConso(),man=numS("als-conso");
   const conso=man||(rc?rc.v:CONSO_DEF),prix=numS("als-prix")||lastPrix()||PRIX_DEF;
-  return{conso,prix,src:man?"réglage":rc?"vos relevés":"estimation",home:(load("als-home")||"").trim()};
+  return{conso,prix,usure:numS("als-usure"),src:man?"réglage":rc?"vos relevés":"estimation",home:(load("als-home")||"").trim()};
 }
 const frN=(n,d=1)=>(Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace(".",",");
-function tripCalc(km1,rt){const t=tripParams(),km=km1*(rt?2:1),lit=km*t.conso/100;return{km,lit,cost:Math.round(lit*t.prix*100)/100,t}}
+function tripCalc(km1,rt){const t=tripParams(),km=km1*(rt?2:1),lit=km*t.conso/100,fuel=lit*t.prix,use=km*t.usure;return{km,lit,fuel,use,cost:Math.round((fuel+use)*100)/100,t}}
 async function geo(q){
   const r=await fetch("https://api-adresse.data.gouv.fr/search/?limit=1&q="+encodeURIComponent(q));
   if(!r.ok)throw new Error("geo");const j=await r.json();const f=j.features&&j.features[0];
@@ -1629,7 +1630,7 @@ function cTripUi(msg){
   const km1=parseNum($("cKm").value);
   if(!(km1>0)){$("cTripHint").textContent=msg||"";return}
   const c=tripCalc(km1,$("cRT").checked);
-  $("cTripHint").textContent=(msg?msg+" · ":"")+frN(c.km,0)+" km"+(tripMin?" · "+Math.round(tripMin)+" min"+($("cRT").checked?" (aller)":""):"")+" · "+frN(c.lit,1)+" L · coût du trajet "+money(Math.round(c.cost*100))+" (conso "+frN(c.t.conso,1)+" L/100, "+c.t.src+" ; "+frN(c.t.prix,2)+" €/L)";
+  $("cTripHint").textContent=(msg?msg+" · ":"")+frN(c.km,0)+" km"+(tripMin?" · "+Math.round(tripMin)+" min"+($("cRT").checked?" (aller)":""):"")+" · "+frN(c.lit,1)+" L · coût du trajet "+money(Math.round(c.cost*100))+(c.use>0?" dont usure "+money(Math.round(c.use*100)):"")+" (conso "+frN(c.t.conso,1)+" L/100, "+c.t.src+" ; "+frN(c.t.prix,2)+" €/L)";
   cMarginUi();
 }
 async function cTrip(){
@@ -3265,11 +3266,11 @@ function stPaint(){
 }
 $("stMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;TH.mode=b.dataset.v;store("als-theme",JSON.stringify(TH));applyTheme();stPaint()});
 function tripPaint(){
-  $("stHome").value=load("als-home")||"";$("stConso").value=load("als-conso")||"";$("stPrix").value=load("als-prix")||"";
+  $("stHome").value=load("als-home")||"";$("stConso").value=load("als-conso")||"";$("stPrix").value=load("als-prix")||"";$("stUsure").value=load("als-usure")||"";
   const rc=realConso(),t=tripParams();
   $("stTripHint").textContent="Utilisé : "+frN(t.conso,1)+" L/100 ("+t.src+") et "+frN(t.prix,2)+" €/L"+(rc?" · votre conso réelle mesurée : "+frN(rc.v,1)+" L/100 sur "+Math.round(rc.km)+" km ("+(rc.n+1)+" pleins)":" · Laissez vide : l'appli prend votre conso réelle dès 2 pleins avec le compteur, sinon "+frN(CONSO_DEF,1)+" L/100 (la conso constructeur annoncée est plus basse que la réalité)")+(lastPrix()?" · dernier prix payé : "+frN(lastPrix(),2)+" €/L":"")+". Ces réglages sont mémorisés sur cet appareil.";
 }
-[["stHome","als-home"],["stConso","als-conso"],["stPrix","als-prix"]].forEach(([id,k])=>$(id).addEventListener("change",()=>{store(k,$(id).value.trim());tripPaint()}));
+[["stHome","als-home"],["stConso","als-conso"],["stPrix","als-prix"],["stUsure","als-usure"]].forEach(([id,k])=>$(id).addEventListener("change",()=>{store(k,$(id).value.trim());tripPaint()}));
 $("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();tripPaint();$("stScrim").hidden=false});
 $("stClose").addEventListener("click",()=>$("stScrim").hidden=true);
 $("stScrim").addEventListener("click",e=>{if(e.target===$("stScrim"))$("stScrim").hidden=true});
