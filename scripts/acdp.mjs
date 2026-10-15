@@ -19,6 +19,11 @@ const scan = async base => {
     if (!n || n < 100) break;
   }
 };
+const home = await get("https://neoriv.com/fr/");
+const cats = new Map();
+for (const m of home.matchAll(/<a[^>]+href="(https:\/\/neoriv\.com\/fr\/(\d+)-[^"#?]*(?:acdp|yanhua)[^"#?]*)"[^>]*>([\s\S]*?)<\/a>/gi)) cats.set(m[2], { url: m[1], t: strip(m[3]) });
+for (const [id, c] of [...cats]) { const html = await get(c.url); for (const m of html.matchAll(/<a[^>]+href="(https:\/\/neoriv\.com\/fr\/(\d+)-[^"#?]*(?:acdp|yanhua)[^"#?]*)"[^>]*>([\s\S]*?)<\/a>/gi)) if (!cats.has(m[2])) cats.set(m[2], { url: m[1], t: strip(m[3]) }); }
+for (const c of cats.values()) await scan(c.url);
 for (const q of ["acdp", "acdp 2", "yanhua acdp"]) await scan(`https://neoriv.com/fr/recherche?controller=search&s=${encodeURIComponent(q)}`);
 const list = [...products.values()];
 let idx = 0;
@@ -31,7 +36,7 @@ await Promise.all(Array.from({ length: 8 }, async () => {
     const bc = [...html.matchAll(/<li[^>]*itemprop="itemListElement"[\s\S]*?<span itemprop="name">([^<]+)<\/span>/g)].map(x => strip(x[1])); p.crumbs = bc.join(" > ");
   }
 }));
-fs.writeFileSync("../acdp.json", JSON.stringify({ n: list.length, products: list }, null, 1));
+fs.writeFileSync("../acdp.json", JSON.stringify({ n: list.length, cats: [...cats.entries()], products: list }, null, 1));
 if (MODE !== "apply") process.exit(0);
 
 import admin from "firebase-admin";
