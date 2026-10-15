@@ -760,13 +760,12 @@ main{padding-top:10px}
       </div>
       <button type="button" class="lnk" id="cMdBtn" hidden style="text-align:left;margin:-4px 0 12px"></button>
       <div class="f"><label for="cCity">Ville</label><input id="cCity" maxlength="80"></div>
-      <div class="f"><label for="cAddr">Adresse d'arrivée (facultatif, sinon la ville)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"></div>
+      <div class="f"><label for="cAddr">Adresse d'intervention (facultatif)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"></div>
       <div class="tripbox">
         <div class="row2">
-          <div class="f"><label for="cKm">Distance aller (km)</label><input id="cKm" inputmode="decimal" placeholder="auto"></div>
+          <div class="f"><label for="cKm">Distance aller (km)</label><input id="cKm" inputmode="decimal" placeholder="ex. 27"></div>
           <div class="f"><label class="chk2" style="margin-top:26px"><input type="checkbox" id="cRT" checked> Aller-retour</label></div>
         </div>
-        <button type="button" class="btn" id="cTripBtn" style="width:100%">Calculer le trajet</button>
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
       <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
@@ -979,7 +978,6 @@ main{padding-top:10px}
     <div class="acts"><button type="button" class="btn" id="stPush">Activer les notifications</button><button type="button" class="btn" id="stPushTest" hidden>Tester</button></div>
     <p class="hint" id="stPushT"></p></div>
     <h3 class="h3">Trajets</h3>
-    <div class="f"><label for="stHome">Adresse de départ (garage / domicile)</label><input id="stHome" maxlength="120" placeholder="12 rue des Lilas, 69003 Lyon"></div>
     <div class="row2">
       <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="7,0"></div>
       <div class="f"><label for="stPrix">Prix du litre (€)</label><input id="stPrix" inputmode="decimal" placeholder="auto"></div>
@@ -1620,23 +1618,13 @@ function lastPrix(){const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essen
 function tripParams(){
   const rc=realConso(),man=numS("als-conso");
   const conso=man||(rc?rc.v:CONSO_DEF),prix=numS("als-prix")||lastPrix()||PRIX_DEF;
-  return{conso,prix,usure:numS("als-usure"),src:man?"réglage":rc?"vos relevés":"estimation",home:(load("als-home")||"").trim()};
+  return{conso,prix,usure:numS("als-usure"),src:man?"réglage":rc?"vos relevés":"estimation"};
 }
 const frN=(n,d=1)=>(Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace(".",",");
 function tripCalc(km1,rt){
   const t=tripParams(),km=km1*(rt?2:1),lit=km*t.conso/100,fuel=lit*t.prix,use=km*t.usure;
   const tl=0;
   return{km,lit,fuel,use,toll:tl,cost:Math.round((fuel+use+tl)*100)/100,t}}
-async function geo(q){
-  const r=await fetch("https://api-adresse.data.gouv.fr/search/?limit=1&q="+encodeURIComponent(q));
-  if(!r.ok)throw new Error("geo");const j=await r.json();const f=j.features&&j.features[0];
-  if(!f)return null;return{lon:f.geometry.coordinates[0],lat:f.geometry.coordinates[1],label:f.properties.label}
-}
-async function roadKm(a,b){
-  const r=await fetch("https://router.project-osrm.org/route/v1/driving/"+a.lon+","+a.lat+";"+b.lon+","+b.lat+"?overview=false");
-  if(!r.ok)throw new Error("route");const j=await r.json();
-  if(j.code!=="Ok"||!j.routes||!j.routes[0])throw new Error("route");return{km:j.routes[0].distance/1000,min:j.routes[0].duration/60}
-}
 let tripSeq=0,tripMin=null;
 function cTripUi(msg){
   const km1=parseNum($("cKm").value);
@@ -1645,22 +1633,6 @@ function cTripUi(msg){
   $("cTripHint").textContent=(msg?msg+" · ":"")+frN(c.km,0)+" km"+(tripMin?" · "+Math.round(tripMin)+" min"+($("cRT").checked?" (aller)":""):"")+" · "+frN(c.lit,1)+" L · coût du trajet "+money(Math.round(c.cost*100))+(c.use>0||c.toll>0?" dont "+[c.toll>0?"péages "+money(Math.round(c.toll*100)):"",c.use>0?"usure "+money(Math.round(c.use*100)):""].filter(Boolean).join(" + "):"")+" (conso "+frN(c.t.conso,1)+" L/100, "+c.t.src+" ; "+frN(c.t.prix,2)+" €/L)";
   cMarginUi();
 }
-async function cTrip(){
-  const t=tripParams(),to=($("cAddr").value.trim()||$("cCity").value.trim());
-  if(!to){cTripUi("Indiquez la ville ou l'adresse d'arrivée");return}
-  if(!t.home){cTripUi("Renseignez d'abord votre adresse de départ dans Réglages > Trajets");return}
-  const my=++tripSeq;$("cTripHint").textContent="Calcul du trajet…";
-  try{
-    const [a,b]=await Promise.all([geo(t.home),geo(to)]);
-    if(my!==tripSeq)return;
-    if(!a){cTripUi("Adresse de départ introuvable (Réglages > Trajets)");return}
-    if(!b){cTripUi("Adresse d'arrivée introuvable : précisez la ville");return}
-    const r=await roadKm(a,b);if(my!==tripSeq)return;
-    $("cKm").value=frN(r.km,1);tripMin=r.min;cTripUi("");
-  }catch(e){if(my===tripSeq)cTripUi("Pas de réseau : saisissez la distance à la main")}
-}
-$("cTripBtn").addEventListener("click",cTrip);
-["cAddr","cCity"].forEach(id=>$(id).addEventListener("change",()=>{if(!cEditing||cEditing.kind==="recette")cTrip()}));
 $("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
@@ -3279,11 +3251,11 @@ function stPaint(){
 }
 $("stMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;TH.mode=b.dataset.v;store("als-theme",JSON.stringify(TH));applyTheme();stPaint()});
 function tripPaint(){
-  $("stHome").value=load("als-home")||"";$("stConso").value=load("als-conso")||"";$("stPrix").value=load("als-prix")||"";$("stUsure").value=load("als-usure")||"";
+  $("stConso").value=load("als-conso")||"";$("stPrix").value=load("als-prix")||"";$("stUsure").value=load("als-usure")||"";
   const rc=realConso(),t=tripParams();
   $("stTripHint").textContent="Utilisé : "+frN(t.conso,1)+" L/100 ("+t.src+") et "+frN(t.prix,2)+" €/L"+(rc?" · votre conso réelle mesurée : "+frN(rc.v,1)+" L/100 sur "+Math.round(rc.km)+" km ("+(rc.n+1)+" pleins)":" · Laissez vide : l'appli prend votre conso réelle dès 2 pleins avec le compteur, sinon "+frN(CONSO_DEF,1)+" L/100 (la conso constructeur annoncée est plus basse que la réalité)")+(lastPrix()?" · dernier prix payé : "+frN(lastPrix(),2)+" €/L":"")+". Ces réglages sont mémorisés sur cet appareil.";
 }
-[["stHome","als-home"],["stConso","als-conso"],["stPrix","als-prix"],["stUsure","als-usure"]].forEach(([id,k])=>$(id).addEventListener("change",()=>{store(k,$(id).value.trim());tripPaint()}));
+[["stConso","als-conso"],["stPrix","als-prix"],["stUsure","als-usure"]].forEach(([id,k])=>$(id).addEventListener("change",()=>{store(k,$(id).value.trim());tripPaint()}));
 $("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();tripPaint();$("stScrim").hidden=false});
 $("stClose").addEventListener("click",()=>$("stScrim").hidden=true);
 $("stScrim").addEventListener("click",e=>{if(e.target===$("stScrim"))$("stScrim").hidden=true});
