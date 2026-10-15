@@ -294,6 +294,7 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .dst-payee,.dst-accepte{background:var(--in-bg);color:var(--in);border-color:transparent}
 .dst-apayer,.dst-envoye{background:var(--warn-bg);color:var(--warn);border-color:transparent}
 .dst-refuse,.dst-annulee{background:var(--out-bg);color:var(--out);border-color:transparent}
+.tripbox{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 12px;background:var(--surface)}
 .tkbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0 0 12px;padding:13px;border:1.5px dashed var(--accent);border-radius:12px;background:none;color:var(--accent);font:600 15px inherit}
 .tkbtn:active{background:var(--today)}
 .chk{border-color:var(--warn)!important;background:var(--warn-bg)!important}
@@ -759,6 +760,15 @@ main{padding-top:10px}
       </div>
       <button type="button" class="lnk" id="cMdBtn" hidden style="text-align:left;margin:-4px 0 12px"></button>
       <div class="f"><label for="cCity">Ville</label><input id="cCity" maxlength="80"></div>
+      <div class="f"><label for="cAddr">Adresse d'arrivée (facultatif, sinon la ville)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"></div>
+      <div class="tripbox">
+        <div class="row2">
+          <div class="f"><label for="cKm">Distance aller (km)</label><input id="cKm" inputmode="decimal" placeholder="auto"></div>
+          <div class="f"><label class="chk2" style="margin-top:26px"><input type="checkbox" id="cRT" checked> Aller-retour</label></div>
+        </div>
+        <button type="button" class="btn" id="cTripBtn" style="width:100%">Calculer le trajet</button>
+        <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
+      </div>
       <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"></div>
@@ -779,6 +789,7 @@ main{padding-top:10px}
       <div class="f"><span class="lab">Type</span><div class="seg" id="cCatSeg"><button type="button" data-v="essence" aria-pressed="true">Essence</button><button type="button" data-v="achat" aria-pressed="false">Achat</button><button type="button" data-v="divers" aria-pressed="false">Divers</button></div></div>
       <div class="f"><label for="cLabel" id="cLblL">Détail</label><input id="cLabel" maxlength="120"></div>
       <div class="f" id="cgL"><label for="cLit">Litres (facultatif)</label><input id="cLit" inputmode="decimal" placeholder="42,5"></div>
+      <div class="f" id="cgO"><label for="cOdo">Km au compteur (facultatif)</label><input id="cOdo" inputmode="numeric" placeholder="184500"><label class="chk2" style="margin-top:6px"><input type="checkbox" id="cFull" checked> Plein complet</label><span class="hint" style="margin:2px 0 0">Avec 2 pleins complets et le compteur, l'appli calcule votre vraie conso.</span></div>
     </div>
     <div class="f"><label for="cAmt" id="cLamt">Tarif (€)</label><input id="cAmt" inputmode="decimal" required placeholder="0,00"></div>
     <div class="f" id="cgV" hidden><label for="cVat">dont TVA (€, facultatif)</label><input id="cVat" inputmode="decimal" placeholder="0,00"></div>
@@ -967,6 +978,13 @@ main{padding-top:10px}
     <div id="stPushBox" hidden><h3 class="h3">Notifications</h3>
     <div class="acts"><button type="button" class="btn" id="stPush">Activer les notifications</button><button type="button" class="btn" id="stPushTest" hidden>Tester</button></div>
     <p class="hint" id="stPushT"></p></div>
+    <h3 class="h3">Trajets</h3>
+    <div class="f"><label for="stHome">Adresse de départ (garage / domicile)</label><input id="stHome" maxlength="120" placeholder="12 rue des Lilas, 69003 Lyon"></div>
+    <div class="row2">
+      <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="6,2"></div>
+      <div class="f"><label for="stPrix">Prix du litre (€)</label><input id="stPrix" inputmode="decimal" placeholder="auto"></div>
+    </div>
+    <p class="hint" id="stTripHint"></p>
     <h3 class="h3">Sécurité</h3>
     <div class="acts"><button type="button" class="btn" id="stLock">Code de verrouillage</button></div>
     <h3 class="h3">Données</h3>
@@ -1579,6 +1597,58 @@ function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
 const sum=list=>list.reduce((a,e)=>a+cents(e),0);
 const stat=e=>e.status||"reussi";
+/* ---- Trajets : distance (adresse.data.gouv.fr + OSRM) et coût d'après la conso ---- */
+const CONSO_DEF=6.2,PRIX_DEF=1.80;
+const numS=k=>{const v=parseNum(load(k)||"");return v>0?v:0};
+function realConso(){
+  const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essence"&&e.full&&Number(e.litres)>0&&Number(e.odo)>0).sort((a,b)=>a.odo-b.odo);
+  let L=0,K=0,n=0;
+  for(let i=1;i<l.length;i++){const k=l[i].odo-l[i-1].odo;if(k>0&&k<2500){K+=k;L+=Number(l[i].litres);n++}}
+  return K>=150?{v:L/K*100,n,km:K}:null;
+}
+function lastPrix(){const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essence"&&Number(e.litres)>0&&Number(e.amount)>0).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.at||0)-(a.at||0))[0];return l?l.amount/l.litres:0}
+function tripParams(){
+  const rc=realConso(),man=numS("als-conso");
+  const conso=man||(rc?rc.v:CONSO_DEF),prix=numS("als-prix")||lastPrix()||PRIX_DEF;
+  return{conso,prix,src:man?"réglage":rc?"vos relevés":"estimation",home:(load("als-home")||"").trim()};
+}
+const frN=(n,d=1)=>(Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace(".",",");
+function tripCalc(km1,rt){const t=tripParams(),km=km1*(rt?2:1),lit=km*t.conso/100;return{km,lit,cost:Math.round(lit*t.prix*100)/100,t}}
+async function geo(q){
+  const r=await fetch("https://api-adresse.data.gouv.fr/search/?limit=1&q="+encodeURIComponent(q));
+  if(!r.ok)throw new Error("geo");const j=await r.json();const f=j.features&&j.features[0];
+  if(!f)return null;return{lon:f.geometry.coordinates[0],lat:f.geometry.coordinates[1],label:f.properties.label}
+}
+async function roadKm(a,b){
+  const r=await fetch("https://router.project-osrm.org/route/v1/driving/"+a.lon+","+a.lat+";"+b.lon+","+b.lat+"?overview=false");
+  if(!r.ok)throw new Error("route");const j=await r.json();
+  if(j.code!=="Ok"||!j.routes||!j.routes[0])throw new Error("route");return{km:j.routes[0].distance/1000,min:j.routes[0].duration/60}
+}
+let tripSeq=0,tripMin=null;
+function cTripUi(msg){
+  const km1=parseNum($("cKm").value);
+  if(!(km1>0)){$("cTripHint").textContent=msg||"";return}
+  const c=tripCalc(km1,$("cRT").checked);
+  $("cTripHint").textContent=(msg?msg+" · ":"")+frN(c.km,0)+" km"+(tripMin?" · "+Math.round(tripMin)+" min"+($("cRT").checked?" (aller)":""):"")+" · "+frN(c.lit,1)+" L · coût du trajet "+money(Math.round(c.cost*100))+" (conso "+frN(c.t.conso,1)+" L/100, "+c.t.src+" ; "+frN(c.t.prix,2)+" €/L)";
+  cMarginUi();
+}
+async function cTrip(){
+  const t=tripParams(),to=($("cAddr").value.trim()||$("cCity").value.trim());
+  if(!to){cTripUi("Indiquez la ville ou l'adresse d'arrivée");return}
+  if(!t.home){cTripUi("Renseignez d'abord votre adresse de départ dans Réglages > Trajets");return}
+  const my=++tripSeq;$("cTripHint").textContent="Calcul du trajet…";
+  try{
+    const [a,b]=await Promise.all([geo(t.home),geo(to)]);
+    if(my!==tripSeq)return;
+    if(!a){cTripUi("Adresse de départ introuvable (Réglages > Trajets)");return}
+    if(!b){cTripUi("Adresse d'arrivée introuvable : précisez la ville");return}
+    const r=await roadKm(a,b);if(my!==tripSeq)return;
+    $("cKm").value=frN(r.km,1);tripMin=r.min;cTripUi("");
+  }catch(e){if(my===tripSeq)cTripUi("Pas de réseau : saisissez la distance à la main")}
+}
+$("cTripBtn").addEventListener("click",cTrip);
+["cAddr","cCity"].forEach(id=>$(id).addEventListener("change",()=>{if(!cEditing||cEditing.kind==="recette")cTrip()}));
+$("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
 const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"?Math.round(cents(e)*RESERVE):0;
@@ -1612,7 +1682,7 @@ function cJournal(inYear){
   const out=[],tot=sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase(),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("30 % à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("70 % pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
-  else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length))));
+  else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
   const nd=new Date(Y,M+1,0).getDate(),ul=h("ul",{class:"days"});
@@ -1640,6 +1710,7 @@ function cEntry(e){
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
         h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
           e.clientId&&clientById(e.clientId)?h("div",{class:"ent-m"},"Client : "+clientById(e.clientId).name):null,
+          e.tripCost>0?h("div",{class:"ent-m"},"🚗 "+frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100))+(s==="reussi"?" · net "+money(cents(e)-Math.round(e.tripCost*100)):"")):null,
           e.idOk||e.cgOk?h("div",{class:"ent-m idok"},"Contrôle : "+[e.idOk?"identité ✓":"",e.cgOk?"carte grise ✓":""].filter(Boolean).join(" · ")):null,
           s==="reussi"&&e.cost!=null&&e.cost!==""?h("div",{class:"ent-m mg"},"Marge sur pièce : "+money(cents(e)-eurosC(e.cost))):null,
           (()=>{const dd=docs.find(x=>x.entryId===e.id);return dd?h("div",{class:"ent-m"},(dd.type==="devis"?"Devis ":"Facture ")+dd.num):null})()),
@@ -1753,7 +1824,7 @@ $("cBrand").addEventListener("change",()=>{brandAuto=false});
 $("cModel").addEventListener("input",()=>{if(brandAuto&&canWrite){$("cBrand").value=inferBrand($("cModel").value)||""}});
 $("cStSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite)setSeg("cStSeg",b.dataset.v,v=>cSt=v)});
 $("cCatSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b){setSeg("cCatSeg",b.dataset.v,v=>cCat=v);cCatUi()}});
-function cCatUi(){$("cgL").hidden=cCat!=="essence";$("cLblL").textContent=cCat==="essence"?"Station / détail (facultatif)":cCat==="achat"?"Fournisseur / n° de facture":"Détail (péage, outils, repas…)"}
+function cCatUi(){$("cgL").hidden=cCat!=="essence";$("cgO").hidden=cCat!=="essence";$("cLblL").textContent=cCat==="essence"?"Station / détail (facultatif)":cCat==="achat"?"Fournisseur / n° de facture":"Détail (péage, outils, repas…)"}
 function lastCity(){const l=entries.filter(e=>e.kind==="recette"&&e.city).sort((a,b)=>(b.at||0)-(a.at||0))[0];return l?l.city:""}
 function cOpen(e,date){
   if(!canWrite&&!e)return;
@@ -1765,6 +1836,8 @@ function cOpen(e,date){
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
   $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
+  $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;tripMin=null;
+  $("cOdo").value=e&&e.odo>0?String(e.odo):"";$("cFull").checked=e&&e.cat==="essence"?e.full!==false:true;
   tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(e.vat).replace(".",","):"";tkUi();
   for(const id of["cLabel","cLit","cAmt","cVat"])$(id).classList.remove("chk");$("cTkHint").hidden=true;
   $("cLabel").value=e?e.label||"":"";$("cLit").value=e&&e.litres?String(e.litres).replace(".",","):"";
@@ -1773,8 +1846,8 @@ function cOpen(e,date){
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
-  cMarginUi();cMdUi();
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
+  cMarginUi();cMdUi();cTripUi("");
   $("cScrim").hidden=false;
   if(!e)setTimeout(()=>$(rec?"cModel":"cAmt").focus(),50);
 }
@@ -1838,7 +1911,8 @@ tkFileEl.addEventListener("change",()=>{const f=tkFileEl.files[0];tkFileEl.value
 $("tkCancel").addEventListener("click",()=>{tkAbort=true;$("tkScrim").hidden=true});
 function cMarginUi(){
   const a=parseNum($("cAmt").value),cv=$("cCost").value.trim(),c=parseNum(cv);
-  $("cMargin").textContent=cv!==""&&a>=0&&c>=0?"Marge sur cette intervention : "+money(Math.round(a*100)-Math.round(c*100)):"";
+  const km1=parseNum($("cKm").value),tc=km1>0?tripCalc(km1,$("cRT").checked).cost:0;
+  $("cMargin").textContent=(cv!==""&&a>=0&&c>=0)||tc>0?"Marge sur cette intervention : "+money(Math.round(a*100)-Math.round((c>0?c:0)*100)-Math.round(tc*100))+(tc>0?" (trajet déduit : "+money(Math.round(tc*100))+")":""):"";
 }
 $("cAmt").addEventListener("input",cMarginUi);$("cCost").addEventListener("input",cMarginUi);
 function cMk(type){
@@ -1859,8 +1933,8 @@ $("cForm").addEventListener("submit",async ev=>{
   const amount=Math.round(parseNum($("cAmt").value)*100)/100;
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
-  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
-  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
+  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
+  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
   if(wasEditing){if(wasEditing.usedId)data.usedId=wasEditing.usedId;if(wasEditing.usedLabel)data.usedLabel=wasEditing.usedLabel;if(wasEditing.doneBy)data.doneBy=wasEditing.doneBy}
@@ -3190,7 +3264,13 @@ function stPaint(){
     h("i",{style:"background:"+palette(a,false)["--accent"]},a.id===TH.acc?"✓":""),a.label)));
 }
 $("stMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;TH.mode=b.dataset.v;store("als-theme",JSON.stringify(TH));applyTheme();stPaint()});
-$("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();$("stScrim").hidden=false});
+function tripPaint(){
+  $("stHome").value=load("als-home")||"";$("stConso").value=load("als-conso")||"";$("stPrix").value=load("als-prix")||"";
+  const rc=realConso(),t=tripParams();
+  $("stTripHint").textContent="Utilisé : "+frN(t.conso,1)+" L/100 ("+t.src+") et "+frN(t.prix,2)+" €/L"+(rc?" · votre conso réelle mesurée : "+frN(rc.v,1)+" L/100 sur "+Math.round(rc.km)+" km ("+(rc.n+1)+" pleins)":" · Laissez vide : l'appli prend votre conso réelle dès 2 pleins avec le compteur, sinon "+frN(CONSO_DEF,1)+" L/100 (la conso constructeur annoncée est plus basse que la réalité)")+(lastPrix()?" · dernier prix payé : "+frN(lastPrix(),2)+" €/L":"")+". Ces réglages sont mémorisés sur cet appareil.";
+}
+[["stHome","als-home"],["stConso","als-conso"],["stPrix","als-prix"]].forEach(([id,k])=>$(id).addEventListener("change",()=>{store(k,$(id).value.trim());tripPaint()}));
+$("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();tripPaint();$("stScrim").hidden=false});
 $("stClose").addEventListener("click",()=>$("stScrim").hidden=true);
 $("stScrim").addEventListener("click",e=>{if(e.target===$("stScrim"))$("stScrim").hidden=true});
 $("stBk").addEventListener("click",()=>{$("stScrim").hidden=true;bkOpen()});
