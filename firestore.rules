@@ -27,6 +27,13 @@ service cloud.firestore {
         && request.resource.data.d.size() < 900000;
     }
 
+    // Clé de chiffrement des sauvegardes automatiques : lisible par l'équipe (pour déchiffrer),
+    // jamais modifiable depuis l'appli. Seul le robot GitHub (SDK admin, hors règles) la crée.
+    match /bkey/{id} {
+      allow read: if membre();
+      allow write: if false;
+    }
+
     // Données métier : liste blanche de collections ; tout le reste est refusé.
     match /{col}/{doc=**} {
       allow read, write: if membre() && col in [

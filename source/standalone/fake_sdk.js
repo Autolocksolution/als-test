@@ -17,6 +17,36 @@
   const ack=()=>new Promise(r=>setTimeout(r,90));
   let _ft=null;const fire=()=>{if(_ft)return;_ft=setTimeout(()=>{_ft=null;subs.forEach(s=>s.fn())},40)};
   const bad=v=>{const s=JSON.stringify(v,(k,x)=>x===undefined?"__UNDEF__":x);if(s.includes("__UNDEF__"))throw new Error("undefined interdit par Firestore")};
+  /* versions par document : une transaction dont un document lu a changé avant la validation est rejouée (comme Firestore) */
+  const VER={};const bump=p=>{VER[p]=(VER[p]||0)+1};
+  const clone=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+  /* window.__fbOffline : true = transaction refusée (hors ligne), "hang" = ne répond jamais */
+  async function runTx(fs,fn){
+    need();
+    if(window.__fbOffline==="hang")return new Promise(()=>{});
+    if(window.__fbOffline){await ack();throw Object.assign(new Error("Failed to get document because the client is offline."),{code:"unavailable"})}
+    for(let a=0;a<5;a++){
+      const reads={},writes=[];
+      const t={
+        get:async r=>{need();if(writes.length)throw new Error("Firestore transactions require all reads to be executed before all writes.");
+          reads[r.path]=VER[r.path]||0;const d=clone((DB[r.col]||{})[r.id]);LOG.push("txget:"+r.path);
+          await new Promise(x=>setTimeout(x,15));
+          return{id:r.id,exists:()=>d!==undefined,data:()=>d,metadata:{fromCache:false}}},
+        set:(r,data)=>{bad(data);writes.push(["set",r,clone(data)]);return t},
+        update:(r,data)=>{bad(data);writes.push(["update",r,clone(data)]);return t}
+      };
+      const res=await fn(t);
+      if(Object.keys(reads).some(p=>(VER[p]||0)!==reads[p])){LOG.push("txretry");continue}
+      for(const [op,r,data] of writes){
+        DB[r.col]=DB[r.col]||{};
+        if(op==="update"){if(!DB[r.col][r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});Object.assign(DB[r.col][r.id],data)}
+        else DB[r.col][r.id]=data;
+        bump(r.path);LOG.push("tx"+op+":"+r.path);
+      }
+      persist();fire();await ack();return res;
+    }
+    throw Object.assign(new Error("Transaction failed all retries."),{code:"aborted"});
+  }
   const A={initializeApp:c=>({c})};
   const Au={
     getAuth:()=>({}),
@@ -33,9 +63,10 @@
     doc:(a,p)=>{if(a&&a.kind==="col"){const id="n"+Math.random().toString(36).slice(2,8);return{kind:"doc",path:a.path+"/"+id,col:a.path,id}}const s=split(p);return{kind:"doc",path:p,col:s.col,id:s.id}},
     getDoc:async r=>{need();return mkDoc(r.col,r.id)},
     getDocs:async r=>{need();return mkCol(r.path)},
-    setDoc:async(r,data,opts)=>{need();bad(data);DB[r.col]=DB[r.col]||{};DB[r.col][r.id]=opts&&opts.merge?Object.assign(DB[r.col][r.id]||{},data):JSON.parse(JSON.stringify(data));persist();LOG.push("set:"+r.path);fire();await ack()},
-    updateDoc:async(r,data)=>{need();bad(data);if(!(DB[r.col]||{})[r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});Object.assign(DB[r.col][r.id],JSON.parse(JSON.stringify(data)));persist();LOG.push("update:"+r.path);fire();await ack()},
-    deleteDoc:async r=>{need();if(DB[r.col])delete DB[r.col][r.id];persist();LOG.push("delete:"+r.path);fire();await ack()},
+    setDoc:async(r,data,opts)=>{need();bad(data);DB[r.col]=DB[r.col]||{};DB[r.col][r.id]=opts&&opts.merge?Object.assign(DB[r.col][r.id]||{},data):JSON.parse(JSON.stringify(data));bump(r.path);persist();LOG.push("set:"+r.path);fire();await ack()},
+    updateDoc:async(r,data)=>{need();bad(data);if(!(DB[r.col]||{})[r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});Object.assign(DB[r.col][r.id],JSON.parse(JSON.stringify(data)));bump(r.path);persist();LOG.push("update:"+r.path);fire();await ack()},
+    deleteDoc:async r=>{need();if(DB[r.col])delete DB[r.col][r.id];bump(r.path);persist();LOG.push("delete:"+r.path);fire();await ack()},
+    runTransaction:runTx,
     onSnapshot:(r,...a)=>{
       const fn=typeof a[0]==="function"?a[0]:a[1],err=typeof a[0]==="function"?a[1]:a[2];
       const run=()=>{try{need()}catch(e){if(err)err(e);return}fn(r.kind==="col"?mkCol(r.path):mkDoc(r.col,r.id))};

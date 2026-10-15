@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-vutHGVX/sGNd41tQOdzDvjI8nDJkjeRl8jakQsFMJOQ=' 'sha256-GhrgcBX9L8aY3u7oLg/hQ2foMOTzTGPOXXYsXp5qKFY=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-3IgTEhT0t/r+fqAAR0r+mKWuVESG65kUtZeRTvo4y80=' 'sha256-SThTBLFPdCjy0Wi7xDCIaLeIjPoI7IE/FlXyIZXZJrc=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -799,7 +799,7 @@ main{padding-top:10px}
       </div>
       <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
       <div class="row2">
-        <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"></div>
+        <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
         <div class="f"><label for="cPin">Code PIN</label><input id="cPin" maxlength="24"></div>
       </div>
       <div class="f"><label for="cKeyCode">Code de clé</label><input id="cKeyCode" maxlength="40"></div>
@@ -955,9 +955,21 @@ main{padding-top:10px}
     <div class="bkstat" id="bStat"></div>
     <p class="hint">Vos données sont déjà enregistrées en ligne et partagées entre vos deux téléphones. La sauvegarde est une copie de secours dans un fichier que vous gardez à part (Fichiers, iCloud, e-mail).</p>
     <div class="acts"><button type="button" class="btn pri" id="bDown">Télécharger une sauvegarde</button></div>
+    <div class="acts"><button type="button" class="btn" id="bKeyBtn">Afficher la clé de secours</button></div>
+    <p class="hint" id="bKeyMsg" hidden></p>
+    <div id="bKeyBox" hidden>
+      <div class="f"><label for="bKey">Clé de secours</label><input id="bKey" readonly autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+      <div class="acts"><button type="button" class="btn" id="bKeyCopy">Copier</button></div>
+      <p class="hint">Gardez cette clé dans un endroit sûr (gestionnaire de mots de passe). Sans elle, les sauvegardes automatiques ne peuvent pas être ouvertes.</p>
+    </div>
     <h2 style="margin-top:18px">Restaurer</h2>
-    <p class="hint">Choisissez un fichier de sauvegarde. Rien n'est supprimé : les éléments du fichier sont remis, ceux qui existent déjà sont remplacés.</p>
-    <div class="acts"><label class="btn pbtn" for="bFile" id="bFileLbl">Choisir un fichier de sauvegarde<input id="bFile" type="file" accept=".json,application/json"></label></div>
+    <p class="hint">Choisissez un fichier de sauvegarde (.json, ou .alsbk pour une sauvegarde automatique). Rien n'est supprimé : les éléments du fichier sont remis, ceux qui existent déjà sont remplacés.</p>
+    <div class="acts"><label class="btn pbtn" for="bFile" id="bFileLbl">Choisir un fichier de sauvegarde<input id="bFile" type="file" accept=".json,application/json,.alsbk,application/octet-stream"></label></div>
+    <div id="bKeyIn" hidden>
+      <p class="hint" id="bKeyInMsg" role="status"></p>
+      <div class="f"><label for="bKeyMan">Clé de secours</label><input id="bKeyMan" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="44 caractères, se termine par ="></div>
+      <div class="acts"><button type="button" class="btn pri" id="bKeyGo">Ouvrir la sauvegarde</button></div>
+    </div>
     <div class="bkstat" id="bRestore" hidden></div>
     <div class="acts" id="lkBox"><button type="button" class="btn" id="lkBtn">Code de verrouillage</button></div>
     <div id="mgBox" hidden>
@@ -1843,7 +1855,18 @@ $("cStSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b
 $("cCatSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b){setSeg("cCatSeg",b.dataset.v,v=>cCat=v);cCatUi()}});
 function cCatUi(){$("cgL").hidden=cCat!=="essence";$("cgO").hidden=cCat!=="essence";$("cLblL").textContent=cCat==="essence"?"Station / détail (facultatif)":cCat==="achat"?"Fournisseur / n° de facture":"Détail (péage, outils, repas…)"}
 function lastCity(){const l=entries.filter(e=>e.kind==="recette"&&e.city).sort((a,b)=>(b.at||0)-(a.at||0))[0];return l?l.city:""}
-function cOpen(e,date){
+let cRdvId="",cPlateT=null,cPlateDone="";
+/* prefill (facultatif, nouvelle ligne seulement) : ne remplit que les champs fournis, après la remise à zéro */
+function cPrefill(p){
+  const ids={time:"cTime",model:"cModel",year:"cYear",city:"cCity",addr:"cAddr",plate:"cPlate",pin:"cPin",keycode:"cKeyCode",note:"cNote"};
+  for(const k in ids)if(p[k])$(ids[k]).value=p[k];
+  if(p.city)$("cCity").dataset.auto="";
+  if(p.brand){$("cBrand").value=p.brand;brandAuto=false}
+  if(p.clientId)fillClientSel("cClient",p.clientId);
+  if(p.status)setSeg("cStSeg",p.status,v=>cSt=v);
+  if(p.rdvId)cRdvId=p.rdvId;
+}
+function cOpen(e,date,prefill){
   if(!canWrite&&!e)return;
   cEditing=e||null;cDelArmed=false;
   const rec=(e?e.kind:cTab)==="recette";
@@ -1864,6 +1887,8 @@ function cOpen(e,date){
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
   for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
+  $("cCity").dataset.auto=e?"":$("cCity").value;cRdvId="";cPlateDone="";clearTimeout(cPlateT);$("cPlateHint").hidden=true;
+  if(prefill&&!e)cPrefill(prefill);
   cMarginUi();cMdUi();cTripUi("");
   $("cScrim").hidden=false;
   if(!e)setTimeout(()=>$(rec?"cModel":"cAmt").focus(),50);
@@ -1954,7 +1979,8 @@ $("cForm").addEventListener("submit",async ev=>{
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
-  if(wasEditing){if(wasEditing.usedId)data.usedId=wasEditing.usedId;if(wasEditing.usedLabel)data.usedLabel=wasEditing.usedLabel;if(wasEditing.doneBy)data.doneBy=wasEditing.doneBy}
+  if(wasEditing){if(wasEditing.usedId)data.usedId=wasEditing.usedId;if(wasEditing.usedLabel)data.usedLabel=wasEditing.usedLabel;if(wasEditing.doneBy)data.doneBy=wasEditing.doneBy;if(wasEditing.rdvId)data.rdvId=wasEditing.rdvId}
+  else if(kind==="recette"&&cRdvId)data.rdvId=cRdvId;
   $("cSave").disabled=true;
   try{
     let savedId;
@@ -1975,6 +2001,29 @@ $("cDel").addEventListener("click",async()=>{
 });
 $("cCancel").addEventListener("click",cClose);
 $("cScrim").addEventListener("click",e=>{if(e.target===$("cScrim"))cClose()});
+/* Immatriculation déjà vue : reprend la dernière intervention sur ce véhicule, seulement dans les cases vides
+   (la ville proposée d'office par lastCity() compte comme vide tant qu'on ne l'a pas retouchée). */
+const plateKey=s=>String(s||"").toUpperCase().replace(/[\s-]/g,"");
+function cPlateFill(){
+  clearTimeout(cPlateT);
+  if(!canWrite||$("cgR").hidden)return;
+  const p=plateKey($("cPlate").value),hint=$("cPlateHint");
+  if(p===cPlateDone)return;
+  const src=p.length>=6?entries.filter(e=>e.kind==="recette"&&!(cEditing&&e.id===cEditing.id)&&plateKey(e.plate)===p).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.at||0)-(a.at||0))[0]:null;
+  if(!src){hint.hidden=true;cPlateDone="";return}
+  cPlateDone=p;let n=0;
+  const put=(id,v)=>{if(v&&!$(id).value.trim()){$(id).value=v;n++}};
+  put("cModel",src.model);put("cYear",src.year);put("cPin",src.pin);put("cKeyCode",src.keycode);put("cAddr",src.addr);
+  const city=$("cCity");if(src.city&&city.value!==src.city&&(!city.value.trim()||(city.dataset.auto&&city.value===city.dataset.auto))){city.value=src.city;city.dataset.auto="";n++}
+  const b=src.brand&&src.brand!=="autres"?src.brand:inferBrand(src.model);
+  if(b&&!$("cBrand").value&&BRANDS.some(x=>x.id===b)){$("cBrand").value=b;n++}
+  if(src.clientId&&!$("cClient").value&&clients.some(c=>c.id===src.clientId)){$("cClient").value=src.clientId;$("cClient").dataset.prev=src.clientId;n++}
+  hint.textContent="Repris de l'intervention du "+fmtDate(src.date);hint.hidden=!n;
+  if(n)cMdUi();
+}
+$("cPlate").addEventListener("input",()=>{clearTimeout(cPlateT);cPlateT=setTimeout(cPlateFill,300)});
+$("cPlate").addEventListener("change",cPlateFill);
+$("cCity").addEventListener("input",()=>{$("cCity").dataset.auto=""});
 $("yPrev").addEventListener("click",()=>{Y--;render()});
 $("yNext").addEventListener("click",()=>{Y++;render()});
 
@@ -2194,16 +2243,20 @@ const BK_COLS=["items","entries","ideas","codes","photos","clients","docs","orde
 function bkCounts(){return {items:items.length,entries:entries.length,ideas:ideas.length,codes:codes.length,clients:clients.length,docs:docs.length,orders:orders.length}}
 function bkOpen(){
   $("bRestore").hidden=true;$("bConfirm").hidden=true;bkPending=null;
+  bkEnc=null;$("bKeyIn").hidden=true;$("bKeyMan").value="";$("bKeyBox").hidden=true;$("bKey").value="";$("bKeyMsg").hidden=true;$("bKeyBtn").hidden=!db;
   const c=bkCounts();
-  const last=bkMeta&&bkMeta.at?"Dernière sauvegarde : "+new Date(bkMeta.at).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}):"Aucune sauvegarde téléchargée pour l'instant";
+  const at=bkMeta&&bkMeta.at?new Date(bkMeta.at):null;
+  const last=at&&bkMeta.by==="auto"?"Sauvegarde automatique : dernière le "+at.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"})+" à "+at.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})
+    :at?"Dernière sauvegarde : "+at.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}):"Aucune sauvegarde téléchargée pour l'instant";
   $("bStat").replaceChildren(h("div",null,last),h("div",null,c.items+" lignes de stock · "+c.entries+" lignes de comptes et planning · "+c.ideas+" achats à venir · "+c.codes+" codes · "+c.clients+" clients · "+c.docs+" devis/factures · "+vehicles.length+" fiches véhicules · "+rdv.length+" rendez-vous · "+news.length+" actus"));
   $("bFileLbl").style.display=canWrite?"":"none";$("lkBox").hidden=!canWrite;
   const legacy=items.filter(legacyPhoto).length;
   $("mgBox").hidden=!(canWrite&&legacy)&&!migrating;if(legacy&&!migrating){$("mgStat").hidden=false;$("mgStat").textContent=legacy+" photo"+(legacy>1?"s":"")+" à optimiser."}
   $("bScrim").hidden=false;
 }
-$("bClose").addEventListener("click",()=>$("bScrim").hidden=true);
-$("bScrim").addEventListener("click",e=>{if(e.target===$("bScrim"))$("bScrim").hidden=true});
+function bkClose(){$("bScrim").hidden=true;$("bKeyBox").hidden=true;$("bKey").value=""}
+$("bClose").addEventListener("click",bkClose);
+$("bScrim").addEventListener("click",e=>{if(e.target===$("bScrim"))bkClose()});
 function bkSnapshot(){
   const strip=l=>l.map(x=>{const o={...x};return o});
   return {app:"AutoLockSolution",format:1,at:new Date().toISOString(),collections:{items:strip(items),entries:strip(entries),ideas:strip(ideas),codes:strip(codes),clients:strip(clients),docs:strip(docs),orders:strip(orders),vehicles:strip(vehicles),rdv:strip(rdv),news:strip(news),meta:company?[{id:"company",...company}]:[]}};
@@ -2227,9 +2280,65 @@ $("bDown").addEventListener("click",async()=>{
     $("bScrim").hidden=true;
   }catch(err){if(!err||err.code!=="declined")toast("Téléchargement impossible sur cet appareil")}
 });
+/* Sauvegardes automatiques (.alsbk) : "ALSBK1" + IV (12 octets) + AES-256-GCM (tag de 16 octets à la fin).
+   Clé : 32 octets en base64, lue dans bkey/main (champ k), ou collée à la main si elle est illisible. */
+let bkEnc=null;
+const BK_MAGIC="ALSBK1";
+function bkIsEnc(buf){const u=new Uint8Array(buf,0,Math.min(6,buf.byteLength));return u.length===6&&String.fromCharCode(...u)===BK_MAGIC}
+function bkKeyBytes(k64){
+  let s=String(k64||"").replace(/\s+/g,"").replace(/-/g,"+").replace(/_/g,"/");
+  if(!/^[A-Za-z0-9+/]+={0,2}$/.test(s))return null;
+  while(s.length%4)s+="=";
+  try{const b=Uint8Array.from(atob(s),ch=>ch.charCodeAt(0));return b.length===32?b:null}catch(e){return null}
+}
+async function bkDecrypt(buf,raw){
+  const u=new Uint8Array(buf);if(u.length<6+12+16)throw new Error("court");
+  const key=await crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["decrypt"]);
+  return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:u.slice(6,18),tagLength:128},key,u.slice(18)));
+}
+function bkKeyAsk(msg){$("bKeyInMsg").textContent=msg;$("bKeyIn").hidden=false;$("bRestore").hidden=true;$("bConfirm").hidden=true;bkPending=null}
+async function bkOpenEnc(k64,manual){
+  if(!bkEnc)return;
+  if(!(window.crypto&&crypto.subtle)){toast("Déchiffrement impossible sur cet appareil");return}
+  const raw=bkKeyBytes(k64);
+  if(!raw){
+    const m=manual?"Clé de secours invalide : il faut 44 caractères (lettres, chiffres, + / =).":"La clé de secours enregistrée en ligne est abîmée. Collez votre copie de la clé ci-dessous.";
+    toast(manual?"Clé de secours invalide":"Clé de secours abîmée");bkKeyAsk(m);return;
+  }
+  let text;
+  try{text=await bkDecrypt(bkEnc,raw)}
+  catch(err){toast("Clé incorrecte ou fichier abîmé");bkKeyAsk("Impossible d'ouvrir ce fichier : clé incorrecte ou fichier abîmé. Si vous avez une autre clé de secours, collez-la ci-dessous.");return}
+  $("bKeyIn").hidden=true;$("bKeyMan").value="";bkEnc=null;
+  bkPrepare(text);
+}
 $("bFile").addEventListener("change",async e=>{
   const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
-  try{bkPrepare(await f.text())}catch(err){toast("Fichier illisible")}
+  bkEnc=null;$("bKeyIn").hidden=true;
+  let buf;try{buf=await f.arrayBuffer()}catch(err){toast("Fichier illisible");return}
+  if(!bkIsEnc(buf)){try{bkPrepare(new TextDecoder().decode(buf))}catch(err){toast("Fichier illisible")}return}
+  bkEnc=buf;$("bRestore").hidden=true;$("bConfirm").hidden=true;bkPending=null;
+  let k=null,why="read";
+  try{if(db){const s=await db.doc("bkey/main").get();const d=s.exists?s.data():null;if(d&&typeof d.k==="string"&&d.k)k=d.k;else why="none"}}catch(err){why="read"}
+  if(!k){
+    toast(why==="none"?"Aucune clé de secours enregistrée":"Clé de secours inaccessible");
+    bkKeyAsk(why==="none"?"Aucune clé de secours n'est enregistrée en ligne. Collez la clé de secours pour ouvrir ce fichier.":"Clé de secours inaccessible (réseau ?). Collez la clé de secours pour ouvrir ce fichier.");
+    return;
+  }
+  await bkOpenEnc(k,false);
+});
+$("bKeyGo").addEventListener("click",()=>{if(!bkEnc){$("bKeyIn").hidden=true;return}bkOpenEnc($("bKeyMan").value,true)});
+$("bKeyBtn").addEventListener("click",async()=>{
+  const msg=$("bKeyMsg"),box=$("bKeyBox");box.hidden=true;msg.hidden=true;$("bKey").value="";
+  if(!db)return;
+  try{
+    const s=await db.doc("bkey/main").get(),d=s.exists?s.data():null;
+    if(!d||typeof d.k!=="string"||!d.k){msg.textContent="La première sauvegarde automatique n'a pas encore eu lieu.";msg.hidden=false;return}
+    $("bKey").value=d.k;box.hidden=false;
+  }catch(err){msg.textContent="Clé de secours illisible pour l'instant (réseau ?). Réessayez avec du réseau.";msg.hidden=false}
+});
+$("bKeyCopy").addEventListener("click",async()=>{
+  const t=$("bKey");if(!t.value)return;
+  try{await navigator.clipboard.writeText(t.value);toast("Clé copiée")}catch(e){t.focus();t.select();toast("Sélectionnée : copiez la clé")}
 });
 function bkPrepare(text){
   let j;try{j=JSON.parse(text)}catch(e){toast("Ce fichier n'est pas une sauvegarde valide");return null}
@@ -2239,10 +2348,10 @@ function bkPrepare(text){
   const plan={};let n=0;
   for(const c of BK_COLS){plan[c]=(Array.isArray(cols[c])?cols[c]:[]).filter(x=>x&&typeof x==="object"&&typeof x.id==="string"&&okId.test(x.id)).map(x=>{const {id,...rest}=x;return {id,data:rest}});n+=plan[c].length}
   if(!n){toast("La sauvegarde est vide");return null}
-  if(n>5000){toast("Sauvegarde trop grande");return null}
+  if(n>20000){toast("Sauvegarde trop grande");return null}
   bkPending={plan,n};
   $("bRestore").hidden=false;
-  $("bRestore").textContent="Prêt à restaurer "+n+" éléments ("+plan.items.length+" stock, "+plan.entries.length+" comptes et planning, "+plan.ideas.length+" achats, "+plan.codes.length+" codes, "+plan.clients.length+" clients, "+plan.docs.length+" devis/factures)"+(j.at?", sauvegarde du "+new Date(j.at).toLocaleDateString("fr-FR"):"")+".";
+  $("bRestore").textContent="Prêt à restaurer "+n+" éléments ("+plan.items.length+" stock, "+plan.entries.length+" comptes et planning, "+plan.ideas.length+" achats, "+plan.codes.length+" codes, "+plan.clients.length+" clients, "+plan.docs.length+" devis/factures)"+(j.at?", sauvegarde "+(j.auto?"automatique ":"")+"du "+new Date(j.at).toLocaleDateString("fr-FR"):"")+".";
   $("bConfirm").hidden=!canWrite;
   return bkPending;
 }
@@ -2507,7 +2616,11 @@ async function drainOff(){
 function guardObj(o,blocked){return new Proxy(o,{get(t,k){const v=t[k];if(typeof v!=="function")return v;
   if(OFFLINE&&blocked.includes(k))return()=>{setTimeout(()=>toast("Hors ligne : seules les quantités du stock se modifient"),80);return Promise.reject(new Error("offline"))};
   return v.bind(t)}})}
-function guardDb(raw){return{collection:p=>guardObj(raw.collection(p),["add"]),doc:p=>guardObj(raw.doc(p),["set","update","delete"])}}
+function guardDb(raw){
+  const g={collection:p=>guardObj(raw.collection(p),["add"]),doc:p=>guardObj(raw.doc(p),["set","update","delete"])};
+  if(typeof raw.runTransaction==="function")g.runTransaction=fn=>OFFLINE?Promise.reject(Object.assign(new Error("offline"),{code:"unavailable"})):raw.runTransaction(fn);
+  return g;
+}
 addEventListener("offline",()=>{OFFLINE=true;offBar();render()});
 addEventListener("online",()=>{OFFLINE=false;offBar();render();if(db)drainOff();else if(window.claude&&window.claude.use)setTimeout(()=>location.reload(),600)});
 
@@ -2889,13 +3002,33 @@ async function dcPersist(){
     return {id:dcEditing.id,...data};
   }
   const yr=+data.date.slice(0,4)||now.getFullYear();let num=nextNum(data.type,yr),guard=0;
-  for(;;){
-    const sn=await db.doc("docs/"+num).get();
-    if(!sn.exists)break;
-    if(++guard>20)throw new Error("num");
-    const pre=num.slice(0,num.lastIndexOf("-")+1),n=parseInt(num.slice(pre.length),10)+1;num=pre+String(n).padStart(4,"0");
+  if(db.runTransaction){
+    /* Numéro attribué en ligne, dans une transaction : deux téléphones (ou un téléphone resté hors ligne)
+       ne peuvent plus obtenir le même numéro ni écraser la facture de l'autre. Compteur : meta/seq-<type>-<année>. */
+    const pre=num.slice(0,num.lastIndexOf("-")+1),seq="meta/seq-"+data.type+"-"+yr,loc=parseInt(num.slice(pre.length),10);
+    try{
+      num=await db.runTransaction(async tx=>{
+        const cs=await tx.get(seq);let n=Math.max(cs.exists?Number((cs.data()||{}).n)||0:0,loc),g=0;
+        while((await tx.get("docs/"+pre+String(n).padStart(4,"0"))).exists){if(++g>20)throw new Error("num");n++}
+        const id=pre+String(n).padStart(4,"0");
+        tx.set("docs/"+id,{...data,num:id});tx.set(seq,{n,at:Date.now()});
+        return id;
+      });
+    }catch(err){
+      const what=data.type==="facture"?"de facture":"de devis";
+      toast(err&&err.code==="permission-denied"?"Enregistrement refusé : numéro "+what+" non attribué":err&&err.message==="num"?"Numéro "+what+" introuvable, réessayez":"Pas de réseau : impossible d'attribuer un numéro "+what+". Réessayez avec du réseau.");
+      return null;
+    }
+    data.num=num;
+  }else{
+    for(;;){
+      const sn=await db.doc("docs/"+num).get();
+      if(!sn.exists)break;
+      if(++guard>20)throw new Error("num");
+      const pre=num.slice(0,num.lastIndexOf("-")+1),n=parseInt(num.slice(pre.length),10)+1;num=pre+String(n).padStart(4,"0");
+    }
+    data.num=num;await db.doc("docs/"+num).set(data);
   }
-  data.num=num;await db.doc("docs/"+num).set(data);
   notify("doc",(data.type==="facture"?"Nouvelle facture ":"Nouveau devis ")+num,(data.clientName||"")+(myName?" ("+myName+")":""));
   return {id:num,...data};
 }
@@ -3653,7 +3786,19 @@ function pRender(){
   });
   $("pBody").replaceChildren(...kids);
 }
-async function rvToggle(r){try{await db.doc("rdv/"+r.id).update({done:!r.done})}catch(e){toast("Modification impossible")}}
+async function rvToggle(r){
+  try{await db.doc("rdv/"+r.id).update({done:!r.done})}catch(e){toast("Modification impossible");return}
+  if(!r.done)rvToEntry(r);
+}
+/* RDV terminé : fiche d'intervention (Comptes > Planning) pré-remplie depuis le RDV, ou celle déjà créée pour ce RDV */
+function rvToEntry(r){
+  if(!canWrite)return;
+  cTab="recette";
+  const ex=entries.find(e=>e.rdvId===r.id);
+  if(ex){cOpen(ex);return}
+  const c=clientById(r.clientId),addr=(r.address||(c&&c.address)||"").replace(/\s*\n+\s*/g,", ").trim().slice(0,140),cm=addr.match(/\b\d{5}\s+([^,\d][^,]*)$/);
+  cOpen(null,r.date,{time:r.time||"",clientId:r.clientId||"",addr,city:cm?cm[1].trim().slice(0,80):"",note:[r.title,r.note].filter(Boolean).join("\n").slice(0,600),status:"reussi",rdvId:r.id});
+}
 $("pPrev").addEventListener("click",()=>{pDay=dAdd(pDay,-1);pRender()});
 $("pNext").addEventListener("click",()=>{pDay=dAdd(pDay,1);pRender()});
 $("pToday").addEventListener("click",()=>{pDay=TODAY;pRender()});
@@ -3886,7 +4031,7 @@ setInterval(()=>{try{remindRender()}catch(e){}},60000);
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261015-2304";
+const ALS_BUILD="20261015-2359";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -3948,7 +4093,24 @@ showWait("Connexion en cours…");
       doc:id=>docApi(path+"/"+id)
     };
   }
-  const dbApi={collection:colApi,doc:docApi};
+  /* Transaction (numéros de devis / facture) : toutes les lectures avant les écritures.
+     Firestore refuse les transactions hors ligne ; on abandonne au bout de 12 s pour ne pas bloquer l'écran,
+     et une tentative relancée après ce délai n'écrit plus rien. */
+  function runTransaction(fn){
+    let gaveUp=false,timer;
+    const late=()=>Object.assign(new Error("Délai dépassé"),{code:"deadline-exceeded"});
+    const run=F.runTransaction(fs,t=>{
+      if(gaveUp)throw late();
+      return fn({
+        get:async path=>docSnap(await t.get(F.doc(fs,path))),
+        set:(path,data)=>{if(gaveUp)throw late();t.set(F.doc(fs,path),strip(data))},
+        update:(path,data)=>{if(gaveUp)throw late();t.update(F.doc(fs,path),strip(data))}
+      });
+    });
+    const stop=new Promise((_,j)=>{timer=setTimeout(()=>{gaveUp=true;j(late())},12000)});
+    return Promise.race([run,stop]).finally(()=>clearTimeout(timer));
+  }
+  const dbApi={collection:colApi,doc:docApi,runTransaction};
 
   /* ---------- utilisateur ---------- */
   const names=new Map();

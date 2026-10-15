@@ -32,13 +32,20 @@ const cases = [
   T("membre appareil au nom d'un autre", member, "devices/t2", "create", "DENY", { uid: "autre", token: "t2" }),
   T("membre collection inconnue", member, "pirate/a", "create", "DENY", { a: 1 }),
   T("membre notified (robot seul)", member, "notified/a", "get", "DENY"),
+  T("membre lit bkey/main", member, "bkey/main", "get", "ALLOW"),
+  T("membre crée bkey/main (robot seul)", member, "bkey/main", "create", "DENY", { k: "x", at: 1 }),
+  { ...T("membre modifie bkey/main (robot seul)", member, "bkey/main", "update", "DENY", { k: "x", at: 1 }), resource: { data: { k: "y", at: 0 } } },
+  T("membre supprime bkey/main (robot seul)", member, "bkey/main", "delete", "DENY"),
+  T("membre crée bkey/autre (robot seul)", member, "bkey/autre", "create", "DENY", { k: "x" }),
+  T("inconnu connecté lit bkey/main", stranger, "bkey/main", "get", "DENY"),
+  T("sans compte lit bkey/main", null, "bkey/main", "get", "DENY"),
   T("inconnu connecté lit items", stranger, "items/a", "get", "DENY"),
   T("inconnu connecté écrit entries", stranger, "entries/a", "create", "DENY", { amount: 1 }),
   T("inconnu connecté lit photos", stranger, "photos/p1", "get", "DENY"),
   T("sans compte lit items", null, "items/a", "get", "DENY"),
   T("sans compte écrit items", null, "items/a", "create", "DENY", { a: 1 }),
 ];
-const r = await fetch("https://firebaserules.googleapis.com/v1/projects/autlocksolution:test", { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + tok }, body: JSON.stringify({ source: { files: [{ name: "firestore.rules", content: rules }] }, testSuite: { testCases: cases.map(c => ({ expectation: c.expectation, request: c.request })) } }) });
+const r = await fetch("https://firebaserules.googleapis.com/v1/projects/autlocksolution:test", { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + tok }, body: JSON.stringify({ source: { files: [{ name: "firestore.rules", content: rules }] }, testSuite: { testCases: cases.map(c => ({ expectation: c.expectation, request: c.request, ...(c.resource ? { resource: c.resource } : {}) })) } }) });
 const j = await r.json();
 if (!r.ok) { console.error("Test impossible :", JSON.stringify(j).slice(0, 500)); process.exit(1); }
 if (j.issues && j.issues.length) { console.error("Erreurs dans les règles :", JSON.stringify(j.issues)); process.exit(1); }

@@ -14,7 +14,7 @@ async def main():
     try:
         async with async_playwright() as pw:
             b=await pw.chromium.launch()
-            ctx=await b.new_context(viewport={"width":390,"height":780},permissions=["notifications"])
+            ctx=await b.new_context(viewport={"width":390,"height":780},permissions=["notifications"],bypass_csp=True)
             await ctx.route("**/fonts.g*/**",lambda r:r.abort())
             page=await ctx.new_page(); errs=[]
             page.on("pageerror",lambda e:errs.append(str(e)))

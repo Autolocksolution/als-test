@@ -1,0 +1,65 @@
+name: Sauvegarde automatique
+
+# Dépôt PUBLIC : journaux et fichiers joints sont visibles de tous.
+# On ne publie que le fichier chiffré (AES-256-GCM) ; le JSON en clair ne touche jamais le disque
+# et la clé de chiffrement reste dans Firestore (bkey/main), jamais dans les journaux.
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/backup.yml"
+      - "scripts/backup.mjs"
+      - "scripts/backup-lib.mjs"
+
+concurrency:
+  group: sauvegarde
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sauvegarde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --no-audit --no-fund
+      - name: Vérifier le chiffrement (tests sans accès à la base)
+        working-directory: scripts
+        run: node test_backup.mjs
+      - name: Préparer la clé (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          umask 077
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Sauvegarder et chiffrer
+        id: sauvegarde
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          OUT_DIR: ${{ runner.temp }}/sauvegarde
+        run: node backup.mjs
+      - name: Supprimer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
+      - name: Publier le fichier chiffré (gardé 90 jours)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauvegarde-${{ steps.sauvegarde.outputs.date }}
+          path: ${{ steps.sauvegarde.outputs.file }}
+          retention-days: 90
+          if-no-files-found: error
+          compression-level: 0

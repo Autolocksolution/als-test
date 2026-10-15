@@ -63,7 +63,24 @@ showWait("Connexion en cours…");
       doc:id=>docApi(path+"/"+id)
     };
   }
-  const dbApi={collection:colApi,doc:docApi};
+  /* Transaction (numéros de devis / facture) : toutes les lectures avant les écritures.
+     Firestore refuse les transactions hors ligne ; on abandonne au bout de 12 s pour ne pas bloquer l'écran,
+     et une tentative relancée après ce délai n'écrit plus rien. */
+  function runTransaction(fn){
+    let gaveUp=false,timer;
+    const late=()=>Object.assign(new Error("Délai dépassé"),{code:"deadline-exceeded"});
+    const run=F.runTransaction(fs,t=>{
+      if(gaveUp)throw late();
+      return fn({
+        get:async path=>docSnap(await t.get(F.doc(fs,path))),
+        set:(path,data)=>{if(gaveUp)throw late();t.set(F.doc(fs,path),strip(data))},
+        update:(path,data)=>{if(gaveUp)throw late();t.update(F.doc(fs,path),strip(data))}
+      });
+    });
+    const stop=new Promise((_,j)=>{timer=setTimeout(()=>{gaveUp=true;j(late())},12000)});
+    return Promise.race([run,stop]).finally(()=>clearTimeout(timer));
+  }
+  const dbApi={collection:colApi,doc:docApi,runTransaction};
 
   /* ---------- utilisateur ---------- */
   const names=new Map();
