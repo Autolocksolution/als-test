@@ -53,6 +53,17 @@ if _v:
     shim = shim.replace("__VAPID__", _v)
 src = src.rstrip() + '\n<script type="module">\n' + shim + '</script>\n</body></html>\n'
 
+# 6. Politique de sécurité du contenu : seuls les scripts de l'appli (empreintes) et ceux de Firebase (gstatic) s'exécutent
+import re, hashlib, base64
+hashes = []
+for m in re.finditer(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>", src, re.S):
+    hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode("utf-8")).digest()).decode() + "'")
+csp = ("default-src 'self'; script-src 'self' " + " ".join(hashes) + " https://www.gstatic.com 'wasm-unsafe-eval'; "
+       "worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; "
+       "img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; "
+       "object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'")
+src = sub(src, '<meta charset="utf-8">', '<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="' + csp + '">', 1)
+
 OUT.mkdir(parents=True, exist_ok=True)
 (OUT / "app.html").write_text(src, encoding="utf-8")
 (OUT / "app-sw.js").write_text((HERE / "sw.js").read_text(encoding="utf-8").replace("__BUILD__", BUILD), encoding="utf-8")

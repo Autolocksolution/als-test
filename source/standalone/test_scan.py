@@ -13,7 +13,7 @@ async def main():
     srv=subprocess.Popen([sys.executable,"-m","http.server","8766","--bind","127.0.0.1"],cwd=tmp,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); time.sleep(1)
     try:
         async with async_playwright() as pw:
-            b=await pw.chromium.launch(); ctx=await b.new_context(viewport={"width":390,"height":780})
+            b=await pw.chromium.launch(); ctx=await b.new_context(viewport={"width":390,"height":780},bypass_csp=True)
             await ctx.route("**/fonts.g*/**",lambda r:r.abort())
             page=await ctx.new_page(); errs=[]; page.on("pageerror",lambda e:errs.append(str(e)))
             await page.add_init_script(SDK); await page.goto("http://localhost:8766/app.html")

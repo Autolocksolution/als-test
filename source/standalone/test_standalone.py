@@ -14,7 +14,7 @@ async def main():
     try:
         async with async_playwright() as pw:
             b=await pw.chromium.launch()
-            ctx=await b.new_context(viewport={"width":390,"height":780})
+            ctx=await b.new_context(viewport={"width":390,"height":780},bypass_csp=True)
             await ctx.route("**/fonts.g*/**",lambda r:r.abort())
             page=await ctx.new_page(); errs=[]; logs=[]
             page.on("pageerror",lambda e:errs.append(str(e)))
@@ -85,7 +85,7 @@ async def main():
             bad=[l for l in logs if "permission" in l.lower() or "undefined" in l.lower()]
             ok(not bad,"aucune erreur de droits/undefined"+("" if not bad else " : "+bad[0][:160]))
             # accès refusé sans connexion : aucune lecture avant login
-            ctx2=await b.new_context(viewport={"width":390,"height":780})
+            ctx2=await b.new_context(viewport={"width":390,"height":780},bypass_csp=True)
             p2=await ctx2.new_page(); await p2.add_init_script(SDK); await p2.goto(URL)
             await p2.wait_for_selector("#lgForm:not([hidden])",timeout=5000); await p2.wait_for_timeout(500)
             ok(await p2.evaluate("(window.__fblog||[]).length")==0,"aucune écriture avant connexion")

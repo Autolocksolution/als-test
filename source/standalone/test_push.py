@@ -66,7 +66,7 @@ async def main():
         # sans clé : message "pas encore configurées"
         subprocess.run([sys.executable,os.path.join(HERE,"build.py"),os.path.join(HERE,"dist_push")],check=True,env=dict(os.environ,ALS_VAPID="-"),stdout=subprocess.DEVNULL)
         async with async_playwright() as pw:
-            b=await pw.chromium.launch(); ctx=await b.new_context(viewport={"width":390,"height":780})
+            b=await pw.chromium.launch(); ctx=await b.new_context(viewport={"width":390,"height":780},bypass_csp=True)
             await ctx.route("**/fonts.g*/**",lambda r:r.abort())
             page=await ctx.new_page(); await page.add_init_script(SDK)
             await page.goto("http://localhost:8766/app.html"); await page.wait_for_selector("#lgForm:not([hidden])")
