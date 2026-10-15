@@ -246,3 +246,22 @@ showWait("Connexion en cours…");
     else{if(started){location.reload();return}showForm()}
   });
 })();
+
+/* ===== Service worker : enregistrement et mises à jour (bloc autonome) =====
+   L'appli s'ouvre depuis la copie locale (instantané, même sans réseau) ; la nouvelle version est téléchargée
+   en arrière-plan et s'affiche à l'ouverture suivante. On enregistre le service worker dès le chargement
+   (même avant connexion) et on demande une vérification à chaque ouverture et retour au premier plan
+   (sur iPhone, l'appli est souvent reprise sans être rechargée). */
+(()=>{
+  if(!("serviceWorker" in navigator))return;
+  const sw=navigator.serviceWorker;
+  sw.addEventListener("message",e=>{
+    if(!e.data||e.data.type!=="als-update")return;
+    try{if(typeof window.toast==="function")window.toast("Nouvelle version prête — elle s'affichera à la prochaine ouverture")}catch(x){}
+  });
+  if(window.__ALS_SDK&&!window.__ALS_SDK.sw)return; /* tests avec le faux Firebase : pas de service worker, sauf demande */
+  let last=0;
+  const check=()=>{const t=Date.now();if(t-last<60000)return;last=t;sw.register("app-sw.js").then(r=>r.update()).catch(()=>{})};
+  if(document.readyState==="complete")setTimeout(check,1000);else window.addEventListener("load",()=>setTimeout(check,1000),{once:true});
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+})();
