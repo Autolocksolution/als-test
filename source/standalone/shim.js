@@ -64,8 +64,9 @@ showWait("Connexion en cours…");
     };
   }
   /* Transaction (numéros de devis / facture) : toutes les lectures avant les écritures.
-     Firestore refuse les transactions hors ligne ; on abandonne au bout de 12 s pour ne pas bloquer l'écran,
-     et une tentative relancée après ce délai n'écrit plus rien. */
+     Firestore refuse les transactions hors ligne ; on rend la main au bout de 12 s pour ne pas bloquer l'écran,
+     et une tentative relancée après ce délai n'écrit plus rien. Mais une validation déjà partie peut encore
+     aboutir : l'erreur de délai porte alors la transaction en cours (err.pending) pour que l'appli la suive. */
   function runTransaction(fn){
     let gaveUp=false,timer;
     const late=()=>Object.assign(new Error("Délai dépassé"),{code:"deadline-exceeded"});
@@ -77,7 +78,7 @@ showWait("Connexion en cours…");
         update:(path,data)=>{if(gaveUp)throw late();t.update(F.doc(fs,path),strip(data))}
       });
     });
-    const stop=new Promise((_,j)=>{timer=setTimeout(()=>{gaveUp=true;j(late())},12000)});
+    const stop=new Promise((_,j)=>{timer=setTimeout(()=>{gaveUp=true;j(Object.assign(late(),{pending:run}))},12000)});
     return Promise.race([run,stop]).finally(()=>clearTimeout(timer));
   }
   const dbApi={collection:colApi,doc:docApi,runTransaction};
