@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-+e2egPIeQGiLea1THI2nouUrwpccctPfdiftwYqLX0k=' 'sha256-22/uhgivD++TzPJF9cz9uCG1m4XXQ2XGCH4OCzLWm/w=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-+e2egPIeQGiLea1THI2nouUrwpccctPfdiftwYqLX0k=' 'sha256-Ia80YGWYQmWChs5lGOGMUOTX5xZPVWji45wiTnpqYIc=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4086,7 +4086,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261016-0036";
+const ALS_BUILD="20261016-0842";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -4346,6 +4346,9 @@ showWait("Connexion en cours…");
     try{if(typeof window.toast==="function")window.toast("Nouvelle version prête — elle s'affichera à la prochaine ouverture")}catch(x){}
   });
   if(window.__ALS_SDK&&!window.__ALS_SDK.sw)return; /* tests avec le faux Firebase : pas de service worker, sauf demande */
+  /* première installation : cette page a chargé Firebase sans le service worker ; on le redemande une fois par lui
+     pour qu'il soit en copie locale (sinon le prochain démarrage hors ligne échoue). Normalement servi par le cache HTTP. */
+  if(!sw.controller)sw.addEventListener("controllerchange",()=>{["firebase-app.js","firebase-auth.js","firebase-firestore.js"].forEach(f=>fetch(SDK_BASE+f).catch(()=>{}))},{once:true});
   let last=0;
   const check=()=>{const t=Date.now();if(t-last<60000)return;last=t;sw.register("app-sw.js").then(r=>r.update()).catch(()=>{})};
   if(document.readyState==="complete")setTimeout(check,1000);else window.addEventListener("load",()=>setTimeout(check,1000),{once:true});
