@@ -260,6 +260,9 @@ showWait("Connexion en cours…");
     try{if(typeof window.toast==="function")window.toast("Nouvelle version prête — elle s'affichera à la prochaine ouverture")}catch(x){}
   });
   if(window.__ALS_SDK&&!window.__ALS_SDK.sw)return; /* tests avec le faux Firebase : pas de service worker, sauf demande */
+  /* première installation : cette page a chargé Firebase sans le service worker ; on le redemande une fois par lui
+     pour qu'il soit en copie locale (sinon le prochain démarrage hors ligne échoue). Normalement servi par le cache HTTP. */
+  if(!sw.controller)sw.addEventListener("controllerchange",()=>{["firebase-app.js","firebase-auth.js","firebase-firestore.js"].forEach(f=>fetch(SDK_BASE+f).catch(()=>{}))},{once:true});
   let last=0;
   const check=()=>{const t=Date.now();if(t-last<60000)return;last=t;sw.register("app-sw.js").then(r=>r.update()).catch(()=>{})};
   if(document.readyState==="complete")setTimeout(check,1000);else window.addEventListener("load",()=>setTimeout(check,1000),{once:true});
