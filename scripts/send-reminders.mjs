@@ -1,4 +1,5 @@
 // Envoie les rappels de planning par notification (FCM). Lancé par GitHub Actions.
+// Dépôt PUBLIC : les journaux ne contiennent ni contenu (titres, clients), ni volumes (nombres de RDV, d'appareils…).
 import fs from "node:fs";
 import admin from "firebase-admin";
 import { parisNow, addDays, due, planOutbox } from "./plan.mjs";
@@ -9,8 +10,9 @@ const db = admin.firestore(), fcm = admin.messaging();
 const MODE = process.env.MODE || "normal";
 
 const devices = (await db.collection("devices").get()).docs.map(d => ({ id: d.id, ...d.data() })).filter(d => d.token);
-console.log(`${devices.length} appareil(s) enregistré(s)`);
 
+// Bilan global en fin d'exécution (une ligne par envoi révélerait le volume d'activité).
+const STATS = { sent: 0, failed: 0, codes: new Set() };
 async function broadcast(n, only) {
   let ok = 0, gone = 0, err = 0;
   const list = only ? devices.filter(d => only.includes(d.id)) : devices;
@@ -26,16 +28,22 @@ async function broadcast(n, only) {
       const c = e && e.code || "";
       if (c.includes("registration-token-not-registered") || c.includes("invalid-argument") || c.includes("invalid-registration-token")) {
         gone++; await db.collection("devices").doc(d.id).delete().catch(() => {});
-      } else { err++; console.error("envoi échoué:", c, e && e.message); }
+      } else { err++; STATS.codes.add(c || "erreur inconnue"); }
     }
   }));
-  console.log(`« ${n.title} » : ${ok} envoyée(s), ${gone} appareil(s) obsolète(s) retiré(s), ${err} erreur(s)`);
+  if (ok) STATS.sent++; if (err) STATS.failed++;
   return { ok, gone, err };
+}
+
+function report() {
+  if (STATS.failed) console.error("Envois en échec (codes : " + [...STATS.codes].join(", ") + ")");
+  console.log(STATS.sent ? "Notifications envoyées" : "Aucune notification envoyée");
 }
 
 if (MODE === "test") {
   if (!devices.length) { console.log("Aucun appareil : activez d'abord les notifications dans l'appli (Réglages)."); process.exit(0); }
   const r = await broadcast({ title: "Test AutoLockSolution", body: "Les notifications du planning fonctionnent.", tag: "test" });
+  report();
   process.exit(r.ok ? 0 : 1);
 }
 
@@ -45,12 +53,12 @@ const rdvs = (await db.collection("rdv").where("date", "in", days).get()).docs.m
 const sentSnap = await db.collection("notified").where("day", "in", days).get();
 const sent = new Set(sentSnap.docs.map(d => d.id));
 const todo = devices.length ? due(rdvs, now, sent) : [];
-console.log(`Paris ${now.date} ${Math.floor(now.minutes / 60)}h${String(now.minutes % 60).padStart(2, "0")} · ${rdvs.length} RDV · ${todo.length} notification(s) à envoyer`);
+console.log(todo.length ? "Rappels du planning : envoi en cours" : "Rappels du planning : rien à envoyer");
 
 for (const n of todo) {
   const ref = db.collection("notified").doc(n.key);
   try { await ref.create({ day: n.key.startsWith("day_") ? n.key.slice(4) : (rdvs.find(r => n.key.startsWith("rem_" + r.id + "_")) || {}).date || now.date, at: Date.now() }); }
-  catch (e) { console.log("déjà envoyée:", n.key); continue; }
+  catch (e) { console.log("Rappel déjà envoyé par une autre exécution"); continue; }
   const r = await broadcast(n);
   if (!r.ok && r.err) await ref.delete().catch(() => {});
 }
@@ -59,7 +67,7 @@ for (const n of todo) {
 const ob = (await db.collection("outbox").where("sent", "==", false).limit(60).get()).docs.map(d => ({ id: d.id, ...d.data() }));
 if (ob.length) {
   const { sends, skip } = planOutbox(ob, devices, Date.now());
-  console.log(`${ob.length} message(s) de l'appli · ${sends.length} à envoyer`);
+  console.log("Messages de l'appli : traitement en cours");
   const mark = id => db.collection("outbox").doc(id).update({ sent: true, sentAt: Date.now() }).catch(() => {});
   await Promise.all(skip.map(mark));
   for (const m of sends) {
@@ -71,4 +79,5 @@ if (ob.length) {
 try {
   const old = await db.collection("outbox").where("sentAt", "<", Date.now() - 3 * 86400e3).limit(100).get();
   await Promise.all(old.docs.map(d => d.ref.delete()));
-} catch (e) { console.log("ménage ignoré:", e.message); }
+} catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
+report();
