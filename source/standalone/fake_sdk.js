@@ -20,11 +20,14 @@
   /* versions par document : une transaction dont un document lu a changé avant la validation est rejouée (comme Firestore) */
   const VER={};const bump=p=>{VER[p]=(VER[p]||0)+1};
   const clone=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
-  /* window.__fbOffline : true = transaction refusée (hors ligne), "hang" = ne répond jamais */
+  /* window.__fbOffline : true = transaction refusée (hors ligne), "hang" = pas de réponse tant que le mode reste actif
+     (puis échec, comme Firestore qui finit par abandonner). window.__fbSlowCommit = n ms : la prochaine validation
+     n'aboutit qu'au bout de n ms (validation partie avant la coupure, qui arrive en retard). */
+  const offErr=()=>Object.assign(new Error("Failed to get document because the client is offline."),{code:"unavailable"});
   async function runTx(fs,fn){
     need();
-    if(window.__fbOffline==="hang")return new Promise(()=>{});
-    if(window.__fbOffline){await ack();throw Object.assign(new Error("Failed to get document because the client is offline."),{code:"unavailable"})}
+    if(window.__fbOffline==="hang"){while(window.__fbOffline==="hang")await new Promise(x=>setTimeout(x,100));throw offErr()}
+    if(window.__fbOffline){await ack();throw offErr()}
     for(let a=0;a<5;a++){
       const reads={},writes=[];
       const t={
@@ -36,6 +39,7 @@
         update:(r,data)=>{bad(data);writes.push(["update",r,clone(data)]);return t}
       };
       const res=await fn(t);
+      if(window.__fbSlowCommit){const ms=window.__fbSlowCommit;window.__fbSlowCommit=0;LOG.push("txslow");await new Promise(x=>setTimeout(x,ms))}
       if(Object.keys(reads).some(p=>(VER[p]||0)!==reads[p])){LOG.push("txretry");continue}
       for(const [op,r,data] of writes){
         DB[r.col]=DB[r.col]||{};

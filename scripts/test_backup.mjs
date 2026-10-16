@@ -154,7 +154,9 @@ await t("sauvegarde complète : clé créée, fichier chiffré, auto-contrôle, 
   const all = q.lines.join("\n");
   assert.ok(!all.includes(MARK) && !all.includes("Clio") && !all.includes("0600000000"), "aucun contenu dans les journaux");
   assert.ok(!all.includes(bk.k) && !all.includes(bk.k.slice(0, 12)), "jamais la clé dans les journaux");
-  assert.match(all, /NOUVELLE clé/); assert.match(all, /auto-contrôle OK/);
+  assert.match(all, /NOUVELLE clé/); assert.match(all, /^Sauvegarde OK : sauvegarde-auto-2026-10-16\.alsbk/m);
+  // aucun volume dans les journaux publics : le seul nombre autorisé est la date du nom de fichier
+  assert.deepEqual(all.replace(/sauvegarde-auto-\d{4}-\d{2}-\d{2}\.alsbk/g, "").match(/\d+/g), null, "aucun nombre (volume) dans les journaux");
   saved = { file: r.file, key, plain, k: bk.k };
 });
 await t("deuxième sauvegarde : même clé réutilisée", async () => {
@@ -189,7 +191,7 @@ await t("relecture avec un document manquant : écart détecté", async () => {
   const db = new FakeDb(sampleData()), k = crypto.randomBytes(32);
   db.col("bkey").set("main", { k: k.toString("base64"), at: 1 });
   const dropOne = f => { const j = JSON.parse(decrypt(fs.readFileSync(f), k)); j.collections.items.pop(); return encrypt(Buffer.from(JSON.stringify(j)), k); };
-  await assert.rejects(runBackup({ db, docIdField: DOCID, outDir: path.join(TMP, "run6"), log() {}, warn() {}, readFile: dropOne }), /ÉCHOUÉ/);
+  await assert.rejects(runBackup({ db, docIdField: DOCID, outDir: path.join(TMP, "run6"), log() {}, warn() {}, readFile: dropOne }), e => /ÉCHOUÉ/.test(e.message) && !/\d/.test(e.message));
   assert.deepEqual(db.sets, []);
 });
 await t("base vide : sauvegarde refusée", async () => {
@@ -201,7 +203,7 @@ await t("forte baisse du nombre de documents : avertissement", async () => {
   const data = sampleData(); data.meta.backup = { at: 1, by: "auto", n: 500 };
   const db = new FakeDb(data), w = [];
   await runBackup({ db, docIdField: DOCID, outDir: path.join(TMP, "run8"), log() {}, warn: m => w.push(m) });
-  assert.match(w.join(""), /::warning::.*500 -> 47/);
+  assert.match(w.join(""), /^::warning::Forte baisse/); assert.equal(/\d/.test(w.join("")), false, "aucun nombre dans l'avertissement");
 });
 
 // ---------- interopérabilité navigateur (WebCrypto) ----------

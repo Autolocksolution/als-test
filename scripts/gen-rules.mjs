@@ -53,4 +53,4 @@ const res = j.testResults || []; let bad = 0;
 res.forEach((t, i) => { const okk = t.state === "SUCCESS"; if (!okk) bad++; console.log((okk ? "OK   " : "ÉCHEC ") + cases[i].name + (okk ? "" : " : " + JSON.stringify(t).slice(0, 200))); });
 if (!res.length || bad) { console.error(bad + " test(s) en échec : règles NON publiées"); process.exit(1); }
 fs.writeFileSync(SRC, rules);
-console.log("Règles générées pour " + uids.length + " compte(s), " + res.length + " tests réussis");
+console.log("Règles générées et testées (" + res.length + " tests réussis)");

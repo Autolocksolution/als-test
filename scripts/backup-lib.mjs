@@ -121,7 +121,8 @@ export async function readCollection(db, name, docIdField, pageSize = PAGE[name]
 const sha = b => crypto.createHash("sha256").update(b).digest("hex");
 
 // Sauvegarde complète. Le JSON en clair reste en mémoire ; seul le fichier chiffré est écrit.
-// Ne journalise que des nombres et des tailles (journaux publics).
+// Journaux PUBLICS : aucun contenu, aucune clé, et aucun volume (ni nombre de documents, ni taille).
+// Les nombres restent dans le fichier chiffré et dans meta/backup (privé).
 export async function runBackup({ db, docIdField, outDir, now = new Date(), log = console.log, warn = console.log,
   writeFile = fs.writeFileSync, readFile = fs.readFileSync, pageSize } = {}) {
   if (!db || !docIdField || !outDir) throw new Error("runBackup : db, docIdField et outDir sont requis");
@@ -133,7 +134,7 @@ export async function runBackup({ db, docIdField, outDir, now = new Date(), log 
   const n = businessCount(counts);
   if (!n) throw new Error("Aucune donnée métier lue (base vide ou mauvais projet) : sauvegarde annulée");
   const prev = collections.meta.find(d => d.id === "backup");
-  if (prev && prev.by === "auto" && prev.n >= 20 && n < prev.n / 2) warn(`::warning::Forte baisse du nombre de documents depuis la dernière sauvegarde automatique (${prev.n} -> ${n})`);
+  if (prev && prev.by === "auto" && prev.n >= 20 && n < prev.n / 2) warn("::warning::Forte baisse du nombre de documents depuis la dernière sauvegarde automatique (plus de la moitié en moins) : vérifiez les données dans l'appli");
 
   // Clé lue (ou créée) seulement une fois les données lues : pas de clé créée dans une base vide / un mauvais projet.
   const key = await getOrCreateKey(db, log);
@@ -151,13 +152,13 @@ export async function runBackup({ db, docIdField, outDir, now = new Date(), log 
     if (parsed.app !== "AutoLockSolution" || parsed.format !== 1 || parsed.auto !== true) throw new Error("en-tête JSON inattendu");
     const got = countDocs(parsed);
     const bad = COLLECTIONS.filter(c => got[c] !== counts[c]);
-    if (bad.length) throw new Error("nombre de documents différent pour : " + bad.map(c => `${c} (${counts[c]} lus, ${got[c]} relus)`).join(", "));
+    if (bad.length) throw new Error("nombre de documents différent pour : " + bad.join(", "));
   } catch (e) {
     try { fs.unlinkSync(file); } catch (_) {}
     throw new Error("Auto-contrôle de la sauvegarde ÉCHOUÉ : " + e.message);
   }
 
   await db.collection("meta").doc("backup").set({ at: Date.now(), by: "auto", n });
-  log(`Sauvegarde ${name} : ${total} documents (${n} hors photos et réglages), ${plain.length} octets en clair -> ${enc.length} octets chiffrés, auto-contrôle OK`);
+  log(`Sauvegarde OK : ${name} (auto-contrôle réussi)`);
   return { file, name, date, bytes: enc.length, plainBytes: plain.length, total, n, counts };
 }
