@@ -1,0 +1,47 @@
+# Actus importées avant le 18/10/2026 (référence anti-doublons, non réimportées)
+c-abrites-rr022	https://abrites.com/partial/rr022	Clio V et Captur II : programmation de cartes avec Abrites (RR022)
+c-abrites-toyota-b6-2025	https://abrites.com/news/brand-new-key-programming-for-the-latest-toyota-models-2025-b6-keys	Abrites : clés Toyota B6 des modèles 2025+ (dont C-HR)
+c-abrites-vn025-mqb49	https://abrites.com/news/new-vn025-license-mqb-5c-all-keys-lost-without-synchro-data	Abrites VN025 : VW, Audi, Skoda, Seat MQB49 5C toutes clés perdues sans données de synchro
+c-autel-psa-opel-4a-2026	https://blog.obdii365.com/2026/06/22/autel-im608-ii-update-psa-opel-4a-immo-till-2026/	Autel IM508S/IM608 II : clés mains libres PSA et Opel 4A jusqu'à 2026
+c-clio5-ajout-cle-can-direct	https://blog.obdii365.com/2026/10/07/how-to-use-obdstar-can-direct-v2-cable-for-renault-clio-5/	Clio 5 et Renault 2020+ : ajouter une clé en contournant la passerelle (OBDSTAR CAN Direct V2)
+c-keydiy-key-defender	https://blog.obdii365.com/2026/10/12/how-to-install-keydiy-key-defender-to-prevent-key-programming-thefts/	KeyDiy Key Defender : un boîtier qui bloque la programmation de clés par l'OBD
+c-kstp-vols-outils-2026-04	https://kstp.com/kstp-news/top-news/locksmith-says-thieves-are-misusing-professional-key-programming-tools-to-steal-cars-in-seconds/	Des voleurs détournent les programmateurs de clés pros
+c-silca-ads2327-2026-02	https://www.silca.biz/en/global/events-and-news/news-about-us/2026-03-software-update-fiat	Silca : clés pour Ducato, Boxer, Movano et Iveco Daily avec passerelle sécurisée
+c-silca-hu198p38-ford	https://www.silca.biz/en/global/events-and-news/news-about-us/2026-26-proximity-key-hu198p38	Silca : nouvelle clé mains libres pour Ford Fiesta, Focus, Puma et Kuga
+c-tip-aygo-c1-108-akl	http://blog.obdii365.com/2026/02/09/program-2014-2020-aygo-c1-108-all-keys-lost/	C1, 108 et Aygo 2014-2020 toutes clés perdues : 2 méthodes
+c-tip-clio5-akl-g3	http://blog.obdii365.com/2025/05/26/obdstar-g3-program-renault-clio-5-all-keys-lost-with-rh850-adapter/	Clio 5 toutes cartes perdues : l'OBD ne suffit pas
+c-tip-kangoo-bcm-n3-clone	https://blog.vvdishop.com/xhorse-multi-prog-clone-renault-kangoo-bcm-n3/	Renault Kangoo / Mercedes Citan : cloner le BCM N3 avec Xhorse Multi Prog
+c-tip-logan-2024-akl	http://blog.obdii365.com/2026/04/30/program-dacia-logan-2024-all-keys-lost-with-autel-im508-obdstar/	Dacia Logan 2024, toutes clés perdues : comment il a réussi
+c-tip-polo-mqb48-akl	https://blog.obdii365.com/2026/05/11/program-vw-mqb48-all-keys-lost-with-yanhua-acdp-obdstar-g3/	VW Polo 2017 MQB toutes clés perdues : OBDSTAR G3 + Yanhua ACDP
+c-tip-psa-bsi-modulation	https://mhhauto.com/Thread-ALWAYS-problems-with-remote-control-P307-Xsara-BSIs	PSA (Xsara, C3, 307) : la clé démarre mais la télécommande ne marche pas
+c-tip-psa-clone-remote-conflit	https://www.peugeotforums.com/threads/remote-sync-programming-a-cloned-key.379901/	PSA : pourquoi une télécommande clonée désynchronise l'originale
+c-tip-xsara-picasso-bsi-valeo-siemens	https://www.tlemcen-electronic.com/forum/programmeur-de-cl-/114705-cl-xsara-picasso-ne-fonctionne-pas.html	Xsara Picasso 2002 : la clé démarre mais pas la centralisation
+c-tip-xsara-picasso-resync	https://frenchcarforum.co.uk/forum/viewtopic.php?p=248979	Xsara Picasso, Xsara, C5 : resynchroniser la télécommande
+c-tip-yaris-cross-8ah-akl	https://blog.obdii365.com/2026/04/13/2023-toyota-yariss-cross-8a-h-all-keys-lost-guide/	Toyota Yaris Cross 2023-2024 toutes clés perdues (8A-H) : changer le boîtier immo
+c-transit-custom-2025-5d	https://blog.obdii365.com/2026/10/11/program-ford-transit-custom-2025-vw-style-5d-key/	Ford Transit Custom 2025 (clé type VW 5D) : clé concession obligatoire
+c-xhorse-2026-08	https://www.vxdas.com/pt/blogs/news/xhorse-2026-update-adds-bmw-bdc3-u-ev-obd-key-programming-and-motorcycle-support	Xhorse : grosse mise à jour 2026 (BMW BDC3, électriques, motos)
+a-xhorse-2026-01-bmw-mazda-byd	http://blog.xhorsetool.com/xhorse-newest-update-for-bmw-mazda-byd-honda-yamaha/	Xhorse janvier 2026 : BMW BDC3/BCP, Mazda sans code, BYD/Denza, motos Honda et Yamaha
+a-xhorse-2026-01-v143-vw-5c-5d	http://blog.xhorsetool.com/xhorse-key-tool-plus-v143-update-vw-5c-5d-key-adding-function/	Xhorse Key Tool Plus V143 : ajout de clés VW 5C et 5D
+a-xhorse-2025-10-bmw-gu-bdc3-copie	http://blog.xhorsetool.com/xhorse-update-bmw-g-u-series-bdc3-bcp-key-copy-feature/	Xhorse : copie de clé BMW série G/U (BDC3/BCP)
+a-keydiy-2026-08-tib-8a	http://blog.keydiy.eu/keydiy-kd-x4-now-supports-tib-direct-cloning-for-toyota-lexus-subaru-8a/	KEYDIY KD-X4 : clonage direct des clés Toyota/Lexus/Subaru 8A vers une télécommande TIB
+a-keydiy-2026-09-kdx6	http://blog.keydiy.eu/keydiy-kd-x6-standard-vs-full-version-whats-the-difference-and-whats-new-compared-to-kd-x4/	KEYDIY KD-X6 : ce qui change face au KD-X4, versions Standard et Full
+a-keydiy-2026-07-hyundai-kia	http://blog.obdii365.com/2026/07/27/keydiy-kd-x4-hyundai-kia-47-4a-prox-no-pre-generation/	KEYDIY KD-X4 : Hyundai/Kia 47/4A sans pré-génération de la clé
+a-keydiy-2026-07-jlr	http://blog.keydiy.eu/how-to-add-2020-land-rover-key-using-keydiy-kd-x4-without-kvm-disassembly/	KEYDIY KD-X4 : Jaguar Land Rover 2018+, ajout de clé sans démonter le KVM
+a-obdstar-2026-09-immo	https://www.obdstar.com/News_2832.html	OBDSTAR septembre 2026 : Citroën, Peugeot, Opel (Astra L, Corsa-F, Vivaro) en clé proximité + lecture PIN
+a-obdstar-2026-09-dash	https://www.obdstar.com/News_2803.html	OBDSTAR septembre 2026 : calibration du kilométrage sur tableaux de bord YZK (Berlingo 2016-2022…)
+a-obdstar-2026-03-toyota	https://www.obdstar.com/News_2461.html	OBDSTAR mars 2026 : clés télécommande/lame/proximité sur Toyota Europe
+a-iea-zedfull-plus-listes-2026	https://www.istanbulanahtar.com/en/zed-full-plus/	IEA Zed-FULL plus : listes d'applications OBD 2026 par marque (Peugeot, Citroën, Renault, Dacia, Opel, Fiat…)
+a-iea-zedfull-obd-0120-0123	https://key24.ru/forum/2-416-1	Zed-FULL plus OBD : versions 0120 à 0123 (menu Renault R5 et R4, Volvo 2016+, Nissan NV200)
+a-autel-2026-bmw	http://www.autelscanner.org/autel-im608-ii-update-2026-bmw-immo-vehicle-coverage-list/	Autel IM608 II / IM508S : couverture IMMO BMW étendue jusqu'à 2026
+a-keyfirst-zedfull-offre	https://www.keyfirst.eu/en/28615-key-programming-tools-zed-full-plus-iea-keyfirst	KeyFirst : offre Zed-FULL PLUS (12 mois de LIFS + 3 offerts, câble Renault RH850 offert)
+a-keyfirst-keydiy-fgb23	https://www.keyfirst.eu/en/KEYDIY-FGB-Series-Remote-Keys/7574-keydiy-fgb23-3-remote-key-bmw-fem-bdc-id49-keyless-entry.html	KeyFirst : circuit KEYDIY FGB23-3 compatible BMW FEM / BDC / BDC2 / BDC3 (ID49), 32,90 €
+f-fiatforum-ducato-2012-b1001-96	https://www.fiatforum.com/threads/bcm-fault-code-of-b1001-96-key-transponder-component-internal-failure.523928/	Fiat Ducato 2012 (BCM Marelli BCM250) : défaut B1001-96, la clé n'est plus reconnue
+f-fiatforum-ducato-1998-clone	https://www.fiatforum.com/threads/d.523669/latest	Fiat Ducato 1998 : la clé de rechange ne passe plus au bout de 2 mois
+f-fiatforum-ducato-x250-pcb	https://fiatforum.com/threads/ducato-immobiliser-code.507065/latest	Ducato X250 2.3 : code immo introuvable, solution en ressoudant 3 micro-switchs de la télécommande
+f-frenchcar-peugeot-307-pin	https://frenchcarforum.co.uk/forum/viewtopic.php?p=798736	Peugeot 307 immobilisé : clé avec carte HS réparée, et ce qu'il faut savoir si toutes les clés sont perdues
+f-cartech-vivaro-2015-akl	https://www.cartechnology.co.uk/showthread.php?tid=72821	Opel Vivaro 2015 toutes clés perdues : la concession réclamait un BCM neuf, un serrurier avec Autel a réglé
+f-obdii365-clio4-clio5-lonsdor	http://blog.obdii365.com/2025/02/17/program-renault-clio-iv-clio-v-key-with-lonsdor-k518-pro/	Clio IV et Clio V : ce qu'il faut lire avant de programmer (retours de terrain)
+f-obdii365-renault-smartpro	http://blog.obdii365.com/2025/01/23/what-is-the-best-value-for-money-tool-for-renault-keys/	Renault toutes clés perdues : un pro conseille Smart Pro, plus stable que les autres
+f-mhh-demandes-immo-off	https://mhhauto.com/portal.php?page=1056	MHH Auto, janvier 2026 : demandes immo off sur Trafic III, Astra et Panda
+f-mhh-fvdi-abrites-psa	https://mhhauto.com/Thread-What-FVDI-can-and-can-t-do	FVDI Abrites Commander pour Peugeot/Citroën (V5.1) : ne lit pas le code immo du BSI
+f-peugeotforums-lost-keys	https://www.peugeotforums.com/threads/lost-keys.356020/	Peugeot toutes clés perdues au Royaume-Uni : 160 à 280 £ pour une clé et la reprogrammation
