@@ -1,0 +1,50 @@
+[
+ {
+  "at": 1792386076887,
+  "by": "claude",
+  "date": "2026-10-18",
+  "kind": "web",
+  "source": "blog.obdii365.com",
+  "state": "new",
+  "summary": "Procédure pour les nouvelles clés 8A-B8 des Toyota et Lexus 2025-2026 (exemple : Lexus ES 2026), en ajout de clé ; toutes clés perdues aussi supporté. Étapes : générer une télécommande KeyDiy TIB à partir de la clé d'origine (433 MHz), sauvegarder l'EEPROM du boîtier smart avec le câble KeyDiy Toyota 30 broches (sous le tableau de bord côté passager), puis « Add Proximity Key » en chargeant cette sauvegarde : clé d'origine près du bouton Start (1 bip), puis la nouvelle (2 bips). Pièges : utiliser une télécommande TIB, pas une ZB ; prendre le câble 30 broches KeyDiy, un autre peut ne pas s'adapter à la rallonge OBD.",
+  "title": "Toyota / Lexus 2025-2026 clé mains libres 8A-B8 : ajout de clé avec KeyDiy KD-X6 ou KD-X4",
+  "url": "http://blog.obdii365.com/2026/10/18/add-lexus-8a-b8-smart-key-with-keydiy-kd-x6/",
+  "id": "c-keydiy-toyota-8a-b8-tib"
+ },
+ {
+  "at": 1792386076887,
+  "by": "claude",
+  "date": "2026-04-28",
+  "kind": "forum",
+  "source": "blog.obdii365.com · retour d'utilisateur",
+  "state": "new",
+  "summary": "Sur une Peugeot 208 2022 à clé mains libres 4A, un utilisateur lit le PIN et ajoute une clé avec l'Autel IM508, puis les deux clés ne démarrent plus. Explication : la procédure efface les clés d'origine, et il y a une attente de 30 minutes (warnings qui clignotent) avant de pouvoir démarrer ; ici, la clé n'avait pas été posée au bon endroit (zone de détection), donc aucune clé n'était apprise. Le lendemain, il a réussi en passant par « Keyless system (CAN) » avec une clé KeyDiy ZB, puis a appris la fonction mains libres en posant la clé sur la zone et en tenant le bouton de verrouillage 10 secondes. Piège : ne pas toucher la voiture avant la fin des 30 minutes et bien repérer la zone de détection.",
+  "title": "Peugeot 208 2022 clé 4A : plus aucune clé ne démarre après l'ajout ? Attendez les 30 minutes",
+  "url": "http://blog.obdii365.com/2026/04/28/autel-im508-peugeot-4a-smart-key-not-start-solution/",
+  "id": "c-peugeot-208-4a-attente-30min"
+ },
+ {
+  "at": 1792386076887,
+  "by": "claude",
+  "date": "2026-09-23",
+  "kind": "web",
+  "source": "blog.obdii365.com",
+  "state": "new",
+  "summary": "Exemple réel sur une Peugeot 4008 2019 en toutes clés perdues (clé 4A). Avec l'OBDSTAR X300 Classic G3 et le simulateur Key SIM, le PIN à 4 chiffres est calculé en quelques minutes, au lieu d'attendre jusqu'à 6 heures. Méthode : brancher en OBD, menu IMMO Peugeot/Citroën, « Read PIN Code – By Key SIM (ID4A) », allumer les warnings et appuyer une fois sur Start, puis poser le Key SIM à l'emplacement de démarrage de secours. Piège : tout doit être fait en 150 secondes (mettre le contact 5 à 10 fois, puis tenir Start jusqu'au message « clé non détectée »).",
+  "title": "Peugeot, Citroën, DS clé mains libres 4A : lire le PIN en quelques minutes avec OBDSTAR G3 + Key SIM",
+  "url": "http://blog.obdii365.com/2026/09/23/read-psa-4a-pin-code-with-obdstar-g3-key-sim/",
+  "id": "c-psa-4a-pin-keysim-obdstar"
+ },
+ {
+  "at": 1792386076887,
+  "by": "claude",
+  "date": "2026-10-18",
+  "kind": "web",
+  "source": "silca.biz",
+  "state": "new",
+  "summary": "Silca sort deux télécommandes aftermarket compatibles avec les Renault, Dacia et Nissan les plus courantes : transpondeur ID49-1E et fréquence 433 MHz. La RN-N02R11 a 2 boutons (verrouillage et déverrouillage) et des lames interchangeables (VAC102, HU136, NSN14, HU179, VA2). Elles se programment avec le Smart Pro et le Smart Pro Mini (QR code fourni pour le Mini). Vérifiez la liste d'applications Silca pour votre modèle exact avant de commander.",
+  "title": "Silca : nouvelles télécommandes RN-N02R11 et RN-N03R11 pour Renault, Dacia et Nissan",
+  "url": "https://www.silca.biz/en/global/events-and-news/news-about-us/2026-31-remote-key-rn-02r11",
+  "id": "c-silca-rn-n02r11-n03r11"
+ }
+]
