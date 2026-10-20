@@ -1,0 +1,51 @@
+name: Contrôle de sécurité (lecture seule, rapport chiffré)
+
+# Lecture seule sur Firebase. Le rapport est chiffré avec controle/cle.pem (clé publique) :
+# seul le détenteur de la clé privée (hors dépôt) peut le lire. Journaux : "OK" uniquement.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: controle-securite
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      - name: Vérifier la clé publique
+        run: test -s controle/cle.pem
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --ignore-scripts --no-audit --no-fund --silent
+      - name: Préparer la clé de service (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          umask 077
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Contrôler (lecture seule)
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: node controle-securite.mjs
+      - name: Supprimer la clé de service
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
+      - name: Publier le rapport chiffré
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898213+github-actions[bot]@users.noreply.github.com"
+          git add controle/rapport.enc.json
+          git commit -q -m "Rapport de contrôle chiffré (temporaire)"
+          git pull -q --rebase origin main
+          git push -q
