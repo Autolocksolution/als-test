@@ -9,7 +9,15 @@ const cred = admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE
 admin.initializeApp({ credential: cred });
 const users = (await admin.auth().listUsers(1000)).users.filter(u => !u.disabled);
 if (!users.length) { console.error("Aucun compte actif : arrêt (on ne verrouille pas tout le monde)"); process.exit(1); }
-const uids = users.map(u => u.uid), member = uids[0], stranger = "inconnu-" + Date.now();
+// Liste verrouillée : seuls les comptes de l'équipe (fiches team/<uid>) sont autorisés, et il en faut exactement 2.
+// Un compte actif hors équipe bloque la publication : il n'obtient jamais l'accès automatiquement.
+const EQUIPE = 2;
+const team = new Set((await admin.firestore().collection("team").listDocuments()).map(d => d.id));
+const horsEquipe = users.filter(u => !team.has(u.uid));
+if (horsEquipe.length) { console.error(horsEquipe.length + " compte(s) actif(s) hors équipe : règles NON publiées. Supprimez ce compte, ou ajoutez-le volontairement à l'équipe."); process.exit(1); }
+const uids = users.map(u => u.uid);
+if (uids.length !== EQUIPE) { console.error("L'équipe doit compter exactement " + EQUIPE + " comptes (trouvé : " + uids.length + ") : règles NON publiées."); process.exit(1); }
+const member = uids[0], stranger = "inconnu-" + Date.now();
 let rules = fs.readFileSync(SRC, "utf8");
 if (!rules.includes("__UIDS__")) { console.error("Modèle sans __UIDS__"); process.exit(1); }
 rules = rules.replace("__UIDS__", uids.map(u => `'${u}'`).join(", "));
