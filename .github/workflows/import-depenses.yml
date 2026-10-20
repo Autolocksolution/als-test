@@ -1,0 +1,57 @@
+name: Importer des dépenses (chiffré)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "cle = préparer une clé d'import ; import = importer depenses/lot.enc.json"
+        required: true
+        type: choice
+        options: [cle, import]
+
+concurrency:
+  group: import-depenses
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Tests (sans accès à la base)
+        working-directory: scripts
+        run: node test_import_depenses.mjs
+      - name: Préparer la clé de service (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          umask 077
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Exécuter
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          MODE: ${{ github.event.inputs.mode }}
+        run: node import-depenses.mjs
+      - name: Supprimer la clé de service
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
+      - name: Publier la clé publique
+        if: github.event.inputs.mode == 'cle'
+        run: |
+          git config user.name "robot-import"
+          git config user.email "robot-import@users.noreply.github.com"
+          git add depenses/cle-publique.pem
+          git commit -m "Clé publique d'import (temporaire)"
+          git push
