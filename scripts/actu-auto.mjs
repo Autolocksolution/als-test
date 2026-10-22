@@ -7,16 +7,14 @@ import crypto from "node:crypto";
 import { clean } from "./actu-lib.mjs";
 
 const MAX = 10, JOURS = 21;
+// Ces blogs ont un certificat https expiré : lecture en http (articles publics uniquement, rien n'est envoyé).
 const FLUX = [
-  "https://blog.obdii365.com/feed/",
-  "https://www.key-programmer.org/feed/",
-  "https://blog.xhorsevvdi.com/feed/",
-  "https://blog.vvdishop.com/feed/",
-  "https://blog.keydiy.eu/feed/",
-  "https://blog.xhorsetool.com/feed/",
-  "https://www.obdii365.com/blog/feed/",
-  "https://www.uobdii.com/blog/feed/",
-  "https://www.locksmithledger.com/rss",
+  "http://blog.obdii365.com/feed/",
+  "http://www.key-programmer.org/feed/",
+  "http://blog.xhorsevvdi.com/feed/",
+  "http://blog.vvdishop.com/feed/",
+  "http://blog.keydiy.eu/feed/",
+  "http://blog.xhorsetool.com/feed/",
 ];
 const MOTS = /(key|cl[ée]|akl|all keys lost|immo|transponder|transpondeur|remote|t[ée]l[ée]commande|smart|proximity|pin|bcm|bsi|uch|esl|elv|xhorse|keydiy|autel|obdstar|lonsdor|abrites|yanhua|acdp|launch|silca|cgdi|vvdi|im508|im608|x300|lishi|blade|lame)/i;
 const MARQUES = /(renault|dacia|peugeot|citro[eë]n|\bds\b|opel|vauxhall|vw|volkswagen|seat|skoda|audi|toyota|lexus|fiat|ford|nissan|hyundai|kia|mercedes|benz|bmw|mini|psa|stellantis|mqb|mlb)/i;
