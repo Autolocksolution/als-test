@@ -36,8 +36,10 @@ async function ia(messages, max_tokens = 900) {
     headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN, "content-type": "application/json", accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28" },
     body: JSON.stringify({ model: process.env.MODELE || "openai/gpt-4.1-mini", messages, temperature: 0.2, max_tokens }),
   });
-  if (!r.ok) throw new Error("IA HTTP " + r.status);
-  const j = await r.json(); return j.choices?.[0]?.message?.content || "";
+  const t = await r.text();
+  if (!r.ok) throw new Error("IA HTTP " + r.status + " " + t.slice(0, 120));
+  let j; try { j = JSON.parse(t); } catch (e) { throw new Error("IA réponse illisible (" + r.status + ", " + (r.headers.get("content-type") || "") + ") : " + t.slice(0, 80)); }
+  return j.choices?.[0]?.message?.content || "";
 }
 const jsonDe = s => { const m = s.match(/\[[\s\S]*\]|\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; };
 
