@@ -1,0 +1,50 @@
+name: Actu automatique
+
+on:
+  schedule:
+    - cron: "17 5 * * *"   # chaque matin vers 7 h (heure de Paris en été, 6 h en hiver)
+  workflow_dispatch:
+
+concurrency:
+  group: actu-auto
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  actu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      - name: Installer firebase-admin
+        working-directory: scripts
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Préparer la clé de service (supprimée en fin de tâche)
+        env:
+          CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLE" ]; then echo "Secret FIREBASE_SERVICE_ACCOUNT absent"; exit 1; fi
+          umask 077
+          printf '%s' "$CLE" > "$RUNNER_TEMP/sa.json"
+      - name: Chercher, trier, résumer et ajouter les actus
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node actu-auto.mjs
+      - name: Supprimer la clé de service
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
+      - name: Garder la trace (anti-doublons)
+        if: always()
+        run: |
+          git config user.name "robot-actu"
+          git config user.email "robot-actu@users.noreply.github.com"
+          git add actu/ || true
+          git diff --cached --quiet || (git commit -m "Actu automatique du $(date +%d/%m)" && git push)
