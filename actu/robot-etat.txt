@@ -1,4 +1,4 @@
 {
- "at": "2026-10-22T10:34:09.121Z",
- "echec": "Unexpected token 'O', \"OK\r\n\" is not valid JSON"
+ "at": "2026-10-22T10:35:01.101Z",
+ "echec": "IA réponse illisible (200, text/plain) : OK\r\n"
 }
