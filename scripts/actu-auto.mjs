@@ -67,6 +67,7 @@ export async function lance({ db, ecrire = true }) {
   etat.candidats = cands.length;
   if (!cands.length) return etat;
   const liste = cands.slice(0, 60).map(c => `${c.n}. [${c.source}, ${c.date}] ${c.titre} — ${c.extrait.slice(0, 160)}`).join("\n");
+  etat.exemples = cands.slice(0, 3).map(c => c.titre.slice(0, 80));
   const choix = jsonDe(await ia([
     { role: "system", content: "Tu tries des articles pour deux serruriers automobiles en France (clés, programmation, toutes clés perdues, cartes Renault, BSI PSA). Tu rejettes la publicité pure, les doublons de sujet, les sujets sans intérêt en France. Réponds uniquement par un tableau JSON de numéros, du plus utile au moins utile." },
     { role: "user", content: `Choisis au maximum ${MAX} articles vraiment utiles parmi :\n${liste}` },
@@ -99,7 +100,9 @@ export async function lance({ db, ecrire = true }) {
 if (process.env.GOOGLE_APPLICATION_CREDENTIALS && process.env.GITHUB_TOKEN) {
   const admin = (await import("firebase-admin")).default;
   admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
-  const etat = await lance({ db: admin.firestore() });
+  let etat;
+  try { etat = await lance({ db: admin.firestore() }); }
+  catch (e) { etat = { at: new Date().toISOString(), echec: String(e.cause?.code || e.message).slice(0, 200) }; }
   const jour = etat.at.slice(0, 10);
   if (etat.actus && etat.actus.length) fs.writeFileSync(new URL(`../actu/${jour}-auto.json`, import.meta.url), JSON.stringify(etat.actus, null, 1));
   delete etat.actus;
