@@ -1,0 +1,18 @@
+{
+ "at": "2026-10-22T10:31:43.439Z",
+ "flux": {
+  "blog.obdii365.com": "indisponible",
+  "www.key-programmer.org": "indisponible",
+  "blog.xhorsevvdi.com": "indisponible",
+  "blog.vvdishop.com": "indisponible",
+  "blog.keydiy.eu": "indisponible",
+  "blog.xhorsetool.com": "indisponible",
+  "www.obdii365.com": "indisponible",
+  "www.uobdii.com": "indisponible",
+  "www.locksmithledger.com": "indisponible"
+ },
+ "candidats": 0,
+ "retenus": 0,
+ "ajoutes": 0,
+ "erreurs": []
+}
