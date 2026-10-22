@@ -1,0 +1,122 @@
+[
+ {
+  "at": 1792645137914,
+  "by": "claude",
+  "date": "2026-06-12",
+  "kind": "web",
+  "source": "abrites.com",
+  "state": "new",
+  "summary": "La préparation des clés NCF 5C/5D (VW, Skoda, Audi, Porsche, et BMW BDC2/BDC3) est maintenant incluse dans le logiciel AVDI de base. Il faut un abonnement annuel actif, le programmateur RH850 et le câble CB503. Méthode : ouvrir la clé d'origine qui marche, lire ses données sur table avec le RH850, préparer une clé neuve d'origine (ou aftermarket avec le PROTAG pour VW/Audi/Skoda), puis faire l'apprentissage par l'OBD. Il faut donc une clé qui fonctionne : ce n'est pas une solution toutes clés perdues.",
+  "title": "Abrites : préparer une clé VW, Skoda, Audi 5C/5D (NCF) sans licence en plus",
+  "url": "https://abrites.com/news/free-with-avdi-and-rh850-programmer-ncf-key-programming-for-bmw-audi-volkswagen-skoda-porsche-vehicles",
+  "id": "c-abrites-ncf-5c5d-gratuit"
+ },
+ {
+  "at": 1792472393635,
+  "by": "claude",
+  "date": "2026-09-01",
+  "kind": "web",
+  "source": "abrites.com",
+  "state": "new",
+  "summary": "Nouvelle licence Abrites RR031 pour Renault et Dacia : elle réaligne le 2e VIN entre l'UCH et le module de navigation, et débloque une navigation verrouillée par un VIN différent de l'UCH (plateforme Clio V : Clio V, Captur II, Arkana, Mégane IV ph2, Sandero III et Jogger mains libres…). Elle sort aussi la direction assistée JTEKT du mode sécurité, panne qui provoque une erreur « Dongle » dans l'UCH et empêche le démarrage. Il faut l'AVDI, le câble CAN interne CB012, et la licence RR024 pour le remplacement de l'UCH.",
+  "title": "Abrites RR031 : Clio V, Captur II, Sandero III… navigation bloquée après changement d'UCH et erreur « Dongle »",
+  "url": "https://abrites.com/news/new-rr031-license-electronic-module-recovery-and-navigation-adaptation-for-renault-and-dacia",
+  "id": "c-abrites-rr031-uch-nav-eps"
+ },
+ {
+  "at": 1792472393635,
+  "by": "claude",
+  "date": "2026-09-01",
+  "kind": "web",
+  "source": "abrites.com",
+  "state": "new",
+  "summary": "La licence VN026 regroupe les anciennes VN021, VN022 et VN023 (gratuite pour ceux qui les ont déjà). Sur les MQB immo 5A/5B (environ 2012-2021 : Golf 7, Polo, Octavia, Leon, Tiguan, T-Roc, A3…), on lit le processeur V850 ou RH850 du compteur avec le programmateur Abrites ZN085 : le logiciel sort le CS, la MAC et les données clés, qui servent à apprendre des clés Megamos AES et à remplacer compteur, calculateur moteur, boîte ou antivol de colonne. Pour les MQB 5C, c'est la licence VN025 qu'il faut.",
+  "title": "Abrites VN026 : clés VW, Skoda, Seat, Audi MQB (immo 5A/5B) en lisant le compteur",
+  "url": "https://abrites.com/news/new-vn026-license-mqb-mileage-calibration-and-key-learning-for-vag-vehicles",
+  "id": "c-abrites-vn026-mqb-5a5b"
+ },
+ {
+  "at": 1792472393635,
+  "by": "claude",
+  "date": "2026-09-28",
+  "kind": "web",
+  "source": "key-programmer.org",
+  "state": "new",
+  "summary": "CGDI MLB Tool sait maintenant ajouter une clé sur les MQB48. Méthode : ouvrir la clé d'origine, choisir le schéma qui correspond à sa carte, retirer un condensateur puis souder deux fils (rouge et noir) vers le câble DB25, alimentation 12 V. On pose la carte dans la bobine à l'endroit indiqué par le logiciel (sinon la clé n'est pas détectée), on lit les données, on génère une clé concession ou une télécommande CGDI, puis on l'apprend sur la voiture.",
+  "title": "VW, Seat, Skoda MQB48 : ajouter une clé en lisant la clé d'origine avec CGDI MLB Tool",
+  "url": "http://www.key-programmer.org/2026/09/28/how-to-read-vag-mqb48-key-data-with-cgdi-mlb-tool/",
+  "id": "c-cgdi-mlb-mqb48-ajout-cle"
+ },
+ {
+  "at": 1792558786249,
+  "by": "claude",
+  "date": "2025-12-01",
+  "kind": "video",
+  "source": "YouTube · Athlone Locksmith · retour d'utilisateur",
+  "state": "new",
+  "summary": "Sur un Dacia Duster 2024 sans aucune clé, le serrurier a essayé l'Advanced Diagnostics Smart Pro (refus sans clé qui marche), un Xhorse puis l'Autel IM608 : aucun n'a réussi. L'OBDSTAR X300 Classic G3 a lu le code PIN par l'OBD puis programmé la première clé, et la voiture a démarré. Piège : la deuxième clé n'a pas été acceptée du premier coup, il a fallu relancer la procédure ; vérifier le nombre de clés programmées à la fin.",
+  "title": "Dacia Duster 2024 toutes clés perdues : seul l'OBDSTAR G3 a réussi",
+  "url": "https://www.youtube.com/watch?v=-Q-vjEFu5aE",
+  "id": "c-duster-2024-akl-obdstar-video"
+ },
+ {
+  "at": 1792472393635,
+  "by": "claude",
+  "date": "",
+  "kind": "web",
+  "source": "fiev.fr",
+  "state": "new",
+  "summary": "Depuis le 1er novembre 2024, en France, accéder aux données antivol et antidémarrage via les portails ou outils d'origine des constructeurs demande la certification SERMI ; le codage de clés en fait partie. Il faut enregistrer l'entreprise auprès d'un organisme certificateur, et chaque technicien fournit une preuve de formation et un extrait de casier judiciaire, puis valide chaque accès en scannant un QR code avec l'appli SERMI. Le certificat dure 5 ans, avec des contrôles possibles sans prévenir. À ne pas confondre avec les accès aux passerelles sécurisées (CSM), qui sont une autre démarche, propre à chaque constructeur.",
+  "title": "SERMI : la certification obligatoire en France pour coder des clés par les portails constructeurs",
+  "url": "https://www.fiev.fr/le-dispositif-sermi-en-france/",
+  "id": "c-sermi-france-codage-cles"
+ },
+ {
+  "at": 1792558786249,
+  "by": "claude",
+  "date": "2026-10-19",
+  "kind": "forum",
+  "source": "VVDIshop · retour d'utilisateur",
+  "state": "new",
+  "summary": "Un utilisateur n'arrivait pas à lire la clé 5C d'une Skoda Scala 2023 : le schéma de carte proposé par Key Tool Plus et Multi-Prog ne correspondait pas à cette clé. La page donne le bon brochage en photo ; on peut aussi utiliser un adaptateur 5C sans soudure. La télécommande Xhorse XSMQB1EN fonctionne, à condition de la générer au bon endroit : menu VW, puis toutes les télécommandes.",
+  "title": "Skoda Scala 2023 (MQB49 5C) : brochage pour lire la clé d'origine avec Xhorse",
+  "url": "http://blog.vvdishop.com/skoda-scala-2023-mqb49-5c-key-wiring-diagram-to-xhorse/",
+  "id": "c-skoda-scala-mqb49-5c-brochage"
+ },
+ {
+  "at": 1792558786249,
+  "by": "claude",
+  "date": "2026-06-18",
+  "kind": "web",
+  "source": "Your Car Key Guys",
+  "state": "new",
+  "summary": "Sur les Toyota et Lexus récentes (surtout 2024 et plus), quand toutes les clés sont perdues, l'alarme reste armée et peut empêcher toute communication OBD : l'outil semble en panne alors qu'il ne l'est pas. Il suffit d'une lame de secours taillée : porte conducteur ouverte, mettre la lame dans la serrure, verrouiller puis déverrouiller, fermer la porte, puis verrouiller et déverrouiller encore une fois. L'alarme se coupe et l'OBD répond de nouveau. À essayer d'abord sur toute Toyota récente qui refuse de communiquer, avant d'accuser l'outil ou le câble.",
+  "title": "Toyota récentes toutes clés perdues : l'alarme active bloque l'OBD, la couper avec la lame",
+  "url": "https://yourcarkeyguys.com/blogs/the-ever-changing-key-world/all-keys-lost-toyota-lexus-active-alarm-what-can-you-do",
+  "id": "c-toyota-alarme-active-akl-lame"
+ },
+ {
+  "at": 1792558786249,
+  "by": "claude",
+  "date": "2026-04-29",
+  "kind": "web",
+  "source": "Thatcham Research",
+  "state": "new",
+  "summary": "Le Crime and Policing Act 2026, en vigueur au Royaume-Uni, punit la détention, l'importation, la fabrication et la vente d'appareils servant à voler des véhicules : boîtiers relais pour les clés mains libres, injecteurs CAN, brouilleurs et émulateurs de clé. C'est à la personne contrôlée de prouver qu'elle a un usage légitime, et la police peut saisir le matériel sans lien avec un vol précis. Thatcham note aussi que les voleurs visent désormais surtout les voitures de 5 à 9 ans. Pour un serrurier, c'est un signal : garder des preuves de son activité pro (factures, certification) pour son matériel, d'autant que ce type de mesure pourrait s'étendre en Europe.",
+  "title": "Royaume-Uni : détenir un outil de vol de voiture devient un délit (loi de 2026)",
+  "url": "https://news.thatcham.org/crime-and-policing-act-2026/",
+  "id": "c-uk-loi-2026-outils-vol"
+ },
+ {
+  "at": 1792472393635,
+  "by": "claude",
+  "date": "",
+  "kind": "forum",
+  "source": "blog.vvdishop.com · retour d'utilisateur",
+  "state": "new",
+  "summary": "Lecture des données de la clé d'origine MQB49 5C réussie, mais la télécommande Xhorse XSMQB ne s'apprend pas toujours : elle émet faiblement. Ce qui a marché : démonter la colonne, sortir le bouton Start/Stop et tenir la clé tout contre l'antenne, volant bien droit. Mettre l'autre clé dans un sac Faraday (ou la garder dehors), et si ça bloque encore, retirer la pile de la clé pendant l'apprentissage. Sur une Skoda, il a fallu recommencer une trentaine de fois avant que la Xhorse et l'originale marchent toutes les deux, télécommande comprise.",
+  "title": "VW / Skoda MQB49 5C mains libres : la clé Xhorse XSMQB ne s'apprend pas (signal faible)",
+  "url": "http://blog.vvdishop.com/xhorse-xsmqb-smart-key-mqb49-5c-weak-signal-solution/",
+  "id": "c-xhorse-xsmqb-mqb49-signal-faible"
+ }
+]
