@@ -1,15 +1,15 @@
 {
- "at": "2026-10-22T10:31:43.439Z",
+ "at": "2026-10-22T10:32:34.895Z",
  "flux": {
-  "blog.obdii365.com": "indisponible",
-  "www.key-programmer.org": "indisponible",
-  "blog.xhorsevvdi.com": "indisponible",
-  "blog.vvdishop.com": "indisponible",
-  "blog.keydiy.eu": "indisponible",
-  "blog.xhorsetool.com": "indisponible",
-  "www.obdii365.com": "indisponible",
-  "www.uobdii.com": "indisponible",
-  "www.locksmithledger.com": "indisponible"
+  "blog.obdii365.com": "indisponible : CERT_HAS_EXPIRED",
+  "www.key-programmer.org": "indisponible : CERT_HAS_EXPIRED",
+  "blog.xhorsevvdi.com": "indisponible : CERT_HAS_EXPIRED",
+  "blog.vvdishop.com": "indisponible : CERT_HAS_EXPIRED",
+  "blog.keydiy.eu": "indisponible : CERT_HAS_EXPIRED",
+  "blog.xhorsetool.com": "indisponible : CERT_HAS_EXPIRED",
+  "www.obdii365.com": "indisponible : HTTP 404",
+  "www.uobdii.com": "indisponible : HTTP 404",
+  "www.locksmithledger.com": "indisponible : HTTP 404"
  },
  "candidats": 0,
  "retenus": 0,
