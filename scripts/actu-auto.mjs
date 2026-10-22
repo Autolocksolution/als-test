@@ -30,16 +30,24 @@ async function get(url, ms = 15000) {
   finally { clearTimeout(t); }
 }
 
+// GitHub Models : point d'accès officiel, puis l'ancien point d'accès Azure si le premier ne répond pas en JSON.
+const IA = [
+  { url: "https://models.github.ai/inference/chat/completions", model: "openai/gpt-4.1-mini" },
+  { url: "https://models.inference.ai.azure.com/chat/completions", model: "gpt-4o-mini" },
+];
 async function ia(messages, max_tokens = 900) {
-  const r = await fetch("https://models.github.ai/inference/chat/completions", {
-    method: "POST",
-    headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN, "content-type": "application/json", accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28" },
-    body: JSON.stringify({ model: process.env.MODELE || "openai/gpt-4.1-mini", messages, temperature: 0.2, max_tokens }),
-  });
-  const t = await r.text();
-  if (!r.ok) throw new Error("IA HTTP " + r.status + " " + t.slice(0, 120));
-  let j; try { j = JSON.parse(t); } catch (e) { throw new Error("IA réponse illisible (" + r.status + ", " + (r.headers.get("content-type") || "") + ") : " + t.slice(0, 80)); }
-  return j.choices?.[0]?.message?.content || "";
+  const errs = [];
+  for (const p of IA) {
+    const r = await fetch(p.url, {
+      method: "POST",
+      headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN, "content-type": "application/json", accept: "application/json", "x-github-api-version": "2022-11-28" },
+      body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens }),
+    });
+    const t = await r.text();
+    try { const j = JSON.parse(t); if (r.ok && j.choices) return j.choices[0]?.message?.content || ""; errs.push(new URL(p.url).hostname + " " + r.status + " " + t.slice(0, 100)); }
+    catch (e) { errs.push(new URL(p.url).hostname + " " + r.status + " " + t.slice(0, 40)); }
+  }
+  throw new Error("IA : " + errs.join(" | "));
 }
 const jsonDe = s => { const m = s.match(/\[[\s\S]*\]|\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; };
 
