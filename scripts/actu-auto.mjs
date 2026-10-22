@@ -63,8 +63,8 @@ export async function lance({ db, ecrire = true }) {
         if (!MOTS.test(titre + " " + extrait) || !MARQUES.test(titre + " " + extrait)) continue;
         cands.push({ n: cands.length, titre, lien, date: d ? new Date(d).toISOString().slice(0, 10) : "", source: new URL(lien).hostname.replace(/^www\./, ""), extrait }); n++;
       }
-      etat.flux[new URL(u).hostname] = n;
-    } catch (e) { etat.flux[new URL(u).hostname] = "indisponible"; }
+      etat.flux[new URL(u).hostname] = n + " / " + ((xml.match(/<item[\s>]/gi) || []).length) + " articles";
+    } catch (e) { etat.flux[new URL(u).hostname] = "indisponible : " + String(e.cause?.code || e.message).slice(0, 60); }
   }
   etat.candidats = cands.length;
   if (!cands.length) return etat;
