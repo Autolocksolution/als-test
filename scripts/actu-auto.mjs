@@ -33,26 +33,26 @@ async function get(url, ms = 15000) {
 // GitHub Models : point d'accès officiel, puis l'ancien point d'accès Azure si le premier ne répond pas en JSON.
 const IA = [
   { url: "https://models.github.ai/inference/chat/completions", model: "openai/gpt-4.1-mini" },
-  { url: "https://models.inference.ai.azure.com/chat/completions", model: "gpt-4o-mini" },
 ];
 async function ia(messages, max_tokens = 900) {
   const errs = [];
   for (const p of IA) {
-    const r = await fetch(p.url, {
+    let r; try { r = await fetch(p.url, {
       method: "POST",
       headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN, "content-type": "application/json", accept: "application/json", "x-github-api-version": "2022-11-28" },
       body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens }),
-    });
+    }); } catch (e) { errs.push(new URL(p.url).hostname + " " + (e.cause?.code || e.message)); continue; }
     const t = await r.text();
     try { const j = JSON.parse(t); if (r.ok && j.choices) return j.choices[0]?.message?.content || ""; errs.push(new URL(p.url).hostname + " " + r.status + " " + t.slice(0, 100)); }
-    catch (e) { errs.push(new URL(p.url).hostname + " " + r.status + " " + t.slice(0, 40)); }
+    catch (e) { errs.push(new URL(p.url).hostname + " " + r.status + " " + JSON.stringify([...r.headers].filter(([k]) => /server|content|x-github|via|location/i.test(k))).slice(0, 300) + " " + t.slice(0, 40)); }
   }
   throw new Error("IA : " + errs.join(" | "));
 }
 const jsonDe = s => { const m = s.match(/\[[\s\S]*\]|\{[\s\S]*\}/); return m ? JSON.parse(m[0]) : null; };
 
 export async function lance({ db, ecrire = true }) {
-  const etat = { at: new Date().toISOString(), flux: {}, candidats: 0, retenus: 0, ajoutes: 0, erreurs: [] };
+  try { const c = await fetch("https://models.github.ai/catalog/models", { headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN, accept: "application/vnd.github+json" } }); var catalogue = c.status + " " + (await c.text()).slice(0, 120); } catch (e) { var catalogue = "erreur " + (e.cause?.code || e.message); }
+  const etat = { catalogue, at: new Date().toISOString(), flux: {}, candidats: 0, retenus: 0, ajoutes: 0, erreurs: [] };
   // déjà connues : base + fichiers du dépôt
   const connues = new Set();
   (await db.collection("news").select("url").get()).forEach(d => { connues.add(d.id); const u = d.get("url"); if (u) connues.add(u.replace(/\/+$/, "")); });
