@@ -47,6 +47,15 @@ jobs:
       - name: Supprimer la clé de service
         if: always()
         run: rm -f "$RUNNER_TEMP/sa.json"
+      - name: Publier le rapport chiffré des doublons écartés
+        if: github.event.inputs.mode == 'import' && hashFiles('depenses/rapport.enc.json') != ''
+        run: |
+          git config user.name "robot-import"
+          git config user.email "robot-import@users.noreply.github.com"
+          git add depenses/rapport.enc.json
+          git commit -m "Rapport d'import chiffré (temporaire)"
+          git pull -q --rebase origin main
+          git push
       - name: Publier la clé publique
         if: github.event.inputs.mode == 'cle'
         run: |

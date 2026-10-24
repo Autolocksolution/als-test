@@ -1,7 +1,13 @@
 import crypto from "node:crypto";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { scelleLot, ouvreLot, valide } from "./import-depenses.mjs";
+import { scelleLot, ouvreLot, valide, doublons } from "./import-depenses.mjs";
+{ // doublons : même jour, montant à 1 € près, une existante n'écarte qu'une ligne
+  const L = [{ id: "a", data: { date: "2025-09-06", amount: 38.96, label: "A" } }, { id: "b", data: { date: "2025-09-06", amount: 39.39, label: "B" } }, { id: "c", data: { date: "2025-09-07", amount: 39.39, label: "C" } }, { id: "d", data: { date: "2025-09-06", amount: 12, label: "D" } }];
+  const r = doublons(L, [{ date: "2025-09-06", amount: 39.39, label: "X" }]);
+  assert.equal(r.size, 1); assert.ok(r.has("b"));
+  assert.equal(doublons(L, []).size, 0);
+}
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", { modulusLength: 2048, publicKeyEncoding: { type: "spki", format: "pem" }, privateKeyEncoding: { type: "pkcs8", format: "pem" } });
 const ok = { id: "tk-x-1", kind: "depense", cat: "essence", date: "2026-10-01", amount: 20, vat: 3.33, pay: "carte", label: "Test", litres: 9.5, odo: null, full: null, at: 1, src: "t" };
 const lot = ouvreLot(scelleLot([ok], publicKey), privateKey);

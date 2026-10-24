@@ -67,14 +67,42 @@ async function cle() {
   console.log("Clé d'import créée");
 }
 
+// Doublons probables : une dépense déjà présente AVANT l'import, le même jour, au même montant à 1 € près.
+// Chaque dépense existante ne peut écarter qu'une seule ligne du lot (la plus proche en montant).
+export function doublons(lot, existantes) {
+  // paires possibles, des plus proches aux plus éloignées : une égalité au centime passe toujours en premier
+  const paires = [];
+  lot.forEach((l, i) => existantes.forEach((x, j) => {
+    const d = Math.abs(x.amount - l.data.amount);
+    if (x.date === l.data.date && d <= 1.0001) paires.push({ i, j, d });
+  }));
+  paires.sort((a, b) => a.d - b.d);
+  const prisL = new Set(), prisX = new Set(), ecartes = new Map();
+  for (const { i, j } of paires) {
+    if (prisL.has(i) || prisX.has(j)) continue;
+    prisL.add(i); prisX.add(j);
+    const { id, data } = lot[i], x = existantes[j];
+    ecartes.set(id, { id, date: data.date, amount: data.amount, label: data.label, deja: { amount: x.amount, label: x.label } });
+  }
+  return ecartes;
+}
+
 async function importe() {
   const db = await init();
   const snap = await db.doc("importkeys/current").get();
   if (!snap.exists) throw new Error("clé d'import absente");
   const lot = ouvreLot(fs.readFileSync(new URL("lot.enc.json", ROOT), "utf8"), snap.get("k"));
+  const idsLot = new Set(lot.map(x => x.id));
+  const existantes = [];
+  for (const date of new Set(lot.map(x => x.data.date))) {
+    const q = await db.collection("entries").where("date", "==", date).get();
+    q.forEach(d => { const v = d.data(); if (v.kind === "depense" && !idsLot.has(d.id) && typeof v.amount === "number") existantes.push({ date, amount: v.amount, label: String(v.label || "") }); });
+  }
+  const ecartes = doublons(lot, existantes);
   let crees = 0, deja = 0, remplaces = 0;
   const ecrits = [];
   for (const { id, data } of lot) {
+    if (ecartes.has(id)) continue;
     const ref = db.collection("entries").doc(id);
     if (REMPLACE.has(id)) { await ref.set(data); remplaces++; ecrits.push({ id, data }); continue; }
     try { await ref.create(data); crees++; ecrits.push({ id, data }); }
@@ -87,7 +115,10 @@ async function importe() {
     if (!s.exists || Math.round(s.get("amount") * 100) !== Math.round(data.amount * 100) || s.get("date") !== data.date) ko++;
   }
   await db.doc("importkeys/current").delete();
-  console.log(`Import : ${crees} créées, ${deja} déjà présentes, ${remplaces} complétée(s), ${ko} anomalie(s). Clé détruite.`);
+  // rapport des doublons écartés, chiffré pour la personne qui a préparé le lot (jamais en clair dans le dépôt)
+  const rk = new URL("rapport-cle.pem", ROOT);
+  if (fs.existsSync(rk)) fs.writeFileSync(new URL("rapport.enc.json", ROOT), scelleLot([...ecartes.values(), { fin: true, crees, deja }], fs.readFileSync(rk, "utf8")));
+  console.log(`Import : ${crees} créées, ${deja} déjà présentes, ${ecartes.size} doublon(s) probable(s) écarté(s), ${remplaces} complétée(s), ${ko} anomalie(s). Clé détruite.`);
   if (ko) process.exit(1);
 }
 
