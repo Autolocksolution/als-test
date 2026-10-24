@@ -74,7 +74,9 @@ export function doublons(lot, existantes) {
   const paires = [];
   lot.forEach((l, i) => existantes.forEach((x, j) => {
     const d = Math.abs(x.amount - l.data.amount);
-    if (x.date === l.data.date && d <= 1.0001) paires.push({ i, j, d });
+    // deux lignes importées de la même source (ex. « import AliExpress ») sont des commandes distinctes, identifiées par leur id
+    const memeSource = x.src && l.data.src && x.src === l.data.src;
+    if (x.date === l.data.date && d <= 1.0001 && !memeSource) paires.push({ i, j, d });
   }));
   paires.sort((a, b) => a.d - b.d);
   const prisL = new Set(), prisX = new Set(), ecartes = new Map();
@@ -96,7 +98,7 @@ async function importe() {
   const existantes = [];
   for (const date of new Set(lot.map(x => x.data.date))) {
     const q = await db.collection("entries").where("date", "==", date).get();
-    q.forEach(d => { const v = d.data(); if (v.kind === "depense" && !idsLot.has(d.id) && typeof v.amount === "number") existantes.push({ date, amount: v.amount, label: String(v.label || "") }); });
+    q.forEach(d => { const v = d.data(); if (v.kind === "depense" && !idsLot.has(d.id) && typeof v.amount === "number") existantes.push({ date, amount: v.amount, label: String(v.label || ""), src: typeof v.src === "string" ? v.src : "" }); });
   }
   const ecartes = doublons(lot, existantes);
   let crees = 0, deja = 0, remplaces = 0;

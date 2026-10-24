@@ -7,6 +7,9 @@ import { scelleLot, ouvreLot, valide, doublons } from "./import-depenses.mjs";
   const r = doublons(L, [{ date: "2025-09-06", amount: 39.39, label: "X" }]);
   assert.equal(r.size, 1); assert.ok(r.has("b"));
   assert.equal(doublons(L, []).size, 0);
+  const S = [{ id: "s", data: { date: "2025-09-27", amount: 7.44, label: "S", src: "import AliExpress" } }];
+  assert.equal(doublons(S, [{ date: "2025-09-27", amount: 7.54, label: "Y", src: "import AliExpress" }]).size, 0);
+  assert.equal(doublons(S, [{ date: "2025-09-27", amount: 7.54, label: "M", src: "manuel" }]).size, 1);
 }
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", { modulusLength: 2048, publicKeyEncoding: { type: "spki", format: "pem" }, privateKeyEncoding: { type: "pkcs8", format: "pem" } });
 const ok = { id: "tk-x-1", kind: "depense", cat: "essence", date: "2026-10-01", amount: 20, vat: 3.33, pay: "carte", label: "Test", litres: 9.5, odo: null, full: null, at: 1, src: "t" };
