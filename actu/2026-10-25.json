@@ -1,0 +1,98 @@
+[
+ {
+  "id": "c-golf7-mqb48-jci-akl-autel",
+  "title": "VW Golf 7 MQB48 (compteur JCI) toutes clés perdues avec Autel IM608",
+  "url": "http://www.key-programmer.org/2026/10/22/autel-im608-program-vw-golf-7-mqb48-all-keys-lost/",
+  "source": "key-programmer.org · retour d'utilisateur",
+  "kind": "web",
+  "summary": "Un utilisateur a refait les clés d'une Golf 7 toutes clés perdues avec l'Autel IM608. Le compteur JCI (D70F3426) a été lu avec l'adaptateur APB131, le calculateur moteur et la boîte (TCU) avec le G-Box. En chargeant les trois fichiers, il a obtenu les données de synchro gratuitement, puis a généré et appris les clés.",
+  "date": "2026-10-22",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-bmw-bcp-copie-kdx4-godiag",
+  "title": "BMW série G/U 2023 (BCP) : copier la clé avec KeyDiy KD-X4 et la pince Godiag, sans soudure",
+  "url": "http://www.key-programmer.org/2026/10/01/copy-bmw-2023-bcp-key-with-keydiy-kd-x4-and-godiag-clip/",
+  "source": "key-programmer.org",
+  "kind": "web",
+  "summary": "On ouvre la clé BCP d'origine et on pose la pince Godiag BDC2/BDC3 sur les petits trous de la carte (MSCL, MSDA, masse) ; l'alimentation passe par un adaptateur à la place de la pile. Dans le KD-X4 : programmation immo, BMW, châssis G/U BDC3, puis lecture des données et écriture sur une clé neuve. Si la lecture échoue du premier coup, il faut repositionner la pince. Pas besoin de souder ni de gratter la carte.",
+  "date": "2026-10-01",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-launch-xprog5-v1075-rh850-renault",
+  "title": "Launch X-Prog5 V10.75 : lecture des puces RH850 des modules immo Renault, Nissan et Ford",
+  "url": "http://www.key-programmer.org/2026/10/08/launch-x-prog5-v10-75-update-ford-nissan-renault-rh850-reading-function/",
+  "source": "key-programmer.org",
+  "kind": "web",
+  "summary": "La version V10.75 du Launch X-Prog5 (octobre 2026) ajoute la lecture des puces Renesas RH850 (R7F7010193, R7F7010253, R7F7010563, R7F701056…) dans les modules antidémarrage Renault, Nissan, Jeep et Ford. Le X-Prog5 peut maintenant lire les données du module HFM Renault/Nissan pour programmer des clés.",
+  "date": "2026-10-08",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-launch-x431-immo-2026-10",
+  "title": "Launch X431 IMMO, mise à jour du 20 octobre 2026 : clés concession VW 5C/5D et Mercedes",
+  "url": "http://www.key-programmer.org/2026/10/21/launch-x431-update-benz-w463-can-all-keys-lost-function/",
+  "source": "key-programmer.org",
+  "kind": "web",
+  "summary": "La mise à jour Launch du 20 octobre 2026 (X431 IMMO Plus, Elite, PAD) ajoute, avec le X-Prog5, la génération sans fil de clés concession VW 5C/5D. Côté Mercedes : toutes clés perdues sur le G (W463 CAN), désactivation de clé sur l'immo 4e génération et détection de fréquence de la clé. Elle ajoute aussi la lecture/écriture de BCM Jeep/Ford à puce R7F701056 et du Nissan Kicks 2025 (HFM).",
+  "date": "2026-10-21",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-keydiy-mercedes-fbs3-fbs4-identif",
+  "title": "KeyDiy KD-X4 / KD-X6 : identifier une clé Mercedes FBS3 ou FBS4 avant de commander",
+  "url": "http://www.key-programmer.org/2026/09/30/keydiy-kdx4-update-benz-key-identification-function/",
+  "source": "key-programmer.org",
+  "kind": "web",
+  "summary": "Mise à jour gratuite de septembre 2026 : le KD-X4 et le KD-X6 reconnaissent le type de puce d'une clé Mercedes. On pose la clé sur la bobine, puis Copie de puce, Détection automatique, Reconnaissance Mercedes ; un type « 5F » indique une clé FBS4/4.5. Utile car FBS3 et FBS4 ne sont pas interchangeables, et pour vérifier si la puce d'une clé à réparer fonctionne. Le KD-X4 identifie seulement ; le KD-X6 programme aussi les clés FBS3.",
+  "date": "2026-09-30",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-kia-soul-4a-pin-keytoolplus",
+  "title": "Kia Soul 2019-2022 (puce 4A) : lire le code PIN avec Xhorse Key Tool Plus",
+  "url": "http://blog.vvdishop.com/xhorse-vvdi-key-tool-plus-read-2019-2022-kia-soul-4a-pin-code/",
+  "source": "blog.vvdishop.com · retour d'utilisateur",
+  "kind": "web",
+  "summary": "Sur les Kia récentes à clé 4A, l'auteur dit que l'Autel IM508 échoue régulièrement pour le PIN, alors que le Key Tool Plus le récupère. Menu : IMMO, Kia, Lecture PIN, lecture par puce 4A ; les données sont calculées sur serveur, donc il faut une connexion Wi-Fi ou un partage de connexion. Avec une clé, mettre le contact ; sans clé, allumer les feux de détresse. Le calcul prend du temps, il faut attendre.",
+  "date": "",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-peugeot-308-iii-abrites-pn018",
+  "title": "Peugeot 308 III : ajout de clé et toutes clés perdues avec Abrites (PN018)",
+  "url": "https://abrites.com/news/added-support-for-peugeot-308-iii-key-programming-in-the-abrites-pn018-pin-manager",
+  "source": "Abrites",
+  "kind": "web",
+  "summary": "Avec l'AVDI et la licence PN018, on peut ajouter une clé ou refaire les clés en toutes clés perdues sur la 308 III. Pour l'ajout de clé, il faut une connexion CAN directe avec le câble CB012. En toutes clés perdues, le PIN se lit sur table avec le kit CB013 et une alimentation stable ; la procédure complète prend jusqu'à une heure. Deux vidéos montrent les deux cas.",
+  "date": "2023-04-12",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ },
+ {
+  "id": "c-dacia-2020-uch-marelli-rr027",
+  "title": "Logan III, Sandero III, Jogger, Kangoo 3, Trafic 2020+ à clé à lame : licence Abrites RR027",
+  "url": "https://abrites.com/news/new-rr027-license-key-learning-for-dacia-2020-vehicles",
+  "source": "Abrites",
+  "kind": "web",
+  "summary": "La licence RR027 programme les clés, même en toutes clés perdues, sur les Dacia et Renault 2020+ à UCH Marelli et clé à lame : Logan III, Sandero III, Jogger, Taliant, Trafic III phase 2 et Kangoo III. Pour les versions mains libres, Abrites renvoie à RR022 (ajout de clé) ou RR026 (toutes clés perdues). Une vidéo montre un Jogger 2022 en toutes clés perdues avec AVDI, PROTAG, émulateur TA64 et câble CB021.",
+  "date": "2023-09-21",
+  "state": "new",
+  "by": "claude",
+  "at": 1792908222139
+ }
+]
