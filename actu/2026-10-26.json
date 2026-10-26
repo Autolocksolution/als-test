@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c-toyota-8a-ba-tib-reecriture",
+    "title": "Toyota 8A-BA mains libres : réécrire une télécommande KeyDiy TIB déjà clonée (KD-X4)",
+    "url": "http://www.key-programmer.org/2026/10/26/how-to-rewrite-toyota-8a-ba-smart-key-with-keydiy-kd-x4-tib-remote/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "Si un client ne veut plus la clé Toyota 8A (BA) que vous avez clonée sur une télécommande KeyDiy TIB, elle n'est pas perdue : le KD-X4 peut réécrire par-dessus avec d'autres données, voire un autre véhicule. Pendant l'écriture, le voyant rouge clignote. Après réécriture, la fonction puce détecte la clé (« BABA ») avec un ID entièrement nouveau, l'ancien n'y est plus associé. La même carte électronique irait aussi dans les coques style Lexus.",
+    "date": "2026-10-26",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-bmw-x3-2021-bdc2-akl-midi",
+    "title": "BMW X3 2021 (BDC2) toutes clés perdues avec Xhorse Key Tool MIDI : plus jamais de clé concession",
+    "url": "http://blog.vvdishop.com/xhorse-key-tool-midi-program-2021-bmw-x3-bdc2-all-keys-lost/",
+    "source": "vvdishop.com · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un serrurier a fait un toutes clés perdues sur un BMW X3 2021 (BDC2) avec le Key Tool MIDI. Le calculateur moteur 2021 étant verrouillé, il a lu l'EEPROM du DME avec un autre outil (Autel). Piège : la méthode modifie les données du DME, et la voiture ne pourra plus jamais recevoir de clé concession. Le client l'a accepté pour éviter le long délai du concessionnaire.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-cgdi-k2-5-12-rf430-8a",
+    "title": "CGDI K2 V5.12.0 : lecture/écriture de la puce RF430F5144 des clés Toyota 8A mains libres",
+    "url": "http://www.key-programmer.org/2026/10/23/cgdi-k2-adds-rf430f5144-8a-smart-key-copy-function/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "La version 5.12.0 du CGDI K2, sortie le 23 octobre 2026, ajoute la lecture et l'écriture de la puce RF430F5144 (clés mains libres 8A) via le programmateur MCU. Elle améliore aussi l'identification des puces et les fonctions clés NXP. Attention : le CGDI ne génère pas de clé 8A, il faut copier sur une clé 8A d'origine neuve.",
+    "date": "2026-10-23",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-xhorse-ktp-base-francais",
+    "title": "Xhorse Key Tool Plus : la base de données passe en 18 langues, dont le français",
+    "url": "http://blog.xhorsetool.com/xhorse-key-tool-plus-update-database-18-languages-now-supported/",
+    "source": "blog.xhorsetool.com",
+    "kind": "web",
+    "summary": "Xhorse a mis à jour la base de données centrale de la tablette VVDI Key Tool Plus. Les menus et la base technique sont désormais traduits en 18 langues, dont le français, l'allemand, l'italien, l'espagnol et le portugais.",
+    "date": "2026-10-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-xhorse-max-pro-oor-sync",
+    "title": "Xhorse Key Tool Max Pro : erreur « OOR Failed to synchronize », que faire",
+    "url": "http://blog.vvdishop.com/xhorse-key-tool-max-pro-oor-failed-to-sync-error-solution/",
+    "source": "vvdishop.com · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Un utilisateur voit son Key Tool Max Pro demander une synchronisation puis afficher « OOR Failed to synchronize ». Solutions proposées : changer de serveur dans les réglages, ou couper le Wi-Fi de l'atelier et connecter l'appareil au partage de connexion 2,4 GHz du téléphone pour synchroniser par les données mobiles. Si rien ne marche, le firmware peut être en cause : contacter le service client Xhorse.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-audi-mlb-cgdi-mlb-ajout",
+    "title": "Audi MLB (A4, A5, Q5, Q7…) : ajouter une clé concession avec CGDI MLB Tool",
+    "url": "http://www.key-programmer.org/2026/09/15/how-to-use-cgdi-mlb-tool-to-add-vag-mlb-keys/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "Avec la clé d'origine, on identifie la clé dans le logiciel V-Engineer, puis on démonte la clé et on retire 2 condensateurs de sa carte. La carte se place dans l'adaptateur sans soudure (ou on soude le câble DB25 selon le schéma du logiciel) pour collecter et sauvegarder ses données. On met ensuite la clé neuve (CGDI MLB ou d'origine) dans l'adaptateur, on génère une clé concession, puis on fait l'apprentissage par l'OBD dans la voiture.",
+    "date": "2026-09-15",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-audi-a6-j518-elv-autel",
+    "title": "Audi A6 2006 : l'Autel XP400 Pro ne lit pas l'antivol J518 sur table ? Alimentation 12 V et résistance",
+    "url": "http://www.key-programmer.org/2026/08/14/autel-im508-xp400-pro-failed-to-read-audi-j518-elv-solution/",
+    "source": "key-programmer.org · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Un utilisateur n'arrivait à lire aucun de ses deux modules J518 (antivol de colonne) d'Audi A6 2006 sur table avec l'Autel IM508 et le XP400 Pro. La solution : le module doit être alimenté en 12 V. L'Autel donne les schémas (deux types de câblage) et indique qu'il faut aussi une résistance.",
+    "date": "2026-08-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  },
+  {
+    "id": "c-c3-2011-max-pro-pin-type2",
+    "title": "Citroën C3 2011 : clé ajoutée avec Xhorse Key Tool Max Pro, essayer le type 2 si le type 1 échoue",
+    "url": "https://www.youtube.com/watch?v=SuuFc0FrHlY",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Par l'OBD (à gauche du volant), clé du client au contact, le Max Pro lit le code PIN (type 2, connexion internet nécessaire). En programmation par modèle, le type 1 « C3 2006-2013 » a échoué, le type 2 a marché : on programme d'abord la clé du client, puis la neuve, en coupant bien le contact entre chaque étape. Pour synchroniser la télécommande, mettre le contact et tenir le bouton de verrouillage 10 à 15 secondes.",
+    "date": "2026-03-21",
+    "state": "new",
+    "by": "claude",
+    "at": 1792994751109
+  }
+]
