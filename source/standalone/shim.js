@@ -17,14 +17,28 @@ function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false
 function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
-showWait("Connexion en cours…");
+/* Déjà connecté sur ce téléphone : on n'affiche pas « Connexion en cours… » par-dessus l'appli.
+   Elle s'ouvre tout de suite sur la copie locale ; si la synchronisation ne répond pas en 12 s (réseau faible),
+   elle continue en mode hors ligne et se resynchronise à la prochaine ouverture ou au retour du réseau. */
+const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"}catch(e){return false}})();
+let started=false,fellBack=false;
+function fallBack(){
+  if(started||fellBack||!signed)return false;
+  fellBack=true;window.claude={use:async()=>null};
+  window.__alsResolve&&window.__alsResolve(window.claude);
+  /* resynchronisation discrète : rechargement quand l'appli passe en arrière-plan */
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)location.reload()});
+  return true;
+}
+const fbTimer=signed?setTimeout(fallBack,12000):0;
+if(signed)hideAll();else showWait("Connexion en cours…");
 
 (async()=>{
   let A,Au,F;
   try{
     if(window.__ALS_SDK){({A,Au,F}=window.__ALS_SDK)}
     else{[A,Au,F]=await Promise.all([import(SDK_BASE+"firebase-app.js"),import(SDK_BASE+"firebase-auth.js"),import(SDK_BASE+"firebase-firestore.js")])}
-  }catch(e){showWait("Impossible de charger la synchronisation. Vérifiez votre connexion internet, puis réessayez.",true);return}
+  }catch(e){if(fallBack())return;showWait("Impossible de charger la synchronisation. Vérifiez votre connexion internet, puis réessayez.",true);return}
 
   const app=A.initializeApp(CFG);
   const auth=Au.getAuth(app);
@@ -211,9 +225,9 @@ showWait("Connexion en cours…");
     catch(err){G("lgBad").textContent=FR[err&&err.code]||"Envoi impossible."}
   });
 
-  let started=false;
   async function start(u){
-    started=true;
+    started=true;clearTimeout(fbTimer);
+    try{localStorage.setItem("als-signed","1")}catch(e){}
     window.claude={use:async name=>{
       if(name==="db")return dbApi;
       if(name==="user")return userApi(u);
@@ -222,11 +236,12 @@ showWait("Connexion en cours…");
       return null;
     }};
     /* enregistre le prénom affiché pour les autres utilisateurs (une seule fois) */
-    try{
+    /* en arrière-plan : ne retarde jamais l'ouverture (réseau faible) */
+    (async()=>{try{
       const r=F.doc(fs,"team/"+u.uid),s=await F.getDoc(r);
       if(!s.exists()){const n=u.displayName||(u.email||"").split("@")[0];F.setDoc(r,{name:n.charAt(0).toUpperCase()+n.slice(1),email:u.email||""})}
       else if(s.data().name)names.set(u.uid,s.data().name);
-    }catch(e){}
+    }catch(e){}})();
     const who=G("stWho"),box=G("stOutBox");
     if(who)who.textContent="Connecté : "+(u.email||"")+" · version "+ALS_BUILD;
     if(box)box.hidden=false;
@@ -243,8 +258,8 @@ showWait("Connexion en cours…");
     location.reload();
   });
   Au.onAuthStateChanged(auth,u=>{
-    if(u){hideAll();if(!started)start(u)}
-    else{if(started){location.reload();return}showForm()}
+    if(u){hideAll();if(fellBack){try{window.toast&&window.toast("Réseau faible : appli ouverte hors ligne, synchronisation à la prochaine ouverture")}catch(e){}return}if(!started)start(u)}
+    else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });
 })();
 
