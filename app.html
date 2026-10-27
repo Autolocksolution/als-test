@@ -798,6 +798,7 @@ main{padding-top:10px}
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
       <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
+      <div class="f"><label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
         <div class="f"><label for="cPin">Code PIN</label><input id="cPin" maxlength="24"></div>
@@ -1643,6 +1644,10 @@ function refreshToday(){
   if(pDay===TODAY)pDay=t;
   now=d;TODAY=t;return true;
 }
+const FAYRE=/(^|[^a-zà-ÿ])fay(?:ss?|cal|çal|c|ç)(?![a-zà-ÿ])/i;
+const isFay=e=>!!(e&&(e.fay||FAYRE.test(e.note||"")));
+let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){return "tous"}})();
+const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
 let cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
 function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
@@ -1704,7 +1709,7 @@ function cRender(){
   $("months").hidden=!(cTab==="recette"||cTab==="depense");
   if(cTab==="recette"||cTab==="depense"){
     $("months").replaceChildren(...MS.map((n,i)=>{
-      const t=sum(inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)));
+      const t=sum(inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)&&(cTab!=="recette"||whoOk(e))));
       return h("button",{class:"mo",role:"tab","aria-selected":String(i===M),onclick:()=>{M=i;cScroll=true;render()}},h("b",null,n),h("span",null,t?money0(t):"–"))}));
     if(cScroll){const s=$("months").querySelector('[aria-selected="true"]');if(s)requestAnimationFrame(()=>s.scrollIntoView({inline:"center",block:"nearest"}));cScroll=false}
   }
@@ -1714,11 +1719,12 @@ function cRender(){
 }
 function cJournal(inYear){
   const pre=Y+"-"+p2(M+1)+"-";
-  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre));
+  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre)&&(cTab!=="recette"||whoOk(e)));
   const valid=mine.filter(counts);
   const out=[],tot=sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase(),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("30 % à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("70 % pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette")out.push(h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l))));
+  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("30 % à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("70 % pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
@@ -1745,7 +1751,7 @@ function cEntry(e){
     const eb=entryBrand(e),br=eb!=="autres"?brandLabel(eb)+" · ":"";
     return h("div",{class:"ent-wrap"},
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
-        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
+        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by+(isFay(e)?" · encaissé par Fayss":"")),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
           e.clientId&&clientById(e.clientId)?h("div",{class:"ent-m"},"Client : "+clientById(e.clientId).name):null,
           (()=>{const pg=s==="reussi"?tollShare(e):0;if(!(e.tripCost>0)&&!pg)return null;
             return h("div",{class:"ent-m"},"🚗 "+(e.tripCost>0?frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100)):"")+(pg?(e.tripCost>0?" + ":"")+"péages "+money(pg):"")+(s==="reussi"?" · net "+money(cents(e)-Math.round((e.tripCost||0)*100)-pg):""))})(),
@@ -1856,6 +1862,7 @@ $("iDel").addEventListener("click",async()=>{
 $("iCancel").addEventListener("click",iClose);
 $("iScrim").addEventListener("click",e=>{if(e.target===$("iScrim"))iClose()});
 function setSeg(id,val,set){for(const b of $(id).children)b.setAttribute("aria-pressed",String(b.dataset.v===val));set(val)}
+$("cNote").addEventListener("input",()=>{if(FAYRE.test($("cNote").value))$("cFay").checked=true});
 $("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeg("cPaySeg",b.dataset.v,v=>cPay=v)});
 let brandAuto=true;
 $("cBrand").addEventListener("change",()=>{brandAuto=false});
@@ -1885,7 +1892,7 @@ function cOpen(e,date,prefill){
   $("cLamt").textContent=rec?"Tarif (€)":"Montant (€)";
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
-  $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
+  $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";$("cFay").checked=isFay(e);fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
   $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;tripMin=null;
   $("cOdo").value=e&&e.odo>0?String(e.odo):"";$("cFull").checked=e&&e.cat==="essence"?e.full!==false:true;
   tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(e.vat).replace(".",","):"";tkUi();
@@ -1896,7 +1903,7 @@ function cOpen(e,date,prefill){
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay"])$(id).disabled=!canWrite;
   $("cCity").dataset.auto=e?"":$("cCity").value;cRdvId="";cPlateDone="";cAuto={};clearTimeout(cPlateT);$("cPlateHint").hidden=true;
   if(prefill&&!e)cPrefill(prefill);
   cMarginUi();cMdUi();cTripUi("");
@@ -1985,7 +1992,7 @@ $("cForm").addEventListener("submit",async ev=>{
   const amount=Math.round(parseNum($("cAmt").value)*100)/100;
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
-  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
+  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
@@ -4086,7 +4093,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261016-0846";
+const ALS_BUILD="20261027-1305";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
