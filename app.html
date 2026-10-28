@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-Gxbm3Ucge/uqUmQFV76osYmjaD8ulch0TO03WcLC1sE=' 'sha256-W+FkPwed5CBH9Y6uenFMBqgJjW9sAVISdQksAM/OYK4=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-u6+8WDITjpmceM5szU5oLSo4nnjrMWx40p5rdYaS9SU=' 'sha256-aIB6EIy5TWPEuD3+qhhzftbeW4Ng0obZ6zhG/8JVySc=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -237,6 +237,9 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .krow small{display:block;font-size:12px;color:var(--muted)}
 .krow .kq{font-family:var(--f-mono);font-size:14px;color:var(--muted);white-space:nowrap}
 .krow .kq.z{color:var(--out)}
+.kchips{margin-bottom:6px}.kchips .chip{min-height:36px;flex:0 0 auto}.kchips .chip .n{opacity:.65;margin-left:5px;font-size:12px}
+.ksub .chip{min-height:30px;font-size:13px;border-radius:999px}
+.krow.zero{opacity:.55}
 .ord{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ord .kl{flex:1;min-width:0}
 .ord .cstep button{width:40px;height:40px;font-size:22px}
@@ -1116,7 +1119,9 @@ main{padding-top:10px}
   <div class="sheet" id="kSheet">
     <h2>Quelle clé as-tu utilisée ?</h2>
     <p class="hint" id="kFor"></p>
-    <div class="f"><input type="search" id="kQ" placeholder="Chercher dans le stock…" aria-label="Chercher dans le stock"></div>
+    <div class="f" style="margin-bottom:8px"><input type="search" id="kQ" placeholder="Chercher dans tout le stock…" aria-label="Chercher dans le stock"></div>
+    <div class="chips kchips" id="kCats" role="tablist" aria-label="Catégories"></div>
+    <div class="chips kchips ksub" id="kSubs" role="tablist" aria-label="Sous-catégories" hidden></div>
     <div class="klist" id="kList"></div>
     <div class="acts"><button type="button" class="btn" id="kNone">Aucune clé du stock</button></div>
   </div>
@@ -2443,15 +2448,42 @@ let kEntry=null;
 function kOpen(e){
   kEntry=e;
   $("kFor").textContent="Pour : "+([e.model,e.year].filter(Boolean).join(" · ")||"ce véhicule")+". Le stock de la clé choisie baisse de 1.";
-  $("kQ").value="";kRender();$("kScrim").hidden=false;
+  $("kQ").value="";kSub="";kRender();$("kScrim").hidden=false;
 }
 function kClose(){$("kScrim").hidden=true;kEntry=null}
+/* sélection en 2 temps : catégorie (puce) puis sous-catégorie ; la recherche fouille tout le stock.
+   « Récentes » = pièces déjà utilisées sur des interventions, les plus récentes d'abord. */
+let kCat=(()=>{try{return localStorage.getItem("als-kcat")||""}catch(x){return ""}})(),kSub="";
+function kRecent(){
+  const seen=new Set(),out=[];
+  entries.filter(e=>e.usedId&&e.usedId!=="none").sort((a,b)=>(b.doneAt||b.at||0)-(a.doneAt||a.at||0)).forEach(e=>{if(!seen.has(e.usedId)){seen.add(e.usedId);out.push(e.usedId)}});
+  return out.slice(0,12);
+}
 function kRender(){
-  const n=normTxt($("kQ").value),order=CATS.map(c=>c.id);
-  const rows=stockRows().map(i=>({i,l:itemLabel(i)})).filter(({i,l})=>!n||normTxt(l.nm+" "+l.path+" "+(i.ref||"")).includes(n))
-    .sort((a,b)=>order.indexOf(a.i.section)-order.indexOf(b.i.section)||a.l.nm.localeCompare(b.l.nm,"fr",{numeric:true})).slice(0,80);
-  $("kList").replaceChildren(...(rows.length?rows.map(({i,l})=>h("button",{class:"krow",type:"button",onclick:()=>useKey(i)},
-    h("div",{class:"kl"},h("b",null,l.nm),h("small",null,l.path)),h("span",{class:"kq"+(i.qty===0?" z":"")},"stock "+i.qty))):[h("div",{class:"bempty"},"Aucune pièce trouvée")]));
+  const n=normTxt($("kQ").value),all=stockRows().map(i=>({i,l:itemLabel(i)}));
+  const byQty=(a,b)=>(b.i.qty>0)-(a.i.qty>0)||a.l.nm.localeCompare(b.l.nm,"fr",{numeric:true});
+  const rec=kRecent(),cats=CATS.filter(c=>!c.urgent).map(c=>({c,k:all.filter(r=>r.i.section===c.id)})).filter(x=>x.k.length);
+  if(kCat!=="__rec"&&!cats.some(x=>x.c.id===kCat))kCat=rec.length?"__rec":(cats[0]?cats[0].c.id:"");
+  const pick=id=>{kCat=id;kSub="";try{localStorage.setItem("als-kcat",id)}catch(x){}kRender();$("kList").scrollTop=0};
+  $("kCats").hidden=!!n;$("kSubs").hidden=true;
+  $("kCats").replaceChildren(...(rec.length?[h("button",{class:"chip",type:"button","aria-pressed":String(kCat==="__rec"),onclick:()=>pick("__rec")},"Récentes")]:[]),
+    ...cats.map(({c,k})=>h("button",{class:"chip",type:"button","aria-pressed":String(kCat===c.id),onclick:()=>pick(c.id)},c.label,h("span",{class:"n"},String(k.filter(r=>r.i.qty>0).length)))));
+  let rows;
+  if(n)rows=all.filter(({i,l})=>normTxt(l.nm+" "+l.path+" "+(i.ref||"")).includes(n)).sort(byQty).slice(0,80);
+  else if(kCat==="__rec")rows=rec.map(id=>all.find(r=>r.i.id===id)).filter(Boolean);
+  else{
+    const cat=CATS.find(c=>c.id===kCat),inCat=all.filter(r=>r.i.section===kCat);
+    const gs=(cat?cat.groups:[]).filter(g=>inCat.some(r=>r.i.group===g.id));
+    if(gs.length>1){
+      if(kSub&&!gs.some(g=>g.id===kSub))kSub="";
+      $("kSubs").hidden=false;
+      $("kSubs").replaceChildren(h("button",{class:"chip",type:"button","aria-pressed":String(!kSub),onclick:()=>{kSub="";kRender()}},"Tout"),
+        ...gs.map(g=>h("button",{class:"chip",type:"button","aria-pressed":String(kSub===g.id),onclick:()=>{kSub=g.id;kRender();$("kList").scrollTop=0}},g.label)));
+    }
+    rows=inCat.filter(r=>!kSub||r.i.group===kSub).sort(byQty);
+  }
+  $("kList").replaceChildren(...(rows.length?rows.map(({i,l})=>h("button",{class:"krow"+(i.qty===0?" zero":""),type:"button",onclick:()=>useKey(i)},
+    h("div",{class:"kl"},h("b",null,l.nm),h("small",null,l.path)),h("span",{class:"kq"+(i.qty===0?" z":"")},"stock "+i.qty))):[h("div",{class:"bempty"},n?"Aucune pièce trouvée":"Rien dans cette catégorie")]));
 }
 $("kQ").addEventListener("input",kRender);
 $("kScrim").addEventListener("click",e=>{if(e.target===$("kScrim"))kClose()});
@@ -4112,7 +4144,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261028-1317";
+const ALS_BUILD="20261028-1405";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
