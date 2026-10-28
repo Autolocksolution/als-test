@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-Em/ki+9sxUNIpyXciCinfMHDAHIJ7Fj2GqdA8qK+KRo=' 'sha256-Y6hQrslOGwJQ7cU4D+0l+nFclJE7lJfRN5yYwzsUiW4=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-kItLWAMxQEOBMeI0yCgCqa5/HnDu/BHI/QUFeuQMtjI=' 'sha256-bOAPAZJdzio70cDaux1OsWscQZMPHKvXQBAHhMn63nI=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3988,6 +3988,7 @@ async function boot(){
   const [d,u]=await Promise.all([c.use("db"),c.use("user")]);
   user=u;db=d?guardDb(d):null;
   try{pushApi=await c.use("push");if(pushApi)$("stPushBox").hidden=false}catch(e){}
+  if(!db)window.__alsUpgrade=()=>{window.__alsUpgrade=null;OFFLINE=!navigator.onLine;boot()};
   if(!db&&hadCache){OFFLINE=true;canWrite=true;$("ro").hidden=true;setSync(false,"Hors ligne");offBar();render();return}
   if(!db){setSync(false,"Hors synchro");loaded=true;canWrite=false;$("ro").hidden=false;$("ro").textContent="Synchronisation indisponible. Connectez-vous pour voir les données.";render();return}
   try{uid=user?await user.id():null}catch(e){}
@@ -4093,7 +4094,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261027-1320";
+const ALS_BUILD="20261028-1013";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -4110,19 +4111,17 @@ function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.get
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 /* Déjà connecté sur ce téléphone : on n'affiche pas « Connexion en cours… » par-dessus l'appli.
-   Elle s'ouvre tout de suite sur la copie locale ; si la synchronisation ne répond pas en 12 s (réseau faible),
-   elle continue en mode hors ligne et se resynchronise à la prochaine ouverture ou au retour du réseau. */
-const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"}catch(e){return false}})();
+   Elle s'ouvre tout de suite sur la copie locale ; si la connexion ne répond pas en 4 s (réseau faible : Firebase
+   vérifie le compte auprès du serveur), elle démarre hors ligne puis passe en synchro toute seule dès que la connexion répond. */
+const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"||!!localStorage.getItem("als-last-mail")}catch(e){return false}})();
 let started=false,fellBack=false;
 function fallBack(){
   if(started||fellBack||!signed)return false;
   fellBack=true;window.claude={use:async()=>null};
   window.__alsResolve&&window.__alsResolve(window.claude);
-  /* resynchronisation discrète : rechargement quand l'appli passe en arrière-plan */
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)location.reload()});
   return true;
 }
-const fbTimer=signed?setTimeout(fallBack,12000):0;
+const fbTimer=signed?setTimeout(fallBack,4000):0;
 if(signed)hideAll();else showWait("Connexion en cours…");
 
 (async()=>{
@@ -4350,7 +4349,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     location.reload();
   });
   Au.onAuthStateChanged(auth,u=>{
-    if(u){hideAll();if(fellBack){try{window.toast&&window.toast("Réseau faible : appli ouverte hors ligne, synchronisation à la prochaine ouverture")}catch(e){}return}if(!started)start(u)}
+    if(u){hideAll();if(fellBack){fellBack=false;start(u);try{window.__alsUpgrade&&window.__alsUpgrade()}catch(e){}return}if(!started)start(u)}
     else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });
 })();

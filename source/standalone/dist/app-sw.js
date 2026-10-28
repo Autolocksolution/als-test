@@ -1,7 +1,7 @@
 /* AutoLockSolution : service worker. Appli utilisable hors ligne + notifications.
    Ouverture instantanée : la page et les fichiers de l'appli sont servis depuis la copie locale,
    puis rafraîchis en arrière-plan ; une nouvelle version s'affiche donc à l'ouverture suivante. */
-const V="als-20261028-1010";
+const V="als-20261028-1013";
 /* cache durable, gardé d'une version à l'autre : Firebase et polices (adresses versionnées) + moteur OCR (4,7 Mo, revalidé).
    Son nom ne commence pas par « als- » : aucune activation ne le supprime, même celle d'une ancienne version.
    Changer ce nom (alslib-2…) le vide à la prochaine mise à jour. */
