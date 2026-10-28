@@ -18,19 +18,17 @@ function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.get
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 /* Déjà connecté sur ce téléphone : on n'affiche pas « Connexion en cours… » par-dessus l'appli.
-   Elle s'ouvre tout de suite sur la copie locale ; si la synchronisation ne répond pas en 12 s (réseau faible),
-   elle continue en mode hors ligne et se resynchronise à la prochaine ouverture ou au retour du réseau. */
-const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"}catch(e){return false}})();
+   Elle s'ouvre tout de suite sur la copie locale ; si la connexion ne répond pas en 4 s (réseau faible : Firebase
+   vérifie le compte auprès du serveur), elle démarre hors ligne puis passe en synchro toute seule dès que la connexion répond. */
+const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"||!!localStorage.getItem("als-last-mail")}catch(e){return false}})();
 let started=false,fellBack=false;
 function fallBack(){
   if(started||fellBack||!signed)return false;
   fellBack=true;window.claude={use:async()=>null};
   window.__alsResolve&&window.__alsResolve(window.claude);
-  /* resynchronisation discrète : rechargement quand l'appli passe en arrière-plan */
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)location.reload()});
   return true;
 }
-const fbTimer=signed?setTimeout(fallBack,12000):0;
+const fbTimer=signed?setTimeout(fallBack,4000):0;
 if(signed)hideAll();else showWait("Connexion en cours…");
 
 (async()=>{
@@ -258,7 +256,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     location.reload();
   });
   Au.onAuthStateChanged(auth,u=>{
-    if(u){hideAll();if(fellBack){try{window.toast&&window.toast("Réseau faible : appli ouverte hors ligne, synchronisation à la prochaine ouverture")}catch(e){}return}if(!started)start(u)}
+    if(u){hideAll();if(fellBack){fellBack=false;start(u);try{window.__alsUpgrade&&window.__alsUpgrade()}catch(e){}return}if(!started)start(u)}
     else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });
 })();

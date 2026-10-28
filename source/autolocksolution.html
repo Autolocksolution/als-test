@@ -3956,6 +3956,7 @@ async function boot(){
   const [d,u]=await Promise.all([c.use("db"),c.use("user")]);
   user=u;db=d?guardDb(d):null;
   try{pushApi=await c.use("push");if(pushApi)$("stPushBox").hidden=false}catch(e){}
+  if(!db)window.__alsUpgrade=()=>{window.__alsUpgrade=null;OFFLINE=!navigator.onLine;boot()};
   if(!db&&hadCache){OFFLINE=true;canWrite=true;$("ro").hidden=true;setSync(false,"Hors ligne");offBar();render();return}
   if(!db){setSync(false,"Hors synchro");loaded=true;canWrite=false;$("ro").hidden=false;$("ro").textContent="Synchronisation indisponible. Connectez-vous pour voir les données.";render();return}
   try{uid=user?await user.id():null}catch(e){}
