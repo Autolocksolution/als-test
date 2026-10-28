@@ -796,6 +796,7 @@ main{padding-top:10px}
       <div class="f" id="cgO"><label for="cOdo">Km au compteur (facultatif)</label><input id="cOdo" inputmode="numeric" placeholder="184500"><label class="chk2" style="margin-top:6px"><input type="checkbox" id="cFull" checked> Plein complet</label><span class="hint" style="margin:2px 0 0">Avec 2 pleins complets et le compteur, l'appli calcule votre vraie conso.</span></div>
     </div>
     <div class="f"><label for="cAmt" id="cLamt">Tarif (€)</label><input id="cAmt" inputmode="decimal" required placeholder="0,00"></div>
+    <div class="f" id="cgM"><span class="lab">Combien de fois ?</span><div class="seg" id="cMulSeg"><button type="button" data-v="1" aria-pressed="true">×1</button><button type="button" data-v="2" aria-pressed="false">×2</button><button type="button" data-v="3" aria-pressed="false">×3</button></div><span class="hint" id="cMulHint" style="margin:2px 0 0">Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois.</span></div>
     <div class="f" id="cgV" hidden><label for="cVat">dont TVA (€, facultatif)</label><input id="cVat" inputmode="decimal" placeholder="0,00"></div>
     <div class="f"><span class="lab">Moyen de paiement</span><div class="seg" id="cPaySeg"><button type="button" data-v="carte" aria-pressed="true">Carte</button><button type="button" data-v="especes" aria-pressed="false">Espèces</button></div></div>
     <div class="acts">
@@ -1623,6 +1624,8 @@ const FAYRE=/(^|[^a-zà-ÿ])fay(?:ss?|cal|çal|c|ç)(?![a-zà-ÿ])/i;
 const isFay=e=>!!(e&&(e.fay||FAYRE.test(e.note||"")));
 let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){return "tous"}})();
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
+let cMul=1;
+function cMulUi(){const b=parseNum($("cAmt").value);$("cMulHint").textContent=cMul>1?(b>0?"Total enregistré : "+money(Math.round(b*cMul*100))+" ("+cMul+" × "+money(Math.round(b*100))+")":"Le montant saisi sera compté "+cMul+" fois."):"Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois."}
 let cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
 function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
@@ -1742,7 +1745,7 @@ function cEntry(e){
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
-  {title=e.label||(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat fournisseur":"Dépense diverse");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):e.cat==="achat"?"Achat":"Divers")+(e.vat!=null&&e.vat!==""?" · TVA "+money(Math.round(e.vat*100)):"")+(e.photoId?" · 🧾":"")+by}
+  {title=(e.label||(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat fournisseur":"Dépense diverse"))+(e.mult>1?" · ×"+e.mult:"");meta=(e.cat==="essence"?"Essence"+(e.litres?" · "+String(e.litres).replace(".",",")+" L":""):e.cat==="achat"?"Achat":"Divers")+(e.vat!=null&&e.vat!==""?" · TVA "+money(Math.round(e.vat*100)):"")+(e.photoId?" · 🧾":"")+by}
   return h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
     h("div",{class:"ent-l"},h("div",{class:"ent-t"},title),h("div",{class:"ent-m"},meta)),
     h("div",{class:"ent-r"},h("div",{class:"ent-a",style:"color:var(--"+(e.kind==="recette"?"in":"out")+")"},(e.kind==="recette"?"+":"−")+money(cents(e))),
@@ -1855,6 +1858,8 @@ $("iCancel").addEventListener("click",iClose);
 $("iScrim").addEventListener("click",e=>{if(e.target===$("iScrim"))iClose()});
 function setSeg(id,val,set){for(const b of $(id).children)b.setAttribute("aria-pressed",String(b.dataset.v===val));set(val)}
 $("cNote").addEventListener("input",()=>{if(FAYRE.test($("cNote").value))$("cFay").checked=true});
+$("cMulSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite){setSeg("cMulSeg",b.dataset.v,v=>cMul=+v);cMulUi()}});
+$("cAmt").addEventListener("input",()=>cMulUi());
 $("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeg("cPaySeg",b.dataset.v,v=>cPay=v)});
 let brandAuto=true;
 $("cBrand").addEventListener("change",()=>{brandAuto=false});
@@ -1880,17 +1885,18 @@ function cOpen(e,date,prefill){
   cEditing=e||null;cDelArmed=false;
   const rec=(e?e.kind:cTab)==="recette";
   $("cTitle").textContent=(e?"Modifier — ":"")+(rec?"Véhicule":"Dépense");
-  $("cgR").hidden=!rec;$("cgD").hidden=rec;
+  $("cgR").hidden=!rec;$("cgD").hidden=rec;$("cgM").hidden=rec;
   $("cLamt").textContent=rec?"Tarif (€)":"Montant (€)";
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
   $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";$("cFay").checked=isFay(e);fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
   $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;tripMin=null;
   $("cOdo").value=e&&e.odo>0?String(e.odo):"";$("cFull").checked=e&&e.cat==="essence"?e.full!==false:true;
-  tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(e.vat).replace(".",","):"";tkUi();
+  tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(Math.round(e.vat/(e.kind==="depense"&&e.mult>1?e.mult:1)*100)/100).replace(".",","):"";tkUi();
   for(const id of["cLabel","cLit","cAmt","cVat"])$(id).classList.remove("chk");$("cTkHint").hidden=true;
   $("cLabel").value=e?e.label||"":"";$("cLit").value=e&&e.litres?String(e.litres).replace(".",","):"";
-  $("cAmt").value=e?String(e.amount).replace(".",","):"";
+  {const mu=e&&e.kind==="depense"&&e.mult>1?e.mult:1;cMul=mu;setSeg("cMulSeg",String(mu),v=>cMul=+v);
+  $("cAmt").value=e?String(Math.round(e.amount/mu*100)/100).replace(".",","):"";cMulUi();}
   setSeg("cPaySeg",e&&e.pay?e.pay:"carte",v=>cPay=v);
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
@@ -1942,7 +1948,7 @@ async function tkStart(file){
   {const c=p.kind==="peage"?"divers":p.kind==="essence"?"essence":"achat";cCat=c;setSeg("cCatSeg",c,v=>cCat=v)}
   cCatUi();
   $("cLabel").value=p.label||"";
-  $("cAmt").value=String(p.total.toFixed(2)).replace(".",",");
+  $("cAmt").value=String(p.total.toFixed(2)).replace(".",",");cMulUi();
   if(p.kind==="essence"&&p.litres)$("cLit").value=String(p.litres).replace(".",",");
   if(p.vat!=null)$("cVat").value=String(p.vat.toFixed(2)).replace(".",",");
   setSeg("cPaySeg",p.pay||"carte",v=>cPay=v);
@@ -1985,7 +1991,7 @@ $("cForm").addEventListener("submit",async ev=>{
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
-  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*100)/100;
+  else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*cMul*100)/100;data.mult=cMul>1?cMul:null;data.amount=Math.round(amount*cMul*100)/100;if(data.litres&&cMul>1)data.litres=Math.round(data.litres*cMul*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
   if(wasEditing){if(wasEditing.usedId)data.usedId=wasEditing.usedId;if(wasEditing.usedLabel)data.usedLabel=wasEditing.usedLabel;if(wasEditing.doneBy)data.doneBy=wasEditing.doneBy;if(wasEditing.rdvId)data.rdvId=wasEditing.rdvId}
