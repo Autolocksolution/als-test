@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-suEDoughhzqsrRHOwvFwkSaT/OtASQT6oJi3kzNN5P0=' 'sha256-K64LvOrf7bWfTXrf1qCDogQdk2W++CVn4JBG8n8peQo=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-lpNS4gxGlEzT4gRQ9DMXkvdJZcktXvszGIsd/Aab+2w=' 'sha256-5/dnMWabYSg8bg34V15E4jVkES4o4ugl2vIkfCNsCk8=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -802,7 +802,7 @@ main{padding-top:10px}
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
       <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
-      <div class="f"><label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
+      <div class="f"><label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> Tout mis dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
         <div class="f"><label for="cPin">Code PIN</label><input id="cPin" maxlength="24"></div>
@@ -1704,7 +1704,8 @@ $("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("i
 const RESERVE=0.30;
 /* épargne de 30 % sur les espèces : en place depuis le 15 octobre 2026 (rien à mettre de côté avant) */
 const SAVE_FROM="2026-10-15";
-const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
+/* saveAll : toute l'intervention va dans l'épargne (carte ou espèces, quelle que soit la date) */
+const cashRes=e=>e.kind!=="recette"||stat(e)!=="reussi"?0:e.saveAll?cents(e):e.pay==="especes"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
 async function setAside(e,on){
   if(!db||!canWrite)return;
@@ -1735,7 +1736,7 @@ function cJournal(inYear){
   const out=[],tot=sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   if(cTab==="recette")out.push(h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l))));
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("30 % à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("70 % pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid.filter(e=>e.pay==="especes")))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
@@ -1772,7 +1773,7 @@ function cEntry(e){
         h("div",{class:"ent-r"},
           h("div",{class:"ent-a"+(s==="reussi"?"":" dim")+(s==="abandon"?" strike":""),style:s==="reussi"?"color:var(--in)":""},(s==="reussi"?"+":"")+money(cents(e))),
           h("div",null,h("span",{class:"pay"+(e.pay==="especes"?" cash":"")},e.pay==="especes"?"Espèces":"Carte"),h("span",{class:"st st-"+s},s==="reussi"?"Réussi":s==="abandon"?"Abandon":"À faire")))),
-      s==="reussi"&&e.pay==="especes"&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
+      s==="reussi"&&e.saveAll?h("div",{class:"quick"},h("span",{class:"qok",style:"padding:6px 10px;border-radius:8px"},"✓ "+money(cashRes(e))+" mis dans l'épargne (tout)")):s==="reussi"&&e.pay==="especes"&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
@@ -1800,7 +1801,7 @@ function cBilan(inYear){
     h("div",{class:"sum"},
       card2("Reste à mettre de côté",money(todo),todo>0?"warn":"","espèces pas encore cochées « mis de côté »"),
       card2("Déjà mis de côté",money(done),"","")),
-    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis le 15 octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
+    h("p",{class:"hint",style:"margin:-6px 0 14px"},"30 % des espèces encaissées depuis le 15 octobre 2026, plus les interventions cochées « Tout mis dans l'épargne ». Pour l'enlever : cochez « mis de côté » sur l'intervention dans Recettes."),
     h("h2",{class:"h2"},"Dépenses par type"),
     h("div",{class:"sum"},card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))))];
   out.push(h("h2",{class:"h2"},"Mois par mois"));
@@ -1920,7 +1921,7 @@ function cOpen(e,date,prefill){
   $("cLamt").textContent=rec?"Tarif (€)":"Montant (€)";
   $("cDate").value=e?e.date:(date||((Y===now.getFullYear()&&M===now.getMonth())?TODAY:key(Y,M,1)));
   $("cModel").value=e?e.model||"":"";$("cYear").value=e?e.year||"":"";$("cCity").value=e?e.city||"":lastCity();
-  $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";$("cFay").checked=isFay(e);fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
+  $("cBrand").value=e?(e.brand&&e.brand!=="autres"?e.brand:(inferBrand(e.model)||e.brand||"")):"";brandAuto=!(e&&e.brand&&e.brand!=="autres");$("cTime").value=e&&e.time?e.time:"";$("cPlate").value=e&&e.plate?e.plate:"";$("cPin").value=e&&e.pin?e.pin:"";$("cKeyCode").value=e&&e.keycode?e.keycode:"";$("cIdOk").checked=!!(e&&e.idOk);$("cCgOk").checked=!!(e&&e.cgOk);$("cNote").value=e?e.note||"":"";$("cFay").checked=isFay(e);$("cSaveAll").checked=!!(e&&e.saveAll);fillClientSel("cClient",e?e.clientId:"");$("cCost").value=e&&e.cost!=null&&e.cost!==""?String(e.cost).replace(".",","):"";$("cMkRow").hidden=!(e&&e.kind==="recette"&&canWrite);setSeg("cStSeg",e&&e.kind==="recette"?stat(e):"prevu",v=>cSt=v);
   $("cAddr").value=e&&e.addr?e.addr:"";$("cKm").value=e&&e.km1>0?String(e.km1).replace(".",","):"";$("cRT").checked=e&&e.rt===false?false:true;tripMin=null;
   $("cOdo").value=e&&e.odo>0?String(e.odo):"";$("cFull").checked=e&&e.cat==="essence"?e.full!==false:true;
   tkData=null;tkPid=e&&e.photoId?e.photoId:"";$("cVat").value=e&&e.vat!=null&&e.vat!==""?String(Math.round(e.vat/(e.kind==="depense"&&e.mult>1?e.mult:1)*100)/100).replace(".",","):"";tkUi();
@@ -1932,7 +1933,7 @@ function cOpen(e,date,prefill){
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay","cSaveAll"])$(id).disabled=!canWrite;
   $("cCity").dataset.auto=e?"":$("cCity").value;cRdvId="";cPlateDone="";cAuto={};clearTimeout(cPlateT);$("cPlateHint").hidden=true;
   if(prefill&&!e)cPrefill(prefill);
   cMarginUi();cMdUi();cTripUi("");
@@ -2021,7 +2022,7 @@ $("cForm").addEventListener("submit",async ev=>{
   const amount=Math.round(parseNum($("cAmt").value)*100)/100;
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
-  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
+  if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.saveAll=$("cSaveAll").checked;if(data.saveAll){data.aside=true;data.asideAt=(cEditing&&cEditing.asideAt)||Date.now()}else if(cEditing&&cEditing.saveAll){data.aside=false;data.asideAt=null}data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*cMul*100)/100;data.mult=cMul>1?cMul:null;data.amount=Math.round(amount*cMul*100)/100;if(data.litres&&cMul>1)data.litres=Math.round(data.litres*cMul*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
   const wasEditing=cEditing;
@@ -4150,7 +4151,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261028-1417";
+const ALS_BUILD="20261028-1423";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
