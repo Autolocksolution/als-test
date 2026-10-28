@@ -105,7 +105,8 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .sum div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
 .sum small{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .sum strong{font-family:var(--f-display);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.sum .pos{color:var(--in)} .sum .neg{color:var(--out)}
+.sum .pos{color:var(--in)} .sum .neg{color:var(--out)} .sum .warn{color:var(--warn)}
+.sum .sub{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.3;background:none!important;padding:0!important}
 .days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .day{background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .day.today{background:var(--today);border-color:var(--accent)}
@@ -1747,7 +1748,22 @@ function cBilan(inYear){
   const R=sum(r),D=sum(d),res=R-D,cash=sum(r.filter(e=>e.pay==="especes"))-sum(d.filter(e=>e.pay==="especes"));
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   const rc=r.filter(e=>e.cost!=null&&e.cost!==""),Rc=sum(rc),Cc=rc.reduce((a,e)=>a+eurosC(e.cost),0);
-  const out=[h("div",{class:"sum"},card("Recettes "+Y,money(R)),card("Dépenses "+Y,money(D)),card("Résultat",money(res),res>=0?"pos":"neg"),card("Espèces en main",money(cash)),card("30 % espèces à mettre de côté",money(resTot(r.filter(e=>!e.aside))),resTot(r.filter(e=>!e.aside))>0?"neg":""),card("Déjà mis de côté",money(resTot(r.filter(e=>e.aside)))),card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Coût des pièces",money(Cc)),card("Marge pièces ("+rc.length+"/"+r.length+")",money(Rc-Cc),Rc-Cc>=0?"pos":"neg"))];
+  const card2=(l,v,c,sub)=>h("div",null,h("small",null,l),h("strong",{class:c},v),sub?h("span",{class:"sub"},sub):null);
+  const rCa=sum(r.filter(e=>e.pay!=="especes")),rEs=sum(r.filter(e=>e.pay==="especes"));
+  const todo=resTot(r.filter(e=>!e.aside)),done=resTot(r.filter(e=>e.aside));
+  const out=[
+    h("h2",{class:"h2"},"Ce qu'on a gagné en "+Y),
+    h("div",{class:"sum"},
+      card2("Encaissé",money(R),"","carte "+money(rCa)+" · espèces "+money(rEs)),
+      card2("Dépensé",money(D),"","essence, achats, divers"),
+      card2("Bénéfice",money(res),res>=0?"pos":"neg","encaissé − dépensé, carte et espèces")),
+    h("h2",{class:"h2"},"Épargne 30 % sur les espèces"),
+    h("div",{class:"sum"},
+      card2("Reste à mettre de côté",money(todo),todo>0?"warn":"","espèces pas encore cochées « mis de côté »"),
+      card2("Déjà mis de côté",money(done),"","")),
+    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
+    h("h2",{class:"h2"},"Dépenses par type"),
+    h("div",{class:"sum"},card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))))];
   out.push(h("h2",{class:"h2"},"Mois par mois"));
   const rows=MS.map((n,i)=>{
     const mm=p2(i+1),a=sum(r.filter(e=>e.date.slice(5,7)===mm)),b=sum(d.filter(e=>e.date.slice(5,7)===mm));
@@ -1756,7 +1772,7 @@ function cBilan(inYear){
     return h("tr",{class:cur?"cur":""},h("td",null,MONTHS[i]),h("td",null,money(a)),h("td",null,money(b)),h("td",{style:"color:var(--"+(a-b>=0?"in":"out")+")"},money(a-b)),h("td",null,rcm.length?money(mg):"–"))});
   out.push(h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Mois"),h("th",null,"Recettes"),h("th",null,"Dépenses"),h("th",null,"Résultat"),h("th",null,"Marge"))),h("tbody",null,rows),
     h("tfoot",null,h("tr",null,h("td",null,"Total "+Y),h("td",null,money(R)),h("td",null,money(D)),h("td",{style:"color:var(--"+(res>=0?"in":"out")+")"},money(res)),h("td",null,rc.length?money(Rc-Cc):"–"))))));
-  out.push(h("p",{class:"hint",style:"margin-top:8px"},"« Marge » = recettes moins prix d'achat des pièces, uniquement sur les interventions où le prix d'achat est renseigné. Elle ne change pas le Résultat."));
+  out.push(h("p",{class:"hint",style:"margin-top:8px"},"« Marge » = prix de l'intervention moins prix d'achat de la pièce, carte et espèces confondues. Elle n'est calculée que si le « prix d'achat de la pièce » est rempli dans l'intervention ("+rc.length+" sur "+r.length+" cette année) ; sinon « – ». Le vrai gain reste le Bénéfice ci-dessus."));
   out.push(...cDetail(d));
   out.push(...cExport());
   return out;
