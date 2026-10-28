@@ -21,11 +21,11 @@ function valideRecette(e) {
     && typeof e.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.date)
     && typeof e.amount === "number" && e.amount >= 0 && e.amount < 100000
     && ["carte", "especes"].includes(e.pay) && e.status === "reussi"
-    && t(e.model, 120) && t(e.city, 80) && t(e.note, 600) && (e.fay === undefined || typeof e.fay === "boolean")
+    && t(e.model, 120) && t(e.city, 80) && t(e.note, 600) && (e.fay === undefined || typeof e.fay === "boolean") && (e.aside === undefined || typeof e.aside === "boolean")
     && typeof e.at === "number";
   if (!ok) throw new Error("recette invalide : " + String(e && e.id).slice(0, 60));
   return { id: e.id, data: { kind: "recette", date: e.date, amount: e.amount, pay: e.pay, status: "reussi", doneAt: e.at,
-    model: e.model || "", city: e.city || "", note: e.note || "", fay: !!e.fay, brand: "", year: "", at: e.at,
+    model: e.model || "", city: e.city || "", note: e.note || "", fay: !!e.fay, aside: !!e.aside, asideAt: e.aside ? e.at : null, brand: "", year: "", at: e.at,
     src: typeof e.src === "string" ? e.src.slice(0, 40) : "import" } };
 }
 
