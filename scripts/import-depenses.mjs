@@ -14,7 +14,23 @@ const MODE = process.env.MODE;
 const ROOT = new URL("../depenses/", import.meta.url);
 const REMPLACE = new Set(["tk-cb-20260820-tridome-21900"]); // version complétée d'une ligne déjà importée
 
+// Recette (encaissement d'une intervention déjà faite) : champs utiles seulement, statut « réussi ».
+function valideRecette(e) {
+  const t = (v, n) => v === undefined || v === null || (typeof v === "string" && v.length <= n);
+  const ok = typeof e.id === "string" && /^[A-Za-z0-9_\-.~:@+]{1,200}$/.test(e.id)
+    && typeof e.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.date)
+    && typeof e.amount === "number" && e.amount >= 0 && e.amount < 100000
+    && ["carte", "especes"].includes(e.pay) && e.status === "reussi"
+    && t(e.model, 120) && t(e.city, 80) && t(e.note, 600) && (e.fay === undefined || typeof e.fay === "boolean")
+    && typeof e.at === "number";
+  if (!ok) throw new Error("recette invalide : " + String(e && e.id).slice(0, 60));
+  return { id: e.id, data: { kind: "recette", date: e.date, amount: e.amount, pay: e.pay, status: "reussi", doneAt: e.at,
+    model: e.model || "", city: e.city || "", note: e.note || "", fay: !!e.fay, brand: "", year: "", at: e.at,
+    src: typeof e.src === "string" ? e.src.slice(0, 40) : "import" } };
+}
+
 export function valide(e) {
+  if (e && e.kind === "recette") return valideRecette(e);
   const ok = e && typeof e === "object"
     && typeof e.id === "string" && /^[A-Za-z0-9_\-.~:@+]{1,200}$/.test(e.id)
     && e.kind === "depense" && ["essence", "achat", "divers"].includes(e.cat)
@@ -76,7 +92,8 @@ export function doublons(lot, existantes) {
     const d = Math.abs(x.amount - l.data.amount);
     // deux lignes importées de la même source (ex. « import AliExpress ») sont des commandes distinctes, identifiées par leur id
     const memeSource = x.src && l.data.src && x.src === l.data.src;
-    if (x.date === l.data.date && d <= 1.0001 && !memeSource) paires.push({ i, j, d });
+    const memeType = (x.kind || "depense") === (l.data.kind || "depense");
+    if (x.date === l.data.date && d <= 1.0001 && !memeSource && memeType) paires.push({ i, j, d });
   }));
   paires.sort((a, b) => a.d - b.d);
   const prisL = new Set(), prisX = new Set(), ecartes = new Map();
@@ -98,7 +115,7 @@ async function importe() {
   const existantes = [];
   for (const date of new Set(lot.map(x => x.data.date))) {
     const q = await db.collection("entries").where("date", "==", date).get();
-    q.forEach(d => { const v = d.data(); if (v.kind === "depense" && !idsLot.has(d.id) && typeof v.amount === "number") existantes.push({ date, amount: v.amount, label: String(v.label || ""), src: typeof v.src === "string" ? v.src : "" }); });
+    q.forEach(d => { const v = d.data(); if ((v.kind === "depense" || v.kind === "recette") && !idsLot.has(d.id) && typeof v.amount === "number") existantes.push({ date, kind: v.kind, amount: v.amount, label: String(v.label || v.model || ""), src: typeof v.src === "string" ? v.src : "" }); });
   }
   const ecartes = doublons(lot, existantes);
   let crees = 0, deja = 0, remplaces = 0;

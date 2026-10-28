@@ -1662,7 +1662,9 @@ function cTripUi(msg){
 $("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
-const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"?Math.round(cents(e)*RESERVE):0;
+/* épargne de 30 % sur les espèces : en place depuis octobre 2026 (rien à mettre de côté avant) */
+const SAVE_FROM="2026-10-01";
+const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
 async function setAside(e,on){
   if(!db||!canWrite)return;
@@ -1730,7 +1732,7 @@ function cEntry(e){
         h("div",{class:"ent-r"},
           h("div",{class:"ent-a"+(s==="reussi"?"":" dim")+(s==="abandon"?" strike":""),style:s==="reussi"?"color:var(--in)":""},(s==="reussi"?"+":"")+money(cents(e))),
           h("div",null,h("span",{class:"pay"+(e.pay==="especes"?" cash":"")},e.pay==="especes"?"Espèces":"Carte"),h("span",{class:"st st-"+s},s==="reussi"?"Réussi":s==="abandon"?"Abandon":"À faire")))),
-      s==="reussi"&&e.pay==="especes"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
+      s==="reussi"&&e.pay==="especes"&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;

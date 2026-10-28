@@ -10,6 +10,16 @@ import { scelleLot, ouvreLot, valide, doublons } from "./import-depenses.mjs";
   const S = [{ id: "s", data: { date: "2025-09-27", amount: 7.44, label: "S", src: "import AliExpress" } }];
   assert.equal(doublons(S, [{ date: "2025-09-27", amount: 7.54, label: "Y", src: "import AliExpress" }]).size, 0);
   assert.equal(doublons(S, [{ date: "2025-09-27", amount: 7.54, label: "M", src: "manuel" }]).size, 1);
+  // une recette n'écarte pas une dépense (et inversement)
+  assert.equal(doublons(S, [{ date: "2025-09-27", kind: "recette", amount: 7.44, label: "R" }]).size, 0);
+  const R = [{ id: "r", data: { kind: "recette", date: "2026-01-03", amount: 140, label: "", src: "import notes" } }];
+  assert.equal(doublons(R, [{ date: "2026-01-03", kind: "recette", amount: 140, label: "x", src: "" }]).size, 1);
+}
+{ // recettes : valides, champs nettoyés
+  const r = valide({ id: "rc-1", kind: "recette", date: "2026-01-21", amount: 90, pay: "carte", status: "reussi", model: "Opel Corsa", city: "", note: "ouverture", fay: false, at: 1, src: "import notes", pin: "x" });
+  assert.equal(r.data.kind, "recette"); assert.equal(r.data.pin, undefined); assert.equal(r.data.status, "reussi");
+  for (const bad of [{ id: "rc-2", kind: "recette", date: "2026-01-21", amount: 90, pay: "cheque", status: "reussi", at: 1 }, { id: "rc-3", kind: "recette", date: "2026-01-21", amount: 90, pay: "carte", status: "prevu", at: 1 }])
+    assert.throws(() => valide(bad));
 }
 const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", { modulusLength: 2048, publicKeyEncoding: { type: "spki", format: "pem" }, privateKeyEncoding: { type: "pkcs8", format: "pem" } });
 const ok = { id: "tk-x-1", kind: "depense", cat: "essence", date: "2026-10-01", amount: 20, vat: 3.33, pay: "carte", label: "Test", litres: 9.5, odo: null, full: null, at: 1, src: "t" };
