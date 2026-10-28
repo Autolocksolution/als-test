@@ -1663,8 +1663,8 @@ function cTripUi(msg){
 $("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
-/* épargne de 30 % sur les espèces : en place depuis octobre 2026 (rien à mettre de côté avant) */
-const SAVE_FROM="2026-10-01";
+/* épargne de 30 % sur les espèces : en place depuis le 15 octobre 2026 (rien à mettre de côté avant) */
+const SAVE_FROM="2026-10-15";
 const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
 async function setAside(e,on){
@@ -1761,7 +1761,7 @@ function cBilan(inYear){
     h("div",{class:"sum"},
       card2("Reste à mettre de côté",money(todo),todo>0?"warn":"","espèces pas encore cochées « mis de côté »"),
       card2("Déjà mis de côté",money(done),"","")),
-    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
+    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis le 15 octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
     h("h2",{class:"h2"},"Dépenses par type"),
     h("div",{class:"sum"},card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))))];
   out.push(h("h2",{class:"h2"},"Mois par mois"));

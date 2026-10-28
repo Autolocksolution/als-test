@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-VnIBfrjOlD4IxOhXmeeT78p8copCsjht4Ozv9qAKZKQ=' 'sha256-pnBb9IHZ+XdLBCfm5dnzwgBZEGyMV7df5pYmnArAPd4=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-Gxbm3Ucge/uqUmQFV76osYmjaD8ulch0TO03WcLC1sE=' 'sha256-W+FkPwed5CBH9Y6uenFMBqgJjW9sAVISdQksAM/OYK4=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1694,8 +1694,8 @@ function cTripUi(msg){
 $("cRT").addEventListener("change",()=>cTripUi(""));$("cKm").addEventListener("input",()=>{tripMin=null;cTripUi("")});
 /* Espèces : 30 % de chaque intervention payée en liquide est mis de côté, 70 % reste pour nous */
 const RESERVE=0.30;
-/* épargne de 30 % sur les espèces : en place depuis octobre 2026 (rien à mettre de côté avant) */
-const SAVE_FROM="2026-10-01";
+/* épargne de 30 % sur les espèces : en place depuis le 15 octobre 2026 (rien à mettre de côté avant) */
+const SAVE_FROM="2026-10-15";
 const cashRes=e=>e.kind==="recette"&&e.pay==="especes"&&stat(e)==="reussi"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
 async function setAside(e,on){
@@ -1792,7 +1792,7 @@ function cBilan(inYear){
     h("div",{class:"sum"},
       card2("Reste à mettre de côté",money(todo),todo>0?"warn":"","espèces pas encore cochées « mis de côté »"),
       card2("Déjà mis de côté",money(done),"","")),
-    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
+    h("p",{class:"hint",style:"margin:-6px 0 14px"},"Compté sur les espèces encaissées depuis le 15 octobre 2026. Pour l'enlever : ouvrez l'intervention dans Recettes et cochez « mis de côté »."),
     h("h2",{class:"h2"},"Dépenses par type"),
     h("div",{class:"sum"},card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))))];
   out.push(h("h2",{class:"h2"},"Mois par mois"));
@@ -4112,7 +4112,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261028-1220";
+const ALS_BUILD="20261028-1317";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
