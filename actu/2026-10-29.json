@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-citroen-bsi-n02-clone-autel",
+    "title": "Citroën BSI Valeo N02 : cloner le BSI sur table avec Autel IM508S",
+    "url": "http://blog.obdii365.com/2026/10/28/clone-citroen-bsi-n02-module-with-autel-im508s/",
+    "source": "OBDII365 · retour d’utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur a cloné un BSI Valeo 9807531680 (N02) de Citroën vers un BSI d’occasion de même version, avec l’Autel IM508S, à cause de clignotants en panne. Piège sur table : chez Peugeot et Citroën, le CAN High et le CAN Low ne sont pas sur les broches 6 et 14 mais sur les broches 3 et 8. Autel ne donne pas ce brochage car il prévoit l’opération dans la voiture. Il a lu l’EEPROM puis la Flash de l’original et les a écrites dans le BSI donneur.",
+    "date": "2026-10-28",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-toyota-8a-b9-uwb-pas-de-cle-adaptable",
+    "title": "Toyota / Lexus 2024+ clé mains libres 8A-B9 : aucune clé adaptable ne fait le mains libres",
+    "url": "http://www.key-programmer.org/2026/10/29/what-device-to-add-toyota-2024-8a-b9-smart-key/",
+    "source": "Car Key Programmer Blog",
+    "kind": "web",
+    "summary": "Sur un Land Cruiser 2025 en 8A-B9 (433 MHz), la clé Xhorse XM n’a pas fonctionné : Xhorse ne gère que le 8A-BA. Le Lonsdor K518 Pro ajoute une clé sur les Toyota/Lexus 2024+ 8A-B9 avec le câble 30 broches FP30, mais la clé LT32 n’a pas le mains libres. La 8A-B9 est une clé UWB : les clés Xhorse, Autel et KeyDiy n’ont que la télécommande et le démarrage de secours, il faut une clé d’origine pour tout avoir.",
+    "date": "2026-10-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-megane3-uch-multiprog-mcu",
+    "title": "Mégane 3 : lire l’UCH (V850 D70F3637) avec Xhorse Multi Prog, passer par le menu MCU",
+    "url": "http://blog.vvdishop.com/xhorse-multi-prog-read-renault-megane-3-uch/",
+    "source": "VVDIshop",
+    "kind": "web",
+    "summary": "Pour lire et écrire l’UCH de Mégane 3 (processeur Renesas V850) avec le Xhorse Multi Prog, il ne faut pas passer par le menu Immobilizer > Renault > Megane UCH. Il faut aller dans MCU > Renesas V850 > D70F3637. Dflash et Pflash ont été lues puis écrites sans problème, en suivant le schéma de branchement fourni.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-peugeot-307-bsi-g0x-vvdi-prog",
+    "title": "Peugeot 307 BSI Valeo G0X (MC912DG128A) : lecture et écriture avec Xhorse VVDI Prog",
+    "url": "http://blog.vvdishop.com/vvdi-prog-read-and-write-peugeot-307-bsi-g0x/",
+    "source": "VVDIshop",
+    "kind": "web",
+    "summary": "Le BSI Valeo G0X de la Peugeot 307 (puce MC912DG128A) se lit et s’écrit avec le Xhorse VVDI Prog. Dans le logiciel, il faut choisir « 2-MCU » puis « Motorola MC68HC(9)12 ». La page montre le montage en photos.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-fiat-bcm-d70f3237-eeprom",
+    "title": "Fiat Bravo, Doblò : BCM D70F3237, sortir l’EEPROM ST95160 avant de lire la Flash",
+    "url": "http://blog.vvdishop.com/xhorse-vvdi-prog-pinout-to-fiat-bcm-d70f3237/",
+    "source": "VVDIshop",
+    "kind": "web",
+    "summary": "Schéma de branchement du Xhorse VVDI Prog sur le BCM Fiat (Bravo, Doblò…) à processeur D70F3237. Pour lire ou écrire la Flash, la page conseille de retirer l’EEPROM ST95160 et de la lire à part avec un programmateur externe.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-renault-master3-renolink-cle",
+    "title": "Renault Master 3 (et Clio 3/4, Kangoo, Twingo, Trafic) : ajouter une clé avec RenoLink",
+    "url": "https://www.youtube.com/watch?v=hu_GKs3qpec",
+    "source": "Planeterenault (YouTube)",
+    "kind": "video",
+    "summary": "Tuto sur un Master 3 de 2012 : avec la sonde RenoLink sur l’OBD, menu Extra > Key, choisir l’UCH du modèle, lire le PIN puis lancer « Start learning » et mettre le contact avec chaque clé. L’auteur dit que c’est pareil sur Clio 3, Clio 4, Kangoo, Twingo et Trafic, et pour les cartes, à condition d’acheter exactement la même clé ou carte. Astuce : si l’erreur « conditions not set or sequence error » apparaît, refaire l’opération avec une porte ouverte.",
+    "date": "2022-10-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-partner-2011-key-tool-max-pro",
+    "title": "Peugeot Partner 2011 : PIN et ajout de clé par l’OBD avec Xhorse Key Tool Max Pro",
+    "url": "https://www.youtube.com/watch?v=-qWsj1lkOxo",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Démonstration sur un Partner 2011 : lecture du PIN dans le menu Peugeot (feux de détresse allumés, ouvrir et fermer la porte quand c’est demandé), puis programmation dans le menu Partner 2008 et plus. On met le contact avec chaque clé client puis avec la nouvelle clé Xhorse. Pour la télécommande : contact mis avec la nouvelle clé, maintenir le bouton de verrouillage 10 à 15 secondes. Bien photographier le PIN.",
+    "date": "2025-01-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-sandero-2022-carte-mains-libres-off",
+    "title": "Sandero Stepway 2022 : la carte n’ouvre plus en mains libres ? Vérifier le réglage dans le menu",
+    "url": "https://www.daciaforum.co.uk/threads/solved-keyless-card-not-locking-doors-automatically.41959/",
+    "source": "UK Dacia Forum · retour d’utilisateur",
+    "kind": "forum",
+    "summary": "Sur un Sandero Stepway 2022, la carte mains libres n’ouvrait plus et ne verrouillait plus les portes en s’approchant, même avec la carte de secours. L’appui de 10 secondes sur la condamnation n’a rien changé. La solution, confirmée par le propriétaire : dans les réglages du véhicule, partie contact, remettre « Mains libres » sur « on ».",
+    "date": "2023-05-25",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  },
+  {
+    "id": "c-astra-k-km100-cle-mains-libres",
+    "title": "Opel Astra K 2016-2021 : clé mains libres par l’OBD avec Autel KM100, attendre 12 minutes",
+    "url": "http://blog.autelshop.de/autel-km100-adds-opel-astra-k-2018-universal-remote-key/",
+    "source": "AutelShop.de",
+    "kind": "web",
+    "summary": "Sur une Astra K 2018, le KM100 génère une clé universelle Autel, lit le PIN par l’OBD puis apprend la clé. Pendant l’apprentissage, la clé doit être posée dans l’emplacement de secours (accoudoir, sous le porte-bouteille, à côté du cendrier ou dans la boîte à gants selon la voiture), les autres clés sorties. Après saisie du PIN à 4 chiffres, il faut attendre 12 minutes de configuration avant de tester.",
+    "date": "2022-12-19",
+    "state": "new",
+    "by": "claude",
+    "at": 1793253911707
+  }
+]
