@@ -3,15 +3,9 @@
 "auto-volkswagen-polo-4-9n-phase-1": 1,
 "auto-volkswagen-polo-4-9n3-phase-2": 2,
 "auto-volkswagen-polo-5-6r-phase-1": 3,
-"auto-volkswagen-polo-5-6c-phase-2": {
-"q": "Volkswagen Polo 6C"
-},
-"auto-volkswagen-polo-6-aw-phase-1": {
-"q": "Volkswagen Polo 2018"
-},
-"auto-volkswagen-polo-6-aw-phase-2": {
-"q": "Volkswagen Polo 2022"
-},
+"auto-volkswagen-polo-5-6c-phase-2": 0,
+"auto-volkswagen-polo-6-aw-phase-1": 0,
+"auto-volkswagen-polo-6-aw-phase-2": 0,
 "auto-volkswagen-golf-3": 1,
 "auto-volkswagen-golf-4": 1,
 "auto-volkswagen-golf-5": 2,
@@ -31,9 +25,7 @@
 "auto-volkswagen-passat-b8-phase-1": 1,
 "auto-volkswagen-passat-b8-phase-2": 1,
 "auto-volkswagen-passat-b9": 2,
-"auto-volkswagen-passat-cc-cc": {
-"q": "Volkswagen Passat CC"
-},
+"auto-volkswagen-passat-cc-cc": 0,
 "auto-volkswagen-arteon": 2,
 "auto-volkswagen-lupo": 1,
 "auto-volkswagen-fox": 1,
@@ -54,9 +46,7 @@
 "auto-volkswagen-tiguan-3": 1,
 "auto-volkswagen-touareg-1": 1,
 "auto-volkswagen-touareg-2": 2,
-"auto-volkswagen-touareg-3": {
-"q": "Volkswagen Touareg 2018"
-},
+"auto-volkswagen-touareg-3": 3,
 "auto-volkswagen-t-roc": 2,
 "auto-volkswagen-t-cross": 3,
 "auto-volkswagen-taigo": 2,
@@ -64,18 +54,14 @@
 "auto-volkswagen-id-4": 1,
 "auto-volkswagen-caddy-2": 1,
 "auto-volkswagen-caddy-3": 3,
-"auto-volkswagen-caddy-4": {
-"q": "Volkswagen Caddy 2015"
-},
+"auto-volkswagen-caddy-4": 3,
 "auto-volkswagen-caddy-5": 1,
 "auto-volkswagen-transporter-t4": 1,
 "auto-volkswagen-transporter-t5": 1,
 "auto-volkswagen-transporter-t6-t6-1": 1,
 "auto-volkswagen-crafter-1": 3,
 "auto-volkswagen-crafter-2": 1,
-"auto-volkswagen-amarok-1": {
-"q": "Volkswagen Amarok 2011"
-},
+"auto-volkswagen-amarok-1": 1,
 "auto-audi-a1-8x": 2,
 "auto-audi-a1-gb": 2,
 "auto-audi-a2": 1,
@@ -102,55 +88,23 @@
 "auto-audi-q7-4l": 3,
 "auto-audi-tt-8n": 1,
 "auto-audi-tt-8j": 1,
-"auto-seat-ibiza-2-phase-2": {
-"q": "Seat Ibiza 6K2"
-},
-"auto-seat-ibiza-3": {
-"q": "Seat Ibiza 6L"
-},
-"auto-seat-ibiza-4-phase-1": {
-"q": "Seat Ibiza 6J"
-},
-"auto-seat-ibiza-4-phase-2": {
-"q": "Seat Ibiza 6J facelift"
-},
-"auto-seat-ibiza-5": {
-"q": "Seat Ibiza KJ"
-},
-"auto-seat-leon-1": {
-"q": "Seat Leon 1M"
-},
-"auto-seat-leon-2": {
-"q": "Seat Leon 1P"
-},
-"auto-seat-leon-3": {
-"q": "Seat Leon 5F"
-},
-"auto-seat-leon-4": {
-"q": "Seat Leon KL"
-},
-"auto-seat-altea": {
-"q": "Seat Altea"
-},
-"auto-seat-toledo-2": {
-"q": "Seat Toledo 1M"
-},
-"auto-seat-arona": {
-"q": "Seat Arona"
-},
-"auto-seat-ateca": {
-"q": "Seat Ateca"
-},
-"auto-seat-alhambra-1": {
-"q": "Seat Alhambra 7M"
-},
-"auto-seat-alhambra-2": {
-"q": "Seat Alhambra 7N"
-},
+"auto-seat-ibiza-2-phase-2": 1,
+"auto-seat-ibiza-3": 3,
+"auto-seat-ibiza-4-phase-1": 1,
+"auto-seat-ibiza-4-phase-2": 0,
+"auto-seat-ibiza-5": 0,
+"auto-seat-leon-1": 0,
+"auto-seat-leon-2": 1,
+"auto-seat-leon-3": 1,
+"auto-seat-leon-4": 0,
+"auto-seat-altea": 1,
+"auto-seat-toledo-2": 1,
+"auto-seat-arona": 1,
+"auto-seat-ateca": 1,
+"auto-seat-alhambra-1": 0,
+"auto-seat-alhambra-2": 1,
 "auto-seat-mii": 1,
-"auto-seat-tarraco": {
-"q": "Seat Tarraco"
-},
+"auto-seat-tarraco": 1,
 "auto-cupra-formentor": 3,
 "auto-cupra-born": 2,
 "auto-skoda-fabia-1": 3,
@@ -202,33 +156,21 @@
 "auto-opel-grandland-x-grandland": 2,
 "auto-opel-antara": 2,
 "auto-opel-combo-c": 2,
-"auto-opel-combo-d": {
-"q": "Opel Combo 2012"
-},
+"auto-opel-combo-d": 3,
 "auto-opel-combo-e": 1,
 "auto-opel-vivaro-a": 3,
 "auto-opel-vivaro-b": 2,
-"auto-opel-vivaro-c": {
-"q": "Opel Vivaro 2019"
-},
+"auto-opel-vivaro-c": 0,
 "auto-opel-movano-a": 3,
 "auto-opel-movano-b": 1,
 "auto-ford-ka-1": 1,
 "auto-ford-ka-2": 1,
 "auto-ford-ka": 2,
 "auto-ford-fiesta-4-mk4": 1,
-"auto-ford-fiesta-5-mk6": {
-"q": "Ford Fiesta 2002"
-},
-"auto-ford-fiesta-6-mk7-phase-1": {
-"q": "Ford Fiesta 2008"
-},
-"auto-ford-fiesta-6-mk7-phase-2": {
-"q": "Ford Fiesta 2013"
-},
-"auto-ford-fiesta-7-mk8": {
-"q": "Ford Fiesta 2018"
-},
+"auto-ford-fiesta-5-mk6": 1,
+"auto-ford-fiesta-6-mk7-phase-1": 2,
+"auto-ford-fiesta-6-mk7-phase-2": 0,
+"auto-ford-fiesta-7-mk8": 1,
 "auto-ford-fusion": 1,
 "auto-ford-focus-1": 1,
 "auto-ford-focus-2-phase-1": 2,
@@ -236,9 +178,7 @@
 "auto-ford-focus-3-phase-1": 2,
 "auto-ford-focus-3-phase-2": 3,
 "auto-ford-focus-4": 1,
-"auto-ford-c-max-1": {
-"q": "Ford Focus C-Max 2004"
-},
+"auto-ford-c-max-1": 0,
 "auto-ford-c-max-2": 1,
 "auto-ford-b-max": 1,
 "auto-ford-s-max-1": 1,
@@ -257,9 +197,7 @@
 "auto-ford-transit-connect-1": 2,
 "auto-ford-transit-connect-2": 3,
 "auto-ford-transit-custom-1": 2,
-"auto-ford-transit-mk6": {
-"q": "Ford Transit 2003"
-},
+"auto-ford-transit-mk6": 0,
 "auto-ford-transit-mk7": 1,
 "auto-ford-transit-mk8": 1,
 "auto-ford-ranger-3": 3,
@@ -291,9 +229,7 @@
 "auto-alfa-romeo-159": 3,
 "auto-alfa-romeo-mito": 1,
 "auto-alfa-romeo-giulietta": 2,
-"auto-alfa-romeo-giulia": {
-"q": "Alfa Romeo Giulia 952"
-},
+"auto-alfa-romeo-giulia": 1,
 "auto-alfa-romeo-stelvio": 1,
 "auto-alfa-romeo-tonale": 1,
 "auto-lancia-ypsilon-843": 1,
@@ -306,9 +242,7 @@
 "auto-bmw-serie-3-e36": 3,
 "auto-bmw-serie-3-e46": 1,
 "auto-bmw-serie-3-e90": 2,
-"auto-bmw-serie-3-f30": {
-"q": "BMW F30 320d"
-},
+"auto-bmw-serie-3-f30": 3,
 "auto-bmw-serie-3-g20": 1,
 "auto-bmw-serie-4-f32": 2,
 "auto-bmw-serie-5-e39": 2,
@@ -327,21 +261,15 @@
 "auto-mini-mini-f56": 1,
 "auto-mini-countryman-r60": 3,
 "auto-mini-countryman-f60": 2,
-"auto-mercedes-benz-classe-a-w168": {
-"q": "Mercedes-Benz A-Klasse W168"
-},
-"auto-mercedes-benz-classe-a-w169": {
-"q": "Mercedes-Benz A-Klasse W169"
-},
+"auto-mercedes-benz-classe-a-w168": 1,
+"auto-mercedes-benz-classe-a-w169": 1,
 "auto-mercedes-benz-classe-a-w176": 1,
 "auto-mercedes-benz-classe-a-w177": 1,
 "auto-mercedes-benz-classe-b-w245": 1,
 "auto-mercedes-benz-classe-b-w246": 2,
 "auto-mercedes-benz-classe-c-w202": 1,
 "auto-mercedes-benz-classe-c-w203": 3,
-"auto-mercedes-benz-classe-c-w204": {
-"q": "Mercedes-Benz C-Klasse W204 Limousine"
-},
+"auto-mercedes-benz-classe-c-w204": 0,
 "auto-mercedes-benz-classe-c-w205": 1,
 "auto-mercedes-benz-classe-e-w210": 1,
 "auto-mercedes-benz-classe-e-w211": 2,
@@ -353,30 +281,20 @@
 "auto-mercedes-benz-vito-w638": 3,
 "auto-mercedes-benz-vito-w639": 1,
 "auto-mercedes-benz-vito-w447": 3,
-"auto-mercedes-benz-sprinter-1-w901-905": {
-"q": "Mercedes-Benz Sprinter 2000"
-},
+"auto-mercedes-benz-sprinter-1-w901-905": 3,
 "auto-mercedes-benz-sprinter-2-w906": 2,
-"auto-mercedes-benz-sprinter-3-w907": {
-"q": "Mercedes-Benz Sprinter 2018 Kastenwagen"
-},
+"auto-mercedes-benz-sprinter-3-w907": 3,
 "auto-mercedes-benz-citan": 2,
 "auto-smart-fortwo-1-450": 1,
 "auto-smart-fortwo-2-451": 1,
 "auto-smart-fortwo-3-453": 1,
 "auto-smart-forfour-453": 1,
-"auto-volvo-s40-v40-1": {
-"q": "Volvo S40 1998"
-},
+"auto-volvo-s40-v40-1": 2,
 "auto-volvo-s40-v50-2": 1,
 "auto-volvo-v40-2012": 3,
 "auto-volvo-c30": 2,
-"auto-volvo-s60-1": {
-"q": "Volvo S60 2004"
-},
-"auto-volvo-s60-v60-2": {
-"q": "Volvo V60 2011"
-},
+"auto-volvo-s60-1": 1,
+"auto-volvo-s60-v60-2": 1,
 "auto-volvo-v70-2": 3,
 "auto-volvo-v70-xc70-3": 2,
 "auto-volvo-xc60-1": 3,

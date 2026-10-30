@@ -1,88 +1,32 @@
 {
-"auto-toyota-aygo-1": {
-"q": "Toyota Aygo 2005"
-},
-"auto-toyota-aygo-2": {
-"q": "Toyota Aygo 2014"
-},
-"auto-toyota-aygo-x": {
-"q": "Toyota Aygo X"
-},
-"auto-toyota-yaris-1": {
-"q": "Toyota Yaris 1999"
-},
-"auto-toyota-yaris-2": {
-"q": "Toyota Yaris XP90"
-},
-"auto-toyota-yaris-3-phase-1": {
-"q": "Toyota Yaris XP130"
-},
-"auto-toyota-yaris-3-phase-2-et-3": {
-"q": "Toyota Yaris 2017"
-},
-"auto-toyota-yaris-4": {
-"q": "Toyota Yaris 2020"
-},
-"auto-toyota-yaris-cross": {
-"q": "Toyota Yaris Cross"
-},
-"auto-toyota-corolla-e11": {
-"q": "Toyota Corolla E110"
-},
-"auto-toyota-corolla-e12": {
-"q": "Toyota Corolla E120"
-},
-"auto-toyota-auris-1": {
-"q": "Toyota Auris 2007"
-},
-"auto-toyota-auris-2": {
-"q": "Toyota Auris 2013"
-},
-"auto-toyota-corolla-e21": {
-"q": "Toyota Corolla E210"
-},
-"auto-toyota-corolla-verso-verso": {
-"q": "Toyota Verso 2009"
-},
-"auto-toyota-avensis-2": {
-"q": "Toyota Avensis T250"
-},
-"auto-toyota-avensis-3": {
-"q": "Toyota Avensis T270"
-},
-"auto-toyota-prius-2": {
-"q": "Toyota Prius II"
-},
-"auto-toyota-prius-3": {
-"q": "Toyota Prius III"
-},
-"auto-toyota-c-hr": {
-"q": "Toyota C-HR"
-},
-"auto-toyota-rav4-2": {
-"q": "Toyota RAV4 2000"
-},
-"auto-toyota-rav4-3": {
-"q": "Toyota RAV4 XA30"
-},
-"auto-toyota-rav4-4": {
-"q": "Toyota RAV4 XA40"
-},
-"auto-toyota-rav4-5": {
-"q": "Toyota RAV4 XA50"
-},
-"auto-toyota-land-cruiser-j120": {
-"q": "Toyota Land Cruiser 120"
-},
-"auto-toyota-hilux-7": {
-"q": "Toyota Hilux 2005"
-},
-"auto-toyota-hilux-8": {
-"q": "Toyota Hilux 2016"
-},
-"auto-toyota-proace": {
-"q": "Toyota Proace 2016 van"
-},
+"auto-toyota-aygo-1": 0,
+"auto-toyota-aygo-2": 0,
+"auto-toyota-aygo-x": 3,
+"auto-toyota-yaris-1": 1,
+"auto-toyota-yaris-2": 3,
+"auto-toyota-yaris-3-phase-1": 2,
+"auto-toyota-yaris-3-phase-2-et-3": 2,
+"auto-toyota-yaris-4": 0,
+"auto-toyota-yaris-cross": 3,
+"auto-toyota-corolla-e11": 1,
+"auto-toyota-corolla-e12": 1,
+"auto-toyota-auris-1": 0,
+"auto-toyota-auris-2": 1,
+"auto-toyota-corolla-e21": 3,
+"auto-toyota-corolla-verso-verso": 2,
+"auto-toyota-avensis-2": 3,
+"auto-toyota-avensis-3": 2,
+"auto-toyota-prius-2": 1,
+"auto-toyota-prius-3": 1,
+"auto-toyota-c-hr": 2,
+"auto-toyota-rav4-2": 1,
+"auto-toyota-rav4-3": 1,
+"auto-toyota-rav4-4": 1,
+"auto-toyota-rav4-5": 2,
+"auto-toyota-land-cruiser-j120": 1,
+"auto-toyota-hilux-7": 1,
+"auto-toyota-hilux-8": 1,
+"auto-toyota-proace": 0,
 "auto-nissan-micra-k11": 1,
 "auto-nissan-micra-k12": 1,
 "auto-nissan-micra-k13": 2,
@@ -107,20 +51,12 @@
 "auto-nissan-nv200-e-nv200": 1,
 "auto-nissan-primastar": 1,
 "auto-nissan-interstar": 2,
-"auto-honda-jazz-2": {
-"q": "Honda Jazz 2005"
-},
+"auto-honda-jazz-2": 2,
 "auto-honda-jazz-3": 1,
 "auto-honda-jazz-4": 3,
-"auto-honda-civic-7": {
-"q": "Honda Civic 2003 hatchback"
-},
-"auto-honda-civic-8": {
-"q": "Honda Civic 2007 hatchback"
-},
-"auto-honda-civic-9": {
-"q": "Honda Civic 2013 Europe"
-},
+"auto-honda-civic-7": 2,
+"auto-honda-civic-8": 0,
+"auto-honda-civic-9": 3,
 "auto-honda-civic-10": 3,
 "auto-honda-cr-v-2": 2,
 "auto-honda-cr-v-3": 3,
@@ -131,9 +67,7 @@
 "auto-mazda-mazda2-de": 1,
 "auto-mazda-mazda2-dj": 3,
 "auto-mazda-mazda3-bk": 2,
-"auto-mazda-mazda3-bl": {
-"q": "Mazda3 2010 hatchback"
-},
+"auto-mazda-mazda3-bl": 1,
 "auto-mazda-mazda3-bm": 1,
 "auto-mazda-mazda6-gg": 1,
 "auto-mazda-mazda6-gh": 1,
@@ -143,41 +77,27 @@
 "auto-mazda-mx-5-nc": 1,
 "auto-mitsubishi-colt-6-z30": 1,
 "auto-mitsubishi-space-star-2": 1,
-"auto-mitsubishi-asx-1": {
-"q": "Mitsubishi ASX 2010"
-},
-"auto-mitsubishi-outlander-2": {
-"q": "Mitsubishi Outlander 2008"
-},
-"auto-mitsubishi-outlander-3": {
-"q": "Mitsubishi Outlander 2013"
-},
+"auto-mitsubishi-asx-1": 1,
+"auto-mitsubishi-outlander-2": 3,
+"auto-mitsubishi-outlander-3": 0,
 "auto-mitsubishi-l200-4": 3,
 "auto-mitsubishi-pajero-4": 2,
-"auto-suzuki-swift-3": {
-"q": "Suzuki Swift 2006"
-},
+"auto-suzuki-swift-3": 2,
 "auto-suzuki-swift-4": 2,
 "auto-suzuki-swift-5": 1,
 "auto-suzuki-ignis-3": 2,
 "auto-suzuki-vitara-2015": 1,
 "auto-suzuki-sx4-1": 1,
-"auto-suzuki-sx4-s-cross": {
-"q": "Suzuki SX4 S-Cross 2014"
-},
+"auto-suzuki-sx4-s-cross": 1,
 "auto-suzuki-grand-vitara-2": 1,
 "auto-suzuki-jimny-3": 2,
 "auto-suzuki-jimny-4": 3,
-"auto-suzuki-celerio": {
-"q": "Suzuki Celerio 2015"
-},
+"auto-suzuki-celerio": 1,
 "auto-subaru-impreza-3": 2,
 "auto-subaru-forester-3": 3,
 "auto-subaru-forester-4": 2,
 "auto-subaru-xv-1": 3,
-"auto-subaru-outback-4": {
-"q": "Subaru Outback 2010"
-},
+"auto-subaru-outback-4": 2,
 "auto-lexus-ct-200h": 1,
 "auto-lexus-nx-1": 1,
 "auto-lexus-rx-3": 3,
@@ -189,17 +109,13 @@
 "auto-hyundai-getz": 2,
 "auto-hyundai-i20-1": 2,
 "auto-hyundai-i20-2": 2,
-"auto-hyundai-i20-3": {
-"q": "Hyundai i20 2021"
-},
+"auto-hyundai-i20-3": 2,
 "auto-hyundai-i30-1": 2,
 "auto-hyundai-i30-2": 1,
 "auto-hyundai-i30-3": 2,
 "auto-hyundai-ix20": 1,
 "auto-hyundai-ix35": 1,
-"auto-hyundai-tucson-1": {
-"q": "Hyundai Tucson 2005"
-},
+"auto-hyundai-tucson-1": 3,
 "auto-hyundai-tucson-3": 3,
 "auto-hyundai-tucson-4": 3,
 "auto-hyundai-kona-1": 3,
@@ -228,9 +144,7 @@
 "auto-kia-carens-3": 2,
 "auto-ssangyong-korando-c200": 3,
 "auto-ssangyong-tivoli": 1,
-"auto-ssangyong-rexton-2": {
-"q": "SsangYong Rexton G4"
-},
+"auto-ssangyong-rexton-2": 1,
 "auto-chevrolet-spark": 1,
 "auto-chevrolet-aveo-1": 2,
 "auto-chevrolet-aveo-2": 3,
@@ -252,9 +166,7 @@
 "auto-tesla-model-y": 3,
 "auto-mg-zs": 3,
 "auto-mg-mg4": 1,
-"auto-mg-hs": {
-"q": "MG HS 2019"
-},
+"auto-mg-hs": 2,
 "auto-byd-atto-3": 1,
 "auto-byd-dolphin": 1,
 "auto-lynk-co-01": 1
