@@ -36,3 +36,11 @@ import { infos } from "./base-vehicules/enrichir.mjs";
   assert.equal(r.s.obd, "Mon OBD"); assert.equal(r.t.lock, "Ma méthode"); assert.ok(r.t.ecuRefs && /calculateur/.test(r.t.notes));
   const r2 = complete({ s: {}, t: { notes: "Ma note perso" } }, m4); assert.equal(r2.t.notes, "Ma note perso");
   console.log("complément OK"); }
+import { fusionne } from "./base-vehicules.mjs";
+{ const a = { s: { type: "Carte", obd: "auto" }, t: { notes: "⚠️ auto", lock: "Lishi" }, ph: { lame: ["a"] }, photoId: "pA", credit: "c", by: "auto" };
+  const m = { s: { obd: "Sous le cendrier" }, t: { proc1: "Ma procédure", notes: "Ma note" }, ph: { lame: ["b"], prog: ["c"] }, photoId: "pM", by: "u1", cs: [{ id: "c1" }] };
+  const r = fusionne(a, m);
+  assert.equal(r.s.obd, "Sous le cendrier"); assert.equal(r.s.type, "Carte"); assert.equal(r.t.proc1, "Ma procédure"); assert.ok(r.t.notes.startsWith("Ma note"));
+  assert.deepEqual(r.ph.lame, ["a", "b"]); assert.deepEqual(r.ph.specs, ["pM"]); assert.equal(r.photoId, "pA"); assert.equal(r.by, "u1"); assert.equal(r.cs.length, 1);
+  assert.ok(entrees(LOTS.fr).some(e => e.id === "auto-renault-arkana" && e.gen === "Arkana phase 1" && e.yTo === 2023));
+  console.log("fusion OK"); }

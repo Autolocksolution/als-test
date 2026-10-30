@@ -7,7 +7,7 @@ on:
         description: "apercu = chercher les photos et produire les planches ; import = créer les fiches"
         required: true
         type: choice
-        options: [apercu, import, enrichit]
+        options: [apercu, import, enrichit, maj]
       retry:
         description: "1 = relancer seulement les recherches marquées q dans choix"
         required: false
@@ -57,7 +57,7 @@ jobs:
           git pull -q --rebase origin main
           git push
       - name: Préparer la clé de service (supprimée en fin de tâche)
-        if: github.event.inputs.mode == 'import' || github.event.inputs.mode == 'enrichit'
+        if: github.event.inputs.mode == 'import' || github.event.inputs.mode == 'enrichit' || github.event.inputs.mode == 'maj'
         env:
           CLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
@@ -78,6 +78,13 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
           MODE: enrichit
+        run: node base-vehicules.mjs
+      - name: Mise à jour (fusion, renommage)
+        if: github.event.inputs.mode == 'maj'
+        working-directory: scripts
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          MODE: maj
         run: node base-vehicules.mjs
       - name: Supprimer la clé de service
         if: always()

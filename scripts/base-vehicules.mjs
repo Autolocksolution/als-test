@@ -12,8 +12,9 @@ import { EU } from "./base-vehicules/eu.mjs";
 import { ASIE } from "./base-vehicules/asie.mjs";
 import { US, AUTRES } from "./base-vehicules/autres.mjs";
 import { infos, NOTE } from "./base-vehicules/enrichir.mjs";
+import { MAJ } from "./base-vehicules/maj2026.mjs";
 
-export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES } };
+export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES }, maj: MAJ };
 const LOT = process.env.LOT || "fr";
 const DIR = new URL(`./base-vehicules/apercu-${LOT}/`, import.meta.url);
 const UA = "AutoLockSolution-base/1.0 (https://github.com/Autolocksolution/als-test)";
@@ -24,8 +25,8 @@ export const slug = s => norm(s).replace(/ /g, "-");
 export function entrees(lot = LOTS[LOT]) {
   const out = [];
   for (const [brand, rows] of Object.entries(lot))
-    for (const [model, gen, yFrom, yTo, q, s] of rows)
-      out.push({ id: "auto-" + slug(brand + " " + gen), brand, model, gen, yFrom, yTo, q, s: s || {} });
+    for (const [model, gen, yFrom, yTo, q, s, id] of rows)
+      out.push({ id: id || "auto-" + slug(brand + " " + gen), brand, model, gen, yFrom, yTo, q, s: s || {} });
   if (new Set(out.map(e => e.id)).size !== out.length) throw new Error("identifiants en double");
   return out;
 }
@@ -198,8 +199,51 @@ async function enrichit() {
   console.log(`::notice::Complément : ${maj} fiches complétées (${champs} cases remplies), ${deja} déjà faites, ${absentes} absentes.`);
 }
 
+// fusion d'une fiche faite à la main dans la fiche automatique équivalente : ses infos à lui priment
+export function fusionne(auto, man) {
+  const s = { ...(auto.s || {}), ...Object.fromEntries(Object.entries(man.s || {}).filter(([, v]) => v)) };
+  const t = { ...(auto.t || {}) };
+  for (const [k, v] of Object.entries(man.t || {})) if (v) t[k] = k === "notes" && t.notes && t.notes !== v ? v + "\n\n" + t.notes : v;
+  const ph = { ...(auto.ph || {}) };
+  for (const [k, ids] of Object.entries(man.ph || {})) ph[k] = [...new Set([...(ph[k] || []), ...(ids || [])])];
+  let photoId = auto.photoId || man.photoId || null, credit = auto.photoId ? auto.credit || "" : "", creditUrl = auto.photoId ? auto.creditUrl || "" : "";
+  if (auto.photoId && man.photoId && man.photoId !== auto.photoId) ph.specs = [...new Set([...(ph.specs || []), man.photoId])];
+  return { s, t, ph, photoId, credit, creditUrl, cs: [...(auto.cs || []), ...(man.cs || [])],
+    links: [auto.links, man.links].filter(Boolean).join("\n"), diffs: [...(auto.diffs || []), ...(man.diffs || [])], by: man.by || auto.by, at: Date.now() };
+}
+
+async function maj() {
+  const admin = (await import("firebase-admin")).default;
+  admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
+  const db = admin.firestore();
+  const docs = (await db.collection("vehicles").get()).docs.map(d => ({ id: d.id, ...d.data() }));
+  const byId = new Map(docs.map(d => [d.id, d]));
+  // 1. fiche Clio 4 faite à la main → fusion dans « Clio 4 phase 1 » automatique, puis suppression
+  const cible = byId.get("auto-renault-clio-4-phase-1");
+  const man = docs.filter(v => !v.auto && norm(v.brand) === "renault" && /\bclio (4|iv)\b/.test(norm(v.model + " " + (v.gen || ""))));
+  let fus = 0, liens = 0;
+  if (cible && man.length === 1) {
+    const m = man[0];
+    await db.doc("vehicles/" + cible.id).update(fusionne(cible, m));
+    for (const col of ["news", "rdv", "entries"]) {
+      const q = await db.collection(col).where("vehicleId", "==", m.id).get();
+      for (const d of q.docs) { await d.ref.update({ vehicleId: cible.id }); liens++; }
+    }
+    await db.doc("vehicles/" + m.id).delete(); fus = 1;
+  }
+  // 2. fiches automatiques encore intactes : nom et années mis à jour selon les listes
+  let renom = 0;
+  for (const lot of Object.values(LOTS)) for (const e of entrees(lot)) {
+    const v = byId.get(e.id);
+    if (!v || !v.auto || v.by !== "auto") continue;
+    if (v.gen !== e.gen || v.yFrom !== e.yFrom || (v.yTo ?? null) !== e.yTo) { await db.doc("vehicles/" + e.id).update({ gen: e.gen, yFrom: e.yFrom, yTo: e.yTo }); renom++; }
+  }
+  console.log(`::notice::Mise à jour : ${fus} fiche Clio 4 fusionnée (${man.length} trouvée), ${liens} lien(s) déplacé(s), ${renom} fiche(s) renommée(s)/années corrigées.`);
+}
+
 const MODE = process.env.MODE;
-if (MODE === "enrichit") await enrichit();
+if (MODE === "maj") await maj();
+else if (MODE === "enrichit") await enrichit();
 else if (MODE === "apercu") await apercu();
 else if (MODE === "import") await importe();
 else if (MODE) { console.error("MODE inconnu"); process.exit(2); }
