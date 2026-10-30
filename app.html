@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-dSNvWiGxtYx9Q99eB4yl4LSIf0HEMq0zsy0VEwa3U30=' 'sha256-5eTYxH7QH55pmDsh3op4L2IDeNsfnnzdae6q1ygdwwU=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-E2o4dePhM6wPw+56o06PqTAojIz2DePi4jWrjzfUrGo=' 'sha256-yBOvNZmL3yB77DEeUuk/3hpg8iPFFNHvb6z0okDWSUk=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -495,7 +495,16 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vh-empty b{display:block;color:var(--ink);font-family:var(--f-display);font-size:20px;font-weight:600;margin-bottom:4px}
 .vh-res{display:flex;flex-direction:column;gap:8px}
 .vh-res button{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
-.vh-res .vh-mono{width:42px;height:42px;font-size:20px;border-radius:12px}
+.vh-thumb{width:76px;height:52px;border-radius:12px;overflow:hidden;flex:0 0 auto;background:var(--tint)}
+.vh-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vh-res button>span{flex:1;min-width:0;display:flex;flex-direction:column;font-weight:600}
+.vh-res button small{color:var(--muted);font-weight:500;font-family:var(--f-mono);font-size:12px}
+.vh-go{font-style:normal;color:var(--muted);font-size:22px}
+.vh-res button:active{transform:scale(.98)}
+.vh-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.vh-back{border:1px solid var(--line);background:var(--surface);color:var(--accent);font-weight:700;font-size:15px;border-radius:999px;padding:8px 14px}
+.vh-phases-h{display:flex;flex-direction:column;margin:4px 2px 10px}.vh-phases-h b{font-family:var(--f-display);font-size:20px}.vh-phases-h small{color:var(--muted)}
+.vh-res .vh-mono{width:76px;height:52px;font-size:22px;border-radius:12px;flex:0 0 auto}
 .vh-res span{flex:1;min-width:0;font-weight:600;font-size:16px}
 .vh-res small{display:block;font-weight:400;color:var(--muted);font-size:13px}
 .vh-drow{display:grid;grid-template-columns:110px 1fr 40px;gap:6px;margin-bottom:6px}
@@ -3935,7 +3944,7 @@ const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){re
 const VH_SPECS=[["type","Type de clé"],["btn","Boutons"],["freq","Fréquence"],["chip","Puce / transpondeur"],["blade","Lame / profil"],["batt","Pile"],["obd","Prise OBD"],["start","Démarrage"]];
 const VH_TXT=[["proc1","Ajout d'une clé (une clé fonctionne déjà)"],["proc2","Toutes clés perdues"],["tools","Outils et logiciels compatibles"],["lock","Crochetage / ouverture"],["notes","À savoir, pièges"]];
 const VH_BRANDS=["Alfa Romeo","Audi","BMW","Citroën","Dacia","DS","Fiat","Ford","Honda","Hyundai","Jeep","Kia","Land Rover","Mazda","Mercedes","Mini","Mitsubishi","Nissan","Opel","Peugeot","Renault","Seat","Skoda","Smart","Suzuki","Toyota","Volkswagen","Volvo"];
-let vBrand=load("als-vb")||"",vModel=load("als-vm")||"",vGen=load("als-vg")||"",vEditing=null,vDiffs=[],vDelArmed=false,vQ="";
+let vBrand=load("als-vb")||"",vModel=load("als-vm")||"",vGen=load("als-vg")||"",vEditing=null,vDiffs=[],vDelArmed=false,vQ="",vFromQ="",vAll=false;
 const vNorm=s=>(s==null?"":String(s)).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
 const vCmp=(a,b)=>(a||"").localeCompare(b||"","fr",{sensitivity:"base"});
 const vYears=v=>v.yFrom&&v.yTo?v.yFrom+" – "+v.yTo:v.yFrom?"depuis "+v.yFrom:v.yTo?"jusqu'à "+v.yTo:"";
@@ -3943,9 +3952,14 @@ const vSort=(a,b)=>(a.yFrom||0)-(b.yFrom||0)||vCmp(a.gen,b.gen);
 const vBrands=()=>[...new Set(vehicles.map(v=>v.brand).filter(Boolean))].sort(vCmp);
 const vModels=b=>[...new Set(vehicles.filter(v=>v.brand===b).map(v=>v.model).filter(Boolean))].sort(vCmp);
 const vGens=(b,m)=>vehicles.filter(v=>v.brand===b&&v.model===m).sort(vSort);
-const vLabel=v=>[v.brand,v.model].filter(Boolean).join(" ")+(v.gen&&vNorm(v.gen)!==vNorm(v.model)?" · "+v.gen:"");
+/* « Clio 4 phase 1 » plutôt que « Clio · Clio 4 phase 1 » quand la génération reprend déjà le modèle */
+const vName=v=>!v.gen||vNorm(v.gen)===vNorm(v.model)?(v.model||""):(vNorm(v.gen).startsWith(vNorm(v.model))?v.gen:v.model+" · "+v.gen);
+const vLabel=v=>[v.brand,vName(v)].filter(Boolean).join(" ");
 const vSave=()=>{store("als-vb",vBrand);store("als-vm",vModel);store("als-vg",vGen)};
-function vSelect(g){vBrand=g.brand;vModel=g.model;vGen=g.id;vQ="";$("vSearch").value="";$("vYear").value="";vSave();vRender();scrollTo(0,0)}
+function vSelect(g){vFromQ=vQ;vAll=false;vBrand=g.brand;vModel=g.model;vGen=g.id;vQ="";$("vSearch").value="";$("vYear").value="";vSave();vRender();scrollTo(0,0)}
+/* miniature : photo du véhicule, sinon l'initiale de la marque */
+const vThumb=v=>v.photoId?h("div",{class:"vh-thumb"},photoImg(v)):h("div",{class:"vh-mono"},(v.brand||"?").charAt(0).toUpperCase());
+const vResRow=(v,label,go)=>h("button",{type:"button",onclick:go},vThumb(v),h("span",null,label,h("small",null,vYears(v)||"—")),h("i",{class:"vh-go"},"›"));
 function vRender(){
   if(loaded){
     if(vBrand&&!vBrands().includes(vBrand)){vBrand="";vModel="";vGen=""}
@@ -3957,20 +3971,23 @@ function vRender(){
   const ms=vBrand?vModels(vBrand):[];
   sm.replaceChildren(h("option",{value:""},vBrand?"Modèle":"Choisir une marque"),...ms.map(m=>h("option",{value:m},m)));sm.value=ms.includes(vModel)?vModel:"";sm.disabled=!vBrand;
   const gens=vBrand&&vModel?vGens(vBrand,vModel):[];
-  let cur=gens.find(g=>g.id===vGen)||null;
+  let cur=vAll?null:gens.find(g=>g.id===vGen)||null;
   if(!cur&&gens.length===1)cur=gens[0];
   if(cur)vGen=cur.id;
   const yr=+$("vYear").value;
-  $("vGens").replaceChildren(...(gens.length>1?gens.map(g=>h("button",{type:"button",class:"vh-gen","aria-pressed":String(!!cur&&cur.id===g.id),onclick:()=>{vGen=g.id;vSave();vRender()}},h("b",null,g.gen||g.model),h("small",null,vYears(g)||"—"))):[]));
+  $("vGens").replaceChildren(...(gens.length>1?gens.map(g=>h("button",{type:"button",class:"vh-gen","aria-pressed":String(!!cur&&cur.id===g.id),onclick:()=>{vAll=false;vGen=g.id;vSave();vRender()}},h("b",null,g.gen||g.model),h("small",null,vYears(g)||"—"))):[]));
   const box=$("vBody");
   if(vQ){
     const q=vNorm(vQ),res=vehicles.filter(v=>vNorm(v.brand+" "+v.model+" "+(v.gen||"")).includes(q)).sort((a,b)=>vCmp(a.brand,b.brand)||vCmp(a.model,b.model)||vSort(a,b));
-    box.replaceChildren(res.length?h("div",{class:"vh-res"},res.map(v=>h("button",{type:"button",onclick:()=>vSelect(v)},h("div",{class:"vh-mono"},(v.brand||"?").charAt(0).toUpperCase()),h("span",null,vLabel(v),h("small",null,vYears(v)))))):h("div",{class:"vh-empty"},h("b",null,"Aucun résultat"),"Ce véhicule n'est pas encore dans ta base.",canWrite?h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn pri",style:"flex:none;padding:0 20px",onclick:()=>vhOpen(null,{model:vQ})},"Créer la fiche")):null));
+    box.replaceChildren(res.length?h("div",{class:"vh-res"},res.slice(0,80).map(v=>vResRow(v,vLabel(v),()=>vSelect(v))),res.length>80?h("p",{class:"vf-none"},(res.length-80)+" autres : précise ta recherche."):null):h("div",{class:"vh-empty"},h("b",null,"Aucun résultat"),"Ce véhicule n'est pas encore dans ta base.",canWrite?h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn pri",style:"flex:none;padding:0 20px",onclick:()=>vhOpen(null,{model:vQ})},"Créer la fiche")):null));
     return;
   }
   if(!cur){
     const kids=[];
-    if(vBrand&&vModel&&gens.length>1)kids.push(h("div",{class:"vh-empty"},h("b",null,vBrand+" "+vModel),"Choisis la génération ci-dessus"+(yr>1900?" : aucune ne couvre "+yr+" dans ta base.":" ou tape l'année du véhicule.")));
+    if(vBrand&&vModel&&gens.length>1){
+      if(vFromQ)kids.push(h("button",{type:"button",class:"vh-back",onclick:()=>{vQ=vFromQ;vFromQ="";$("vSearch").value=vQ;vRender()}},"‹ Résultats « "+vFromQ+" »"));
+      kids.push(h("div",{class:"vh-phases-h"},h("b",null,vBrand+" "+vModel),h("small",null,gens.length+" générations / phases"+(yr>1900?" · aucune ne couvre "+yr:""))),
+        h("div",{class:"vh-res"},gens.map(g=>vResRow(g,g.gen||g.model,()=>{vAll=false;vGen=g.id;vSave();vRender();scrollTo(0,0)}))));}
     else if(!vehicles.length&&loaded)kids.push(h("div",{class:"vh-empty"},h("b",null,"Ta base est vide"),"Ajoute ton premier véhicule : tout ce que tu notes ici sera retrouvé en deux touches.",canWrite?h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn pri",style:"flex:none;padding:0 20px",onclick:()=>vhOpen(null)},"Ajouter un véhicule")):null));
     else kids.push(h("div",{class:"vh-empty"},h("b",null,vehicles.length+" fiche"+(vehicles.length>1?"s":"")),"Choisis une marque et un modèle, ou cherche par nom."));
     const known=new Set(vehicles.map(v=>vNorm(v.model)));
@@ -3980,7 +3997,10 @@ function vRender(){
     if(miss.length&&canWrite)kids.push(h("div",{class:"vh-card"},h("h3",null,"Faits mais sans fiche"),...miss.map(m=>h("button",{type:"button",class:"vh-row",onclick:()=>vhOpen(null,{model:m.label})},h("span",null,m.label),h("em",null,m.n+" × · créer")))));
     box.replaceChildren(...kids);return;
   }
-  box.replaceChildren(...vFiche(cur));
+  const nav=[];
+  if(gens.length>1)nav.push(h("button",{type:"button",class:"vh-back",onclick:()=>{vAll=true;vRender();scrollTo(0,0)}},"‹ Toutes les phases "+vModel));
+  if(vFromQ)nav.push(h("button",{type:"button",class:"vh-back",onclick:()=>{vQ=vFromQ;vFromQ="";$("vSearch").value=vQ;vRender()}},"‹ Résultats « "+vFromQ+" »"));
+  box.replaceChildren(...(nav.length?[h("div",{class:"vh-nav"},nav)]:[]),...vFiche(cur));
 }
 /* fiche véhicule : photo en grand, puis rubriques à ouvrir (comme une appli de fiches techniques) */
 function vdOpen(title,blocks){
@@ -4073,7 +4093,7 @@ function vFiche(g){
     h("div",{class:"vx-shade"}),
     h("div",{class:"vx-badge"},(g.brand||"?").charAt(0).toUpperCase()),
     canWrite?h("button",{type:"button",class:"vx-edit",onclick:()=>vhOpen(g)},"Modifier"):null,
-    h("div",{class:"vx-cap"},h("small",null,g.brand||""),h("h2",null,[g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:""].filter(Boolean).join(" · ")),
+    h("div",{class:"vx-cap"},h("small",null,g.brand||""),h("h2",null,vName(g)),
       yrs?h("span",{class:"vx-yrs"},yrs):null),
     g.photoId&&g.credit?(safeUrl(g.creditUrl)?h("a",{class:"vx-cred",href:safeUrl(g.creditUrl),target:"_blank",rel:"noopener"},g.credit):h("span",{class:"vx-cred"},g.credit)):null);
   out.push(hero);
@@ -4125,12 +4145,12 @@ function vFiche(g){
   if(df.length)out.push(h("div",{class:"vh-diff"},h("h3",null,"Différences selon l'année"),...df.map(d=>h("div",null,h("b",null,d.years||"—"),h("span",null,d.text||"")))));
   return out;
 }
-$("vBrand").addEventListener("change",()=>{vBrand=$("vBrand").value;vModel="";vGen="";$("vYear").value="";vSave();vRender()});
-$("vModel").addEventListener("change",()=>{vModel=$("vModel").value;vGen="";vSave();vRender()});
+$("vBrand").addEventListener("change",()=>{vFromQ="";vAll=false;vBrand=$("vBrand").value;vModel="";vGen="";$("vYear").value="";vSave();vRender()});
+$("vModel").addEventListener("change",()=>{vFromQ="";vAll=false;vModel=$("vModel").value;vGen="";vSave();vRender()});
 $("vSearch").addEventListener("input",()=>{vQ=$("vSearch").value.trim();vRender()});
 $("vYear").addEventListener("input",()=>{
   const y=+$("vYear").value;
-  if($("vYear").value.length===4&&vBrand&&vModel){const g=vGens(vBrand,vModel).find(g=>(!g.yFrom||y>=g.yFrom)&&(!g.yTo||y<=g.yTo)&&(g.yFrom||g.yTo));if(g){vGen=g.id;vSave()}}
+  if($("vYear").value.length===4&&vBrand&&vModel){const g=vGens(vBrand,vModel).find(g=>(!g.yFrom||y>=g.yFrom)&&(!g.yTo||y<=g.yTo)&&(g.yFrom||g.yTo));if(g){vAll=false;vGen=g.id;vSave()}}
   vRender();
 });
 /* formulaire */
@@ -4470,7 +4490,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-2150";
+const ALS_BUILD="20261030-2219";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
