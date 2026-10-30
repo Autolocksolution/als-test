@@ -277,6 +277,9 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vx-facts span{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:15px;white-space:nowrap}
 .vx-facts .vx-chk{border-color:var(--warn);color:var(--warn)}
 .vx-facts i{display:block;font-style:normal;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.vx-box{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--line)}
+.vx-box:first-of-type{border-top:0;padding-top:0}
+.vx-box b{font-size:16px}.vx-box span{color:var(--muted);font-size:15px}
 .vx-refs{display:flex;flex-wrap:wrap;gap:6px}
 .vx-refs span{font-family:ui-monospace,Menlo,monospace;font-size:14px;font-weight:600;padding:5px 10px;border-radius:10px;background:var(--tint);border:1px solid var(--line)}
 .vx-search{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
@@ -3842,7 +3845,7 @@ $("cMdBtn").addEventListener("click",()=>{const m=$("cModel").value.trim();mdOpe
 
 /* ================= ACCUEIL ================= */
 function hmGoStockLow(){sCat="urgent";sGroup=firstGroup(curCat());sSeries="";lowOnly=false;q="";$("q").value="";store("als-cat",sCat);goMode("stock")}
-const ICO={"chip": "<rect x=\"7\" y=\"7\" width=\"10\" height=\"10\" rx=\"1.5\"/><path d=\"M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4\"/>", "forum": "<path d=\"M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z\"/><path d=\"M17 9h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v2l-3-2h-4\"/>", "note": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 8h6M9 12h6M9 16h4\"/>", "plug": "<path d=\"M9 3v4M15 3v4\"/><rect x=\"6\" y=\"7\" width=\"12\" height=\"6\" rx=\"2\"/><path d=\"M12 13v4a3 3 0 0 1-3 3\"/>", "blade": "<circle cx=\"6\" cy=\"6\" r=\"3\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><path d=\"M8.5 7.5L20 18M8.5 16.5L20 6\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/><circle cx=\"12\" cy=\"16\" r=\"1\"/>", "info": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11v6M12 7.5v.5\"/>", "savings": "<path d=\"M5 11a7 6 0 0 1 14 0v4a2 2 0 0 1-2 2h-1v2h-3v-2h-2v2H8v-2a4 4 0 0 1-3-4z\"/><path d=\"M10 7.5h4\"/><circle cx=\"15.5\" cy=\"11\" r=\".6\"/>", "home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
+const ICO={"box": "<path d=\"M3 7l9-4 9 4v10l-9 4-9-4z\"/><path d=\"M3 7l9 4 9-4M12 11v10\"/>", "chip": "<rect x=\"7\" y=\"7\" width=\"10\" height=\"10\" rx=\"1.5\"/><path d=\"M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4\"/>", "forum": "<path d=\"M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z\"/><path d=\"M17 9h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v2l-3-2h-4\"/>", "note": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 8h6M9 12h6M9 16h4\"/>", "plug": "<path d=\"M9 3v4M15 3v4\"/><rect x=\"6\" y=\"7\" width=\"12\" height=\"6\" rx=\"2\"/><path d=\"M12 13v4a3 3 0 0 1-3 3\"/>", "blade": "<circle cx=\"6\" cy=\"6\" r=\"3\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><path d=\"M8.5 7.5L20 18M8.5 16.5L20 6\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/><circle cx=\"12\" cy=\"16\" r=\"1\"/>", "info": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11v6M12 7.5v.5\"/>", "savings": "<path d=\"M5 11a7 6 0 0 1 14 0v4a2 2 0 0 1-2 2h-1v2h-3v-2h-2v2H8v-2a4 4 0 0 1-3-4z\"/><path d=\"M10 7.5h4\"/><circle cx=\"15.5\" cy=\"11\" r=\".6\"/>", "home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
 const icoSvg=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICO[n]||"")+'</svg>';
 document.querySelectorAll("[data-ico]").forEach(e=>e.innerHTML=icoSvg(e.dataset.ico));
 const ic=n=>{const e=h("span",{class:"msi"});e.innerHTML=icoSvg(n);return e};
@@ -3963,6 +3966,7 @@ const VSECT={
   lock:{t:"Crochetage",s:[],x:[["lock"]]},
   notes:{t:"À savoir, pièges",s:[],x:[["notes"]]},
   ecu:{t:"Emplacement du calculateur",s:[],x:[["ecuLoc","Où il se trouve (accès, démontage…)"],["ecuRefs","Références des calculateurs moteur (une par ligne)"]]},
+  boxes:{t:"Autres boîtiers",s:[],x:[["boxes","Un boîtier par ligne : nom : emplacement (ex. HFM : derrière la boîte à gants)"],["boxNote","Remarques (démontage, connecteurs…)"]]},
   forum:{t:"Infos forums",s:[],x:[["forum","Infos et liens trouvés sur les forums et groupes Facebook"]]}};
 /* texte avec liens cliquables (http/https seulement) */
 function linkText(txt){return String(txt||"").split(/(https?:\/\/[^\s]+)/g).map((p,i)=>i%2&&safeUrl(p)?h("a",{href:safeUrl(p),target:"_blank",rel:"noopener noreferrer"},hostOf(p)||p):p)}
@@ -3991,13 +3995,16 @@ function vsOpen(id,sk,edit){
     if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
     S.x.forEach(([f,l])=>{if(!t[f])return;
       const ttl=f!=="__cs"&&f!=="forum"&&(S.x.length>1||l)?h("h3",null,f==="ecuRefs"?"Références calculateur":f==="ecuLoc"?"Emplacement":vxLabel(f,l)):null;
+      if(f==="boxes"){body.push(h("div",{class:"vh-card"},h("h3",null,"Boîtiers"),...t[f].split(/\n+/).map(x=>x.trim()).filter(Boolean).map(r=>{const m=r.match(/^([^:–-]{1,40})\s*[:–-]\s*(.+)$/);
+        return h("div",{class:"vx-box"},h("b",null,m?m[1].trim():r),m?h("span",null,...linkText(m[2])):null)})));return}
+      if(f==="boxNote"){body.push(h("div",{class:"vh-card"},h("h3",null,"Remarques"),h("p",null,...linkText(t[f]))));return}
       if(f==="ecuRefs")body.push(h("div",{class:"vh-card"},ttl,h("div",{class:"vx-refs"},t[f].split(/\n+/).map(x=>x.trim()).filter(Boolean).map(r=>h("span",null,r)))));
       else body.push(h("div",{class:"vh-card"},ttl,h("p",null,...linkText(t[f]))))});
     if(sk==="ecu"||sk==="forum"){const q=vQuery(g),enc=encodeURIComponent;
       const sl=sk==="ecu"?[["Chercher les références",`https://www.google.com/search?q=${enc(q+" calculateur moteur référence emplacement")}`]]
         :[["Forums (Google)",`https://www.google.com/search?q=${enc(q+" programmation clé forum")}`],["Groupes Facebook",`https://www.facebook.com/search/groups/?q=${enc(g.brand+" "+g.model+" clé programmation")}`],["Publications Facebook",`https://www.facebook.com/search/posts/?q=${enc(q+" clé")}`]];
       body.push(h("div",{class:"vx-search"},sl.map(([l,u])=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},"🔎 "+l))))}
-    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
+    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="boxes"?"Rien de noté pour l'instant. Ajoute les boîtiers utiles (HFM, BCM, gateway, UCH…) avec leur emplacement et une photo.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
   }
   const grid=h("div",{class:"vs-ph"},ids.map(pid=>{const im=photoImg({photoId:pid});im.onclick=async()=>{const d=await getPhoto(pid);if(d)openLb(d)};
     return h("div",{class:"vs-t"},im,edit&&canWrite?h("button",{type:"button",class:"vs-x","aria-label":"Retirer la photo",onclick:async()=>{
@@ -4059,7 +4066,8 @@ function vFiche(g){
   out.push(...grp("Véhicule",[
     tile("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · "),has("specs"),"a"),
     tile("obd","plug","Prise OBD",s.obd||"",has("obd"),"a"),
-    tile("ecu","chip","Calculateur",[(t.ecuRefs||"").split("\n").filter(Boolean).length?(t.ecuRefs||"").split("\n").filter(Boolean).length+" réf.":"",(t.ecuLoc||"").split("\n")[0].slice(0,50)].filter(Boolean).join(" · "),has("ecu"),"a"),...cg("spec")]));
+    tile("ecu","chip","Calculateur",[(t.ecuRefs||"").split("\n").filter(Boolean).length?(t.ecuRefs||"").split("\n").filter(Boolean).length+" réf.":"",(t.ecuLoc||"").split("\n")[0].slice(0,50)].filter(Boolean).join(" · "),has("ecu"),"a"),
+    tile("boxes","box","Autres boîtiers",(()=>{const L=(t.boxes||"").split("\n").map(x=>x.trim()).filter(Boolean);return L.length?L.map(x=>x.split(/\s*[:–-]\s*/)[0]).join(" · ").slice(0,60):""})(),has("boxes"),"a"),...cg("spec")]));
   out.push(...grp("Clé",[
     tile("lame","blade","Lame",s.blade||(t.lameNote||"").slice(0,60),has("lame"),"b"),
     tile("prog","key","Programmation",[t.proc1&&"Ajout de clé",t.proc2&&"Toutes clés perdues"].filter(Boolean).join(" · "),has("prog"),"b"),
