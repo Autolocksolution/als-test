@@ -9,8 +9,13 @@ const per = (y, steps) => { for (const [max, v] of steps) if (y < max) return v;
 
 function ecuRefs(e) {
   const y = e.yFrom, g = e.gen;
+  if (/maxity|cabstar|nt400|alaskan|classe x/i.test(g)) return ["Bosch EDC16 / Denso (moteurs Nissan YD25 / ZD30)"];
+  if (e.brand === "Iveco") return y < 2011 ? ["Bosch EDC16C39 (2.3 / 3.0 HPI-HPT)"] : ["Bosch EDC17C49 / EDC17C69 (2.3 / 3.0)"];
+  if (e.brand === "Isuzu") return ["Denso / Transtron (D-Max)"];
+  if (/fuso canter/i.test(g)) return ["Bosch EDC17 (moteur Fuso 3.0)"];
+  if (e.brand === "MAN") return ["Bosch EDC17C64 / C74 (TDI d'origine Volkswagen)"];
   if (ELEC.test(g) || ELEC.test(e.model)) return ["Électrique : pas de calculateur moteur thermique"];
-  if (e.brand === "Renault" || e.brand === "Dacia" || e.brand === "Alpine" || (e.brand === "Nissan" && /primastar|interstar|micra k14/i.test(g)) || (e.brand === "Mercedes-Benz" && /citan/i.test(g)) || (e.brand === "Opel" && /vivaro a|vivaro b|movano/i.test(g)) || (e.brand === "Smart" && /453/.test(g)))
+  if (e.brand === "Renault" || e.brand === "Dacia" || e.brand === "Alpine" || (e.brand === "Nissan" && /primastar|interstar|micra k14/i.test(g)) || (e.brand === "Mercedes-Benz" && /citan/i.test(g)) || (e.brand === "Opel" && /vivaro a|vivaro b|movano a|movano b/i.test(g)) || /talento|primastar 2|interstar 2|nv300|nv400|townstar/i.test(g) || (e.brand === "Smart" && /453/.test(g)))
     return per(y, [
       [2001, ["Siemens Fenix 5 / Sagem Safir (essence)", "Bosch EDC15C3 / Lucas DCN (diesel)"]],
       [2005, ["Siemens Sirius 32 / Sagem S2000 (essence)", "Delphi DDCR / Bosch EDC15C3 / EDC16C3 (dCi)"]],
@@ -41,7 +46,7 @@ function ecuRefs(e) {
       [2010, ["Siemens / Visteon (essence)", "Siemens SID802 / SID803 / Bosch EDC16C34 / Delphi (TDCi)"]],
       [2018, ["Bosch MED17.0 (EcoBoost) / Continental EMS2204", "Siemens SID206 / SID208 / Bosch EDC17C10 / C70 / Delphi DCM3.5 (TDCi)"]],
       [9999, ["Bosch MG1CS019 / Continental (EcoBoost)", "Bosch MD1CS / Delphi DCM7.1 (EcoBlue)"]]]);
-  if (FIAT.includes(e.brand) || (e.brand === "Jeep" && /renegade|compass/i.test(g)) || (e.brand === "Opel" && /combo d/i.test(g)) || (e.brand === "Ford" && /ka 2/i.test(g)))
+  if (FIAT.includes(e.brand) || (e.brand === "Jeep" && /renegade|compass/i.test(g)) || /movano c|proace max/i.test(g) || (e.brand === "Opel" && /combo d/i.test(g)) || (e.brand === "Ford" && /ka 2/i.test(g)))
     return per(y, [
       [2003, ["Magneti Marelli IAW 59F / Bosch ME7.3 (essence)", "Bosch EDC15C7 (JTD)"]],
       [2010, ["Magneti Marelli IAW 5SF / 4AF / Bosch ME7.9.10 (essence)", "Magneti Marelli MJD6F3 / Bosch EDC16C39 (Multijet)"]],
@@ -87,6 +92,9 @@ function ecuLoc(e) {
 
 function boxes(e) {
   const y = e.yFrom, g = e.gen, t = e.s.type || "";
+  if (/maxity|cabstar|nt400|alaskan|classe x/i.test(g)) return ["Antidémarrage NATS (Nissan) : derrière le tableau de bord, côté conducteur"];
+  if (e.brand === "Iveco") return ["Body Computer : sous le tableau de bord côté conducteur", "Antidémarrage : antenne au contacteur + calculateur moteur"];
+  if (e.brand === "MAN") return ["BCM (boîtier confort) : sous la planche de bord, côté gauche"];
   if (e.brand === "Renault" || e.brand === "Alpine") {
     const L = ["UCH : sous le volant, côté gauche (près de la boîte à fusibles)"];
     if (/carte/i.test(t)) L.push("Lecteur de carte : planche de bord / console centrale");
