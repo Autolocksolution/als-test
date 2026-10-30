@@ -35,7 +35,7 @@ function ecuRefs(e) {
       [2009, ["Bosch MED9.5.10 / Siemens Simos 7 / Magneti Marelli 4HV (essence)", "Bosch EDC16U1 / EDC16U34 / EDC16CP34 (TDI PD)"]],
       [2013, ["Bosch MED17.5 / Continental Simos 10 (TSI)", "Bosch EDC17C46 / EDC17CP14 / Continental SID803A (TDI CR)"]],
       [9999, ["Bosch MED17.1.27 / MG1CS011 / Continental Simos 18 (TSI)", "Bosch EDC17C64 / EDC17C74 / MD1CS004 / Delphi DCM6.2 (TDI)"]]]);
-  if (e.brand === "Opel" || e.brand === "Chevrolet")
+  if ((e.brand === "Opel" && !/movano c/i.test(g)) || e.brand === "Chevrolet")
     return per(y, [
       [2004, ["Siemens Simtec 70 / 71 / Bosch Motronic (essence)", "Bosch EDC15M / Denso (diesel)"]],
       [2010, ["Siemens Simtec 75 / Bosch ME7.6 (essence)", "Bosch EDC16C9 / EDC16C39 / Magneti Marelli MJD6JO (CDTI)"]],
