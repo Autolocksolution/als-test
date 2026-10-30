@@ -16,3 +16,7 @@ import { retenue } from "./base-vehicules.mjs";
   assert.equal(retenue({ a: 2 }, cand, "a").t, 2); assert.equal(retenue({}, cand, "b").t, 3); assert.equal(retenue({ b: { from: "a", n: 1 } }, cand, "b").t, 1);
   assert.equal(retenue({ b: { q: "x" } }, cand, "b"), null); assert.equal(retenue({ a: 0 }, cand, "a"), null); }
 console.log("retenue OK");
+import { LOTS } from "./base-vehicules.mjs";
+{ const all = Object.values(LOTS).flatMap(l => entrees(l)); assert.equal(new Set(all.map(e => e.id)).size, all.length, "id en double entre lots");
+  for (const e of all) assert.ok(e.yFrom >= 1990 && (e.yTo === null || e.yTo >= e.yFrom), e.id);
+  console.log("lots :", Object.entries(LOTS).map(([n, l]) => n + "=" + entrees(l).length).join(" ")); }

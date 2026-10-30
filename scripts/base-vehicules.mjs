@@ -8,8 +8,11 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 import { FR } from "./base-vehicules/fr.mjs";
+import { EU } from "./base-vehicules/eu.mjs";
+import { ASIE } from "./base-vehicules/asie.mjs";
+import { US, AUTRES } from "./base-vehicules/autres.mjs";
 
-const LOTS = { fr: FR };
+export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES } };
 const LOT = process.env.LOT || "fr";
 const DIR = new URL(`./base-vehicules/apercu-${LOT}/`, import.meta.url);
 const UA = "AutoLockSolution-base/1.0 (https://github.com/Autolocksolution/als-test)";
