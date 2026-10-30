@@ -29,7 +29,7 @@ export function entrees(lot = LOTS[LOT]) {
   return out;
 }
 
-const MAUVAIS = /interior|innen|innenraum|cockpit|dashboard|armaturen|engine|motor|heck|rear|back|arri[eè]re|int[eé]rieur|badge|logo|emblem|detail|wheel|felge|seat|trunk|kofferraum|tail|crash|wreck|unfall|rally|rallye|race|racing|tuning|police|polizei|polizia|gendarmerie|taxi|model ?car|miniature|toy|scale|diecast|sketch|drawing|key|schl[uü]ssel|light|lamp|scheinwerfer|steering|lenkrad/i;
+const MAUVAIS = /interior|innen|innenraum|cockpit|dashboard|armaturen|engine|motor\b|heck|\brear\b|\bback\b|arri[eè]re|int[eé]rieur|badge|logo|emblem|detail|\bwheel|felge|\btrunk|kofferraum|\btail|crash|wreck|unfall|rally|rallye|\brace\b|racing|tuning|police|polizei|polizia|gendarmerie|\btaxi|model ?car|miniature|\btoys?\b|\bscale\b|diecast|sketch|drawing|\bkeys?\b|schl[uü]ssel|\blights?\b|\blamp|scheinwerfer|steering|lenkrad|concept|prototype/i;
 const DEVANT = /front|vorne|frontansicht|avant|vorderansicht|\bvl\b/i;
 const txt = h => String(h || "").replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/\s+/g, " ").trim();
 

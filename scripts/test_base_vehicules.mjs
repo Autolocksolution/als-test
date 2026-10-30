@@ -20,3 +20,5 @@ import { LOTS } from "./base-vehicules.mjs";
 { const all = Object.values(LOTS).flatMap(l => entrees(l)); assert.equal(new Set(all.map(e => e.id)).size, all.length, "id en double entre lots");
   for (const e of all) assert.ok(e.yFrom >= 1990 && (e.yTo === null || e.yTo >= e.yFrom), e.id);
   console.log("lots :", Object.entries(LOTS).map(([n, l]) => n + "=" + entrees(l).length).join(" ")); }
+{ const ii = [{ width: 2000, height: 1000, thumburl: "x" }];
+  assert.equal(trie([{ title: "File:Toyota Yaris 2006.jpg", index: 1, imageinfo: ii }, { title: "File:SEAT Leon 2.jpg", index: 2, imageinfo: ii }, { title: "File:Seat Ibiza interior.jpg", index: 3, imageinfo: ii }]).length, 2); }
