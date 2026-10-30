@@ -8,6 +8,10 @@ on:
         required: true
         type: choice
         options: [apercu, import]
+      retry:
+        description: "1 = relancer seulement les recherches marquées q dans choix"
+        required: false
+        default: ""
       lot:
         description: "Lot de marques (fr, ...)"
         required: true
@@ -41,6 +45,7 @@ jobs:
         env:
           MODE: apercu
           LOT: ${{ github.event.inputs.lot }}
+          RETRY: ${{ github.event.inputs.retry }}
         run: node base-vehicules.mjs
       - name: Publier l'aperçu
         if: github.event.inputs.mode == 'apercu'

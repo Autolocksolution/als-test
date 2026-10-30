@@ -11,3 +11,8 @@ assert.ok(!memeFiche({ brand: "Renault", model: "Megane", gen: "Megane 4", yFrom
 const ii = (w, h) => [{ width: w, height: h, thumburl: "x" }];
 assert.deepEqual(trie([{ title: "File:Renault Clio interior.jpg", index: 1, imageinfo: ii(2000, 1000) }, { title: "File:Renault Clio rear.jpg", index: 2, imageinfo: ii(2000, 1000) }, { title: "File:Renault Clio IV.jpg", index: 3, imageinfo: ii(2000, 1000) }, { title: "File:Renault Clio IV front.jpg", index: 4, imageinfo: ii(2000, 1000) }]).map(p => p.title), ["File:Renault Clio IV front.jpg", "File:Renault Clio IV.jpg"]);
 console.log("base-vehicules: tests OK (" + E.length + " fiches)");
+import { retenue } from "./base-vehicules.mjs";
+{ const cand = { a: [{ t: 1 }, { t: 2 }], b: [{ t: 3 }] };
+  assert.equal(retenue({ a: 2 }, cand, "a").t, 2); assert.equal(retenue({}, cand, "b").t, 3); assert.equal(retenue({ b: { from: "a", n: 1 } }, cand, "b").t, 1);
+  assert.equal(retenue({ b: { q: "x" } }, cand, "b"), null); assert.equal(retenue({ a: 0 }, cand, "a"), null); }
+console.log("retenue OK");

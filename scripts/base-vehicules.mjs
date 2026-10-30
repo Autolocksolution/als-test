@@ -65,35 +65,57 @@ async function telecharge(url) {
   throw new Error("téléchargement impossible");
 }
 
+async function planche(sharp, liste, cand, nom, num) {
+  const RW = 1000, RH = 150, TW = 220, esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+  const comps = [];
+  for (let i = 0; i < liste.length; i++) {
+    const e = liste[i], y = i * RH;
+    comps.push({ input: Buffer.from(`<svg width="330" height="${RH}" xmlns="http://www.w3.org/2000/svg"><rect width="330" height="${RH}" fill="${i % 2 ? "#eee" : "#fff"}"/><text x="8" y="40" font-family="DejaVu Sans" font-size="26" font-weight="bold">#${num(e, i)}</text><text x="8" y="80" font-family="DejaVu Sans" font-size="20">${esc(e.brand)}</text><text x="8" y="108" font-family="DejaVu Sans" font-size="20" font-weight="bold">${esc(e.gen)}</text><text x="8" y="134" font-family="DejaVu Sans" font-size="18">${e.yFrom}–${e.yTo || "…"}</text></svg>`), left: 0, top: y });
+    for (let j = 0; j < (cand[e.id] || []).length; j++) {
+      try {
+        const b = await telecharge(cand[e.id][j].thumb);
+        const t = await sharp(b).resize(TW - 6, RH - 26, { fit: "cover" }).jpeg({ quality: 70 }).toBuffer();
+        comps.push({ input: t, left: 330 + j * TW, top: y + 2 });
+        comps.push({ input: Buffer.from(`<svg width="${TW}" height="22" xmlns="http://www.w3.org/2000/svg"><text x="4" y="17" font-family="DejaVu Sans" font-size="16" font-weight="bold">${j + 1}</text></svg>`), left: 330 + j * TW, top: y + RH - 24 });
+      } catch (err) { /* vignette manquante */ }
+    }
+  }
+  await sharp({ create: { width: RW, height: liste.length * RH, channels: 3, background: "#ffffff" } }).composite(comps).jpeg({ quality: 72 }).toFile(new URL(nom, DIR).pathname);
+}
+
+const choixFile = new URL(`./base-vehicules/choix-${LOT}.json`, import.meta.url);
+
 async function apercu() {
   const sharp = (await import("sharp")).default;
   fs.mkdirSync(DIR, { recursive: true });
-  const E = entrees(), cand = {};
+  const E = entrees(), PAR = 20;
+  if (process.env.RETRY) { // nouvelles recherches pour les fiches marquées {"q": "..."} dans choix
+    const cand = JSON.parse(fs.readFileSync(new URL("candidats.json", DIR), "utf8")), choix = JSON.parse(fs.readFileSync(choixFile, "utf8"));
+    const R = E.filter(e => choix[e.id] && choix[e.id].q);
+    for (const e of R) cand[e.id] = await cherche(choix[e.id].q);
+    fs.writeFileSync(new URL("candidats.json", DIR), JSON.stringify(cand, null, 1));
+    for (let p = 0; p * PAR < R.length; p++) await planche(sharp, R.slice(p * PAR, p * PAR + PAR), cand, `reprise-${p + 1}.jpg`, e => E.indexOf(e) + 1);
+    console.log(`Reprise : ${R.length} fiches, ${R.filter(e => cand[e.id].length).length} avec photo.`);
+    return;
+  }
+  const cand = {};
   for (const e of E) {
     let c = await cherche(e.q);
     if (!c.length) c = await cherche(e.q.replace(/ (phase \d|facelift|\d{4})$/i, ""));
     cand[e.id] = c;
   }
   fs.writeFileSync(new URL("candidats.json", DIR), JSON.stringify(cand, null, 1));
-  const RW = 1000, RH = 150, TW = 220, PAR = 20, esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
-  for (let p = 0; p * PAR < E.length; p++) {
-    const part = E.slice(p * PAR, p * PAR + PAR), comps = [];
-    for (let i = 0; i < part.length; i++) {
-      const e = part[i], y = i * RH, n = p * PAR + i + 1;
-      comps.push({ input: Buffer.from(`<svg width="330" height="${RH}" xmlns="http://www.w3.org/2000/svg"><rect width="330" height="${RH}" fill="${i % 2 ? "#eee" : "#fff"}"/><text x="8" y="40" font-family="DejaVu Sans" font-size="26" font-weight="bold">#${n}</text><text x="8" y="80" font-family="DejaVu Sans" font-size="20">${esc(e.brand)}</text><text x="8" y="108" font-family="DejaVu Sans" font-size="20" font-weight="bold">${esc(e.gen)}</text><text x="8" y="134" font-family="DejaVu Sans" font-size="18">${e.yFrom}–${e.yTo || "…"}</text></svg>`), left: 0, top: y });
-      for (let j = 0; j < (cand[e.id] || []).length; j++) {
-        try {
-          const b = await telecharge(cand[e.id][j].thumb);
-          const t = await sharp(b).resize(TW - 6, RH - 26, { fit: "cover" }).jpeg({ quality: 70 }).toBuffer();
-          comps.push({ input: t, left: 330 + j * TW, top: y + 2 });
-          comps.push({ input: Buffer.from(`<svg width="${TW}" height="22" xmlns="http://www.w3.org/2000/svg"><text x="4" y="17" font-family="DejaVu Sans" font-size="16" font-weight="bold">${j + 1}</text></svg>`), left: 330 + j * TW, top: y + RH - 24 });
-        } catch (err) { /* vignette manquante */ }
-      }
-    }
-    await sharp({ create: { width: RW, height: part.length * RH, channels: 3, background: "#ffffff" } }).composite(comps).jpeg({ quality: 72 })
-      .toFile(new URL(`planche-${String(p + 1).padStart(2, "0")}.jpg`, DIR).pathname);
-  }
+  for (let p = 0; p * PAR < E.length; p++)
+    await planche(sharp, E.slice(p * PAR, p * PAR + PAR), cand, `planche-${String(p + 1).padStart(2, "0")}.jpg`, (e, i) => p * PAR + i + 1);
   console.log(`Aperçu : ${E.length} fiches, ${Object.values(cand).filter(c => c.length).length} avec au moins une photo.`);
+}
+
+// photo retenue : n° de candidat, {from: autre fiche, n}, ou 0 / {q} non résolu = sans photo
+export function retenue(choix, cand, id) {
+  const ch = choix[id] ?? 1;
+  if (typeof ch === "number") return ch > 0 ? (cand[id] || [])[ch - 1] || null : null;
+  if (ch && ch.from) return (cand[ch.from] || [])[(ch.n || 1) - 1] || null;
+  return null;
 }
 
 // numéro de génération : « Clio 4 phase 1 » → 4 ; « Megane 3 » → 3
@@ -112,14 +134,14 @@ async function importe() {
   admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
   const db = admin.firestore();
   const cand = JSON.parse(fs.readFileSync(new URL("candidats.json", DIR), "utf8"));
-  const choix = JSON.parse(fs.readFileSync(new URL(`./base-vehicules/choix-${LOT}.json`, import.meta.url), "utf8"));
+  const choix = JSON.parse(fs.readFileSync(choixFile, "utf8"));
   const exist = (await db.collection("vehicles").get()).docs.map(d => ({ id: d.id, ...d.data() }));
   const manuelles = exist.filter(v => !v.auto);
   let crees = 0, deja = 0, sautees = 0, sansPhoto = 0;
   for (const e of entrees()) {
     if (manuelles.some(v => memeFiche(v, e))) { sautees++; continue; }
     if (exist.some(v => v.id === e.id)) { deja++; continue; } // déjà importée : on n'y touche plus (photos et notes ajoutées)
-    const ch = choix[e.id] ?? 1, c = typeof ch === "number" && ch > 0 ? (cand[e.id] || [])[ch - 1] : null;
+    const c = retenue(choix, cand, e.id);
     let photoId = null, credit = "";
     if (c) {
       try {
