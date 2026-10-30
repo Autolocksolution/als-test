@@ -260,6 +260,10 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vf-l{flex:1;min-width:0}.vf-l b{display:block;font-size:17px;font-weight:600}.vf-l small{display:block;color:var(--muted);font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vf-ch{color:var(--muted);font-size:24px;line-height:1}
 .vf-none{color:var(--muted)}
+.vs-ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.vs-t{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--tint)}
+.vs-t img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.vs-x{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px}
 .seg4{flex-wrap:wrap}.seg4 button{flex:1 1 45%}
 .ord{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ord .kl{flex:1;min-width:0}
@@ -3900,6 +3904,54 @@ function vdOpen(title,blocks){
     h("div",{class:"acts"},h("button",{type:"button",class:"btn",onclick:()=>sc.remove()},"Fermer"))));
   document.body.append(sc);
 }
+/* rubriques de la fiche : champs (s = courts, t = textes) + photos (g.ph[clé] = ids) ; modifiables à tout moment */
+const VSECT={
+  specs:{t:"Spécifications",s:["type","btn","freq","chip","batt","start"],x:[]},
+  obd:{t:"Emplacement de la prise OBD",s:["obd"],x:[["obdNote","Précisions (démontage, cache…)"]]},
+  lame:{t:"Lame",s:["blade"],x:[["lameNote","Taillage, code, profil, remarques"]]},
+  prog:{t:"Programmation",s:[],x:[["proc1"],["proc2"],["tools"]]},
+  lock:{t:"Crochetage",s:[],x:[["lock"]]},
+  notes:{t:"À savoir, pièges",s:[],x:[["notes"]]}};
+for(const k in VSECT)VSECT[k].has=g=>VSECT[k].s.some(f=>(g.s||{})[f])||VSECT[k].x.some(([f])=>(g.t||{})[f]);
+const vxLabel=(f,l)=>l||((VH_TXT.find(x=>x[0]===f)||[])[1])||f;
+function vsOpen(id,sk,edit){
+  document.querySelectorAll(".scrim.vs").forEach(x=>x.remove());
+  const g=vehicles.find(v=>v.id===id);if(!g)return;
+  const S=VSECT[sk],s=g.s||{},t=g.t||{},ids=((g.ph||{})[sk]||[]).slice();
+  const close=()=>sc.remove();
+  const body=[];
+  if(edit){
+    S.s.forEach(f=>{const l=(VH_SPECS.find(x=>x[0]===f)||[])[1]||f;body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},l),h("input",{id:"ve_"+f,maxlength:"80",value:s[f]||""})))});
+    S.x.forEach(([f,l])=>{const ta=h("textarea",{id:"ve_"+f,rows:"4",maxlength:"2000"});ta.value=t[f]||"";body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},vxLabel(f,l)),ta))});
+  }else{
+    const sp=S.s.filter(f=>s[f]);
+    if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
+    S.x.forEach(([f,l])=>{if(t[f])body.push(h("div",{class:"vh-card"},S.x.length>1||l?h("h3",null,vxLabel(f,l)):null,h("p",null,t[f])))});
+    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length)body.push(h("p",{class:"vf-none"},"Rien de noté pour l'instant."));
+  }
+  const grid=h("div",{class:"vs-ph"},ids.map(pid=>{const im=photoImg({photoId:pid});im.onclick=async()=>{const d=await getPhoto(pid);if(d)openLb(d)};
+    return h("div",{class:"vs-t"},im,edit&&canWrite?h("button",{type:"button",class:"vs-x","aria-label":"Retirer la photo",onclick:async()=>{
+      try{await db.doc("vehicles/"+g.id).update({ph:{...(g.ph||{}),[sk]:ids.filter(x=>x!==pid)}});toast("Photo retirée")}catch(e){toast("Modification refusée")}vsLater(g.id,sk,true)}},"✕"):null)}));
+  if(ids.length)body.push(grid);
+  const inp=h("input",{type:"file",accept:"image/*",hidden:true});
+  inp.addEventListener("change",async()=>{const f=inp.files[0];inp.value="";if(!f)return;
+    try{const d=await shrink(f,1400);const pid=await putPhoto(d);await db.doc("vehicles/"+g.id).update({ph:{...(g.ph||{}),[sk]:[...ids,pid]}});toast("Photo ajoutée")}catch(e){toast("Photo non enregistrée")}
+    vsLater(g.id,sk,edit)});
+  const acts=edit
+    ?[h("button",{type:"button",class:"btn",onclick:()=>vsOpen(g.id,sk,false)},"Annuler"),h("button",{type:"button",class:"btn pri",onclick:async()=>{
+        const ns={...s},nt={...t};
+        S.s.forEach(f=>{const v=$("ve_"+f).value.trim();if(v)ns[f]=v;else delete ns[f]});
+        S.x.forEach(([f])=>{const v=$("ve_"+f).value.trim();if(v)nt[f]=v;else delete nt[f]});
+        try{await db.doc("vehicles/"+g.id).update({s:ns,t:nt,by:uid,at:Date.now()});toast("Enregistré")}catch(e){toast("Modification refusée");return}
+        vsLater(g.id,sk,false)}},"Enregistrer")]
+    :[h("button",{type:"button",class:"btn",onclick:close},"Fermer"),canWrite?h("button",{type:"button",class:"btn pri",onclick:()=>vsOpen(g.id,sk,true)},"✏️ Ajouter / modifier"):null];
+  const sc=h("div",{class:"scrim vs",onclick:e=>{if(e.target===sc)close()}},h("div",{class:"sheet"},h("h2",null,S.t),...body,inp,
+    canWrite?h("button",{type:"button",class:"btn",style:"width:100%;margin:6px 0",onclick:()=>inp.click()},"📷 Ajouter une photo"):null,
+    h("div",{class:"acts"},...acts.filter(Boolean))));
+  document.body.append(sc);
+}
+/* rouvre la rubrique une fois la fiche mise à jour par la synchro */
+function vsLater(id,sk,edit){setTimeout(()=>vsOpen(id,sk,edit),350)}
 function vFiche(g){
   const out=[];
   const s=g.s||{},t=g.t||{},yrs=vYears(g);
@@ -3909,20 +3961,18 @@ function vFiche(g){
     h("div",{class:"vf-shade"}),h("h2",{class:"vf-title"},title),
     canWrite?h("button",{type:"button",class:"vf-edit",onclick:()=>vhOpen(g)},"Modifier"):null);
   out.push(hero);
-  const none=h("p",{class:"vf-none"},"Rien de noté pour l'instant."+(canWrite?" Touche « Modifier » pour compléter.":""));
-  const sp=(keys)=>{const l=VH_SPECS.filter(([k])=>keys.includes(k)&&s[k]);return l.length?h("div",{class:"vh-specs"},l.map(([k,lb])=>h("div",{class:"vh-spec"},h("small",null,lb),h("b",null,s[k])))):null};
-  const tx=(k)=>t[k]?h("div",{class:"vh-card"},h("h3",null,VH_TXT.find(x=>x[0]===k)[1]),h("p",null,t[k])):null;
-  const row=(icon,label,sub,blocks)=>{const has=blocks.some(Boolean);return h("button",{type:"button",class:"vf-row"+(has?"":" empty"),onclick:()=>vdOpen(label,has?blocks.filter(Boolean):[none])},
-    h("span",{class:"vf-ic"},ic(icon)),h("span",{class:"vf-l"},h("b",null,label),sub?h("small",null,sub):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
+  const ph=g.ph||{},np=k=>(ph[k]||[]).length;
+  const row=(sk,icon,label,sub)=>{const has=VSECT[sk].has(g)||np(sk);return h("button",{type:"button",class:"vf-row"+(has?"":" empty"),onclick:()=>vsOpen(g.id,sk)},
+    h("span",{class:"vf-ic"},ic(icon)),h("span",{class:"vf-l"},h("b",null,label),(sub||np(sk))?h("small",null,[sub,np(sk)?"📷 "+np(sk):""].filter(Boolean).join(" · ")):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
   const sec=(icon,label,rows)=>[h("div",{class:"vf-sec"},ic(icon),h("span",null,label)),...rows];
   out.push(...sec("directions_car","Spécifications",[
-    row("directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · "),[sp(["type","btn","freq","chip","batt","start"])]),
-    row("plug","Emplacement de la prise OBD",s.obd||"",[s.obd?h("div",{class:"vh-card"},h("p",null,s.obd)):null])]));
+    row("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · ")),
+    row("obd","plug","Emplacement de la prise OBD",s.obd||"")]));
   out.push(...sec("key","Clé",[
-    row("blade","Lame",s.blade||"",[sp(["blade"])]),
-    row("key","Programmation",[t.proc1&&"ajout de clé",t.proc2&&"toutes clés perdues"].filter(Boolean).join(" · "),[tx("proc1"),tx("proc2"),tx("tools")]),
-    row("lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,40),[tx("lock")]),
-    row("info","À savoir, pièges","",[tx("notes")])]));
+    row("lame","blade","Lame",s.blade||""),
+    row("prog","key","Programmation",[t.proc1&&"ajout de clé",t.proc2&&"toutes clés perdues"].filter(Boolean).join(" · ")),
+    row("lock","lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,40)),
+    row("notes","info","À savoir, pièges",(t.notes||"").split("\n")[0].slice(0,40))]));
   const links=(g.links||"").split(/\n+/).map(x=>x.trim()).filter(safeUrl);
   if(links.length)out.push(h("div",{class:"vh-card"},h("h3",null,"Liens"),h("div",{class:"vh-links"},links.map(u=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},hostOf(u)||u)))));
   const mk=vNorm(g.model);
@@ -3989,9 +4039,9 @@ $("vhForm").addEventListener("submit",async ev=>{
   const known=vehicles.find(v=>v.brand===brand&&vNorm(v.model)===vNorm(model));if(known)model=known.model;
   const yf=parseInt($("vf_from").value,10),yt=parseInt($("vf_to").value,10);
   if(yf&&yt&&yt<yf){toast("L'année de fin est avant l'année de début");return}
-  const s={},t={};
-  VH_SPECS.forEach(([k])=>{const v=$("vs_"+k).value.trim();if(v)s[k]=v});
-  VH_TXT.forEach(([k])=>{const v=$("vt_"+k).value.trim();if(v)t[k]=v});
+  const s={...((vEditing&&vEditing.s)||{})},t={...((vEditing&&vEditing.t)||{})};
+  VH_SPECS.forEach(([k])=>{const v=$("vs_"+k).value.trim();if(v)s[k]=v;else delete s[k]});
+  VH_TXT.forEach(([k])=>{const v=$("vt_"+k).value.trim();if(v)t[k]=v;else delete t[k]});
   let photoId=vfPh.pid||null;if(vfPh.data){try{photoId=await putPhoto(vfPh.data)}catch(e){toast("Photo non enregistrée")}}
   const data={photoId,brand,model,gen:$("vf_gen").value.trim(),yFrom:yf||null,yTo:yt||null,s,t,links:$("vf_links").value.trim(),diffs:vDiffs.map(d=>({years:(d.years||"").trim(),text:(d.text||"").trim()})).filter(d=>d.years||d.text),by:uid,at:Date.now()};
   $("vhSave").disabled=true;
