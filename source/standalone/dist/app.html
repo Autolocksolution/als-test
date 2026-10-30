@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-qJksoPkYeibkilY6tzV4Bu5koY/376M5nmOVHyJOBFM=' 'sha256-lUxvCbJFBG9PxLtFg3zPQv5pD9OFGmdZdTOhz7arzXs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-bQNw0L4MazpmSeIhxKayam6pg1hIm0Vcs2KCYw7UNGg=' 'sha256-fJiUhxwxDYgVjTn+eH81ZWxV/EOBrq4S6m/lSTYAfEs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -261,6 +261,48 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vf-l{flex:1;min-width:0}.vf-l b{display:block;font-size:17px;font-weight:600}.vf-l small{display:block;color:var(--muted);font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vf-ch{color:var(--muted);font-size:24px;line-height:1}
 .vf-none{color:var(--muted)}
+/* ===== fiche véhicule : style AutoLockSolution ===== */
+.vx-hero{position:relative;height:230px;border-radius:24px;overflow:hidden;margin:0 0 12px;box-shadow:0 10px 30px rgba(0,0,0,.18);animation:vxIn .4s ease both}
+.vx-hero img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.02)}
+.vx-pat{position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.18),transparent 40%),linear-gradient(135deg,var(--accent),#1d2f3a)}
+.vx-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,0) 30%,rgba(0,0,0,.7))}
+.vx-badge{position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.92);color:#16242c;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:800;font-size:20px}
+.vx-edit{position:absolute;top:14px;right:14px;border:0;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;color:#fff;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.vx-cap{position:absolute;left:16px;right:16px;bottom:14px;color:#fff}
+.vx-cap small{display:block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.vx-cap h2{margin:2px 0 6px;font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.05;text-shadow:0 2px 10px rgba(0,0,0,.4);overflow-wrap:break-word}
+.vx-yrs{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:13px;font-weight:700}
+.vx-facts{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 6px;padding:2px 16px 4px}
+.vx-facts::-webkit-scrollbar{display:none}
+.vx-facts span{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:15px;white-space:nowrap}
+.vx-facts i{display:block;font-style:normal;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.vx-grp{display:flex;align-items:center;gap:10px;margin:16px 2px 8px;color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.vx-grp:after{content:"";flex:1;height:1px;background:var(--line)}
+.vx-grp span:empty{display:none}
+.vx-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vx-tile{--tone:var(--accent);position:relative;display:flex;flex-direction:column;text-align:left;min-height:118px;border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;padding:0;color:inherit;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);animation:vxIn .35s ease both;transition:transform .15s ease,box-shadow .15s ease}
+.vx-tile:active{transform:scale(.97)}
+.vx-tile:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tone);opacity:.9}
+.vx-tile.t-b{--tone:var(--warn)}.vx-tile.t-c{--tone:var(--muted)}
+.vx-tile.ghost{background:transparent;border-style:dashed}.vx-tile.ghost:before{opacity:.35}
+.vx-tb{padding:12px 12px 12px 16px;display:flex;flex-direction:column;gap:4px;flex:1}
+.vx-ic{color:var(--tone)}.vx-ic .msi{width:22px;height:22px;color:var(--tone)}
+.vx-tile b{font-size:16px;font-weight:700;line-height:1.2}
+.vx-tile small{font-size:13px;color:var(--muted);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vx-th{position:relative;height:76px;background:var(--tint)}
+.vx-th img{width:100%;height:100%;object-fit:cover;display:block}
+.vx-th em{position:absolute;right:6px;bottom:6px;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);border-radius:999px;padding:2px 8px}
+.vx-tile.withph .vx-ic{display:none}
+.vx-add{align-items:center;justify-content:center;gap:4px;border-style:dashed;background:transparent;color:var(--accent)}
+.vx-add:before{display:none}.vx-add span{font-size:30px;font-weight:300;line-height:1}
+@keyframes vxIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.scrim.vs .sheet{animation:vxUp .28s cubic-bezier(.2,.8,.2,1) both}
+.scrim.vs{animation:vxFade .2s ease both}
+@keyframes vxUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes vxFade{from{background:rgba(20,30,34,0)}}
+@media (prefers-reduced-motion:reduce){.vx-hero,.vx-tile,.scrim.vs,.scrim.vs .sheet{animation:none!important}}
+
 .vf-add{width:100%;min-height:52px;border:2px dashed var(--line);border-radius:16px;background:none;color:var(--accent);font-weight:700;font-size:16px;margin:4px 0 14px}
 .vs-ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
 .vs-t{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--tint)}
@@ -3999,31 +4041,43 @@ function vFiche(g){
   const out=[];
   const s=g.s||{},t=g.t||{},yrs=vYears(g);
   const title=[g.brand,g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:""].filter(Boolean).join(" ")+(yrs?" "+yrs:"");
-  const hero=h("div",{class:"vf-hero"+(g.photoId?"":" nophoto")},
-    g.photoId?photoImg(g):h("div",{class:"vf-mono"},(g.brand||"?").charAt(0).toUpperCase()),
-    h("div",{class:"vf-shade"}),h("h2",{class:"vf-title"},title),
-    canWrite?h("button",{type:"button",class:"vf-edit",onclick:()=>vhOpen(g)},"Modifier"):null);
+  /* en-tête : photo en carte, badge marque, titre et années en pastille */
+  const hero=h("div",{class:"vx-hero"+(g.photoId?"":" nophoto")},
+    g.photoId?photoImg(g):h("div",{class:"vx-pat"}),
+    h("div",{class:"vx-shade"}),
+    h("div",{class:"vx-badge"},(g.brand||"?").charAt(0).toUpperCase()),
+    canWrite?h("button",{type:"button",class:"vx-edit",onclick:()=>vhOpen(g)},"Modifier"):null,
+    h("div",{class:"vx-cap"},h("small",null,g.brand||""),h("h2",null,[g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:""].filter(Boolean).join(" · ")),
+      yrs?h("span",{class:"vx-yrs"},yrs):null));
   out.push(hero);
+  /* l'essentiel d'un coup d'œil */
+  const facts=[[s.type,"Clé"],[s.blade,"Lame"],[s.chip,"Puce"],[s.freq,"Fréq."],[s.batt,"Pile"]].filter(x=>x[0]);
+  if(facts.length)out.push(h("div",{class:"vx-facts"},facts.map(([v,l])=>h("span",null,h("i",null,l),v))));
   const ph=g.ph||{},np=k=>(ph[k]||[]).length;
-  const row=(sk,icon,label,sub)=>{const has=VSECT[sk].has(g)||np(sk);return h("button",{type:"button",class:"vf-row"+(has?"":" empty"),onclick:()=>vsOpen(g.id,sk)},
-    h("span",{class:"vf-ic"},ic(icon)),h("span",{class:"vf-l"},h("b",null,label),(sub||np(sk))?h("small",null,[sub,np(sk)?"📷 "+np(sk):""].filter(Boolean).join(" · ")):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
-  const sec=(icon,label,rows)=>[h("div",{class:"vf-sec"},ic(icon),h("span",null,label)),...rows];
-  const crow=c=>{const n=np(c.id);return h("button",{type:"button",class:"vf-row"+((c.text||n)?"":" empty"),onclick:()=>vsOpen(g.id,c.id)},
-    h("span",{class:"vf-ic"},ic("note")),h("span",{class:"vf-l"},h("b",null,c.title||"Rubrique"),(c.text||n)?h("small",null,[(c.text||"").split("\n")[0].slice(0,40),n?"📷 "+n:""].filter(Boolean).join(" · ")):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
-  const cg=k=>(g.cs||[]).filter(c=>(c.grp||"cle")===k).map(crow);
+  let ix=0;
+  const tile=(sk,icon,label,sub,has,tone)=>{const n=np(sk),first=n?(ph[sk]||[])[0]:"";
+    const el=h("button",{type:"button",class:"vx-tile t-"+tone+(has||n?"":" ghost")+(first?" withph":""),style:"animation-delay:"+(ix++*35)+"ms",onclick:()=>vsOpen(g.id,sk)},
+      first?h("div",{class:"vx-th"},photoImg({photoId:first}),n>1?h("em",null,"+"+(n-1)):null):null,
+      h("div",{class:"vx-tb"},h("span",{class:"vx-ic"},ic(icon)),h("b",null,label),h("small",null,has?(sub||"Voir"):n?"Photos":"À compléter")));
+    return el};
+  const grp=(label,tiles)=>tiles.length?[h("div",{class:"vx-grp"},h("span",null,label)),h("div",{class:"vx-grid"},...tiles)]:[];
+  const ctile=c=>tile(c.id,"note",c.title||"Rubrique",(c.text||"").split("\n")[0].slice(0,60),!!c.text,(c.grp||"cle")==="spec"?"a":(c.grp||"cle")==="cle"?"b":"c");
+  const cg=k=>(g.cs||[]).filter(c=>(c.grp||"cle")===k).map(ctile);
+  const has=k=>VSECT[k].has(g);
   const addSec=async()=>{const id="c_"+Date.now().toString(36);
     try{await db.doc("vehicles/"+g.id).update({cs:[...(g.cs||[]),{id,title:"Nouvelle rubrique",text:"",grp:"cle"}]})}catch(e){toast("Modification refusée");return}
     vsLater(g.id,id,true)};
-  out.push(...sec("directions_car","Spécifications",[
-    row("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · ")),
-    row("obd","plug","Emplacement de la prise OBD",s.obd||""),...cg("spec")]));
-  out.push(...sec("key","Clé",[
-    row("lame","blade","Lame",s.blade||""),
-    row("prog","key","Programmation",[t.proc1&&"ajout de clé",t.proc2&&"toutes clés perdues"].filter(Boolean).join(" · ")),
-    row("lock","lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,40)),
-    row("notes","info","À savoir, pièges",(t.notes||"").split("\n")[0].slice(0,40)),...cg("cle")]));
-  if(cg("autre").length)out.push(...sec("note","Autres",cg("autre")));
-  if(canWrite)out.push(h("button",{type:"button",class:"vf-add",onclick:addSec},"+ Ajouter une rubrique"));
+  out.push(...grp("Véhicule",[
+    tile("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · "),has("specs"),"a"),
+    tile("obd","plug","Prise OBD",s.obd||"",has("obd"),"a"),...cg("spec")]));
+  out.push(...grp("Clé",[
+    tile("lame","blade","Lame",s.blade||(t.lameNote||"").slice(0,60),has("lame"),"b"),
+    tile("prog","key","Programmation",[t.proc1&&"Ajout de clé",t.proc2&&"Toutes clés perdues"].filter(Boolean).join(" · "),has("prog"),"b"),
+    tile("lock","lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,60),has("lock"),"b"),
+    tile("notes","info","À savoir",(t.notes||"").split("\n")[0].slice(0,60),has("notes"),"b"),...cg("cle")]));
+  const others=cg("autre");
+  if(canWrite)others.push(h("button",{type:"button",class:"vx-tile vx-add",style:"animation-delay:"+(ix++*35)+"ms",onclick:addSec},h("span",null,"+"),h("b",null,"Nouvelle rubrique")));
+  out.push(...grp((g.cs||[]).some(c=>c.grp==="autre")?"Autres":"",others));
   const links=(g.links||"").split(/\n+/).map(x=>x.trim()).filter(safeUrl);
   if(links.length)out.push(h("div",{class:"vh-card"},h("h3",null,"Liens"),h("div",{class:"vh-links"},links.map(u=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},hostOf(u)||u)))));
   const mk=vNorm(g.model);
@@ -4385,7 +4439,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-1917";
+const ALS_BUILD="20261030-1947";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
