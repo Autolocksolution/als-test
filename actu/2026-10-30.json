@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-bmw-u-bcp-295e-295g",
+    "title": "BMW série U (BCP) : vérifier la puce 295E ou 295G avant de copier une clé",
+    "url": "http://blog.obdii365.com/2026/10/29/bmw-u-chassis-bcp-keys-cloneable-vs-non-cloneable/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Des utilisateurs n'arrivent pas à copier des clés BCP de BMW X3 2026 ou M5 2025 avec Xhorse Key Tool Plus ou Lonsdor. Selon la source, BMW a verrouillé ses clés après 2025 : il faut ouvrir la clé et lire la puce NXP. Avec une puce 295E, la copie est possible ; avec une 295G, la puce est verrouillée et la copie ne marche pas. Pour les clés copiables, l'adaptateur Godiag BCP évite de souder.",
+    "date": "2026-10-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-abrites-diagnodes-mlb-evo",
+    "title": "Audi MLB Evo (A4 B9, Q5, Q7, A6 C8…) : copie de clé avec DiagNodes et KYDZ",
+    "url": "https://shop-nodes.abrites.com/features/diagnodes-x-kydz-mlb-generation-2-3-key-programming",
+    "source": "Abrites DiagNodes",
+    "kind": "web",
+    "summary": "Abrites propose une fonction DiagNodes pour faire une clé de plus sur les Audi MLB Evo (A4/A5 B9, Q5, Q7, A6/A7 C8, A8, Q8, Touareg, Cayenne) et les nouvelles plateformes PPC (A5 B10, Q5 2024+, A6 C9). Il faut ouvrir une clé qui marche et poser son circuit sur un programmateur KYDZ pour lire les données, puis les écrire sur un circuit neuf. Comptez environ 10 minutes et 15 jetons (gratuit pour les possesseurs d'AVDI).",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-audi-a6-c5-compteur-bdm",
+    "title": "Audi A6 C5 : changer le compteur en clonant l'immo par BDM (Xhorse Multi Prog)",
+    "url": "http://blog.vvdishop.com/xhorse-multi-prog-clone-adui-a6-c5-cluster-via-bdm/",
+    "source": "VVDIshop · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur l'Audi A6 C5, l'antidémarrage est dans le compteur : lors d'un échange, il faut transférer l'EEPROM d'origine. L'utilisateur a lu et écrit le Motorola MC68HC912DG128A en BDM avec Xhorse Multi Prog par 4 points de test (VCC, GND, BKGD, RESET). Les compteurs de remplacement fabriqués en 2008-2009 ont la porte d'accès habituelle fermée : seul le BDM permet de les traiter.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-xhorse-multiprog-recovery-4133aaaa",
+    "title": "Xhorse Multi Prog bloqué en mode Recovery (erreur 4133AAAA) : la solution",
+    "url": "http://blog.xhorsetool.com/how-to-fix-xhorse-multi-prog-stuck-in-recovery-mode/",
+    "source": "Xhorse Tool Blog · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Symptômes : le Multi Prog reste en mode Recovery, la version système affiche « — — » et l'erreur 4133AAAA revient même après une mise à jour arrivée à 100 %. La solution donnée par le support : appuyer sur le bouton RST avant d'allumer l'appareil, le garder enfoncé environ 10 secondes après la mise sous tension pour entrer en mode mise à jour du firmware, puis relancer la mise à jour.",
+    "date": "2026-10-26",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-pcf7939ma-vs-pcf7939fa",
+    "title": "Puces PCF7939MA (4A) et PCF7939FA (49) : ne pas les confondre",
+    "url": "http://www.key-programmer.org/2026/07/17/nxp-pcf7939ma-vs-pcf7939fa-transponder-chip/",
+    "source": "Key-programmer.org",
+    "kind": "web",
+    "summary": "Les deux puces NXP portent presque le même nom mais ne sont pas interchangeables. La PCF7939MA correspond en général à l'ID4A (Hitag AES), utilisée chez Renault, Dacia, Nissan, Peugeot, Hyundai et Kia. La PCF7939FA correspond à l'ID49 (Hitag Pro), surtout sur les Ford récentes. Lisez la référence complète avec les deux dernières lettres avant de commander une clé.",
+    "date": "2026-07-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-tucson-2025-km100",
+    "title": "Hyundai Tucson 2025 mains libres : ajout de clé avec Autel KM100, les pièges",
+    "url": "http://www.key-programmer.org/2026/07/30/program-2025-hyundai-tucson-smart-key-with-autel-km100/",
+    "source": "Key-programmer.org · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Le KM100 ne reconnaît pas le Tucson 2025 par le VIN, et le choix « 2021 et plus » ne communique pas : il a fallu sélectionner 2022-2023. Le PIN ne se lit pas par l'OBD, il a été obtenu par un service payant de codes. L'ajout efface toutes les clés : il faut avoir la clé du client pour la réapprendre, en posant chaque clé contre le bouton start dans les 5 secondes.",
+    "date": "2026-07-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-vw-transporter-t7-2025-odis",
+    "title": "VW Transporter T7 2025 : clé de système Ford, programmation par ODIS seulement",
+    "url": "http://www.key-programmer.org/2026/07/10/what-device-to-program-vw-transporter-2025-key/",
+    "source": "Key-programmer.org",
+    "kind": "web",
+    "summary": "Le Transporter T7 2025 est construit sur la base du Ford Transit Custom : sa clé mains libres est une ID49 Hitag Pro identique à Ford. Selon la source, la clé se commande au châssis chez VW et se programme avec le logiciel concession ODIS, pas avec FDRS de Ford. Les outils du marché donnent au mieux un diagnostic partiel et ne sont pas fiables pour les clés.",
+    "date": "2026-07-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-bmw-cas4-ne-demarre-pas-acdp2",
+    "title": "BMW F10 CAS4+ : nouvelle clé qui ouvre mais ne démarre pas (Yanhua ACDP2)",
+    "url": "http://www.key-programmer.org/2026/07/29/yanhua-acdp2-bmw-cas4-obd-not-start-solution/",
+    "source": "Key-programmer.org · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Après un ajout de clé par l'OBD avec Yanhua Mini ACDP2 sur une BMW F10 CAS4+, la télécommande et l'accès confort marchent mais la voiture ne démarre pas. La solution : resynchroniser le CAS avec le calculateur moteur (DME) par la fonction « Sync code lost repair », et si ça ne suffit pas, « reset starter motor ».",
+    "date": "2026-07-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  },
+  {
+    "id": "c-xhorse-multiprog-bmw-b48-b58-isn",
+    "title": "BMW B48, B58 verrouillés (2020+) : lecture de l'ISN avec Xhorse Multi Prog",
+    "url": "http://blog.vvdishop.com/xhorse-multi-prog-adds-bmw-locked-b48-b58-dmes/",
+    "source": "VVDIshop",
+    "kind": "web",
+    "summary": "Comme le Key Tool Plus, le Xhorse Multi Prog lit maintenant les calculateurs moteur BMW verrouillés à partir de juin 2020 (B48, B58, N55, S58 ; Bosch MG1CS049, MD1CP032, MD1CS001, MG1CS024…). Il lit le calculateur et le code ISN, utile pour faire une clé, mais il ne peut pas écrire ces calculateurs.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793340451841
+  }
+]
