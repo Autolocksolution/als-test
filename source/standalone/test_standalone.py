@@ -52,7 +52,7 @@ async def main():
             await page.click("#navPlus"); await page.click("#plusList button:has-text('Base véhicules')"); await page.click("#fab")
             await page.fill("#vf_brand","Renault"); await page.fill("#vf_model","Clio"); await page.fill("#vf_gen","Clio 4")
             await page.fill("#vf_from","2012"); await page.fill("#vf_to","2019"); await page.click("#vhSave"); await page.wait_for_timeout(500)
-            ok("Renault Clio" in await page.inner_text("#vBody"),"fiche véhicule créée via Firestore")
+            ok("renault clio" in (await page.inner_text("#vBody")).lower(),"fiche véhicule créée via Firestore")
             ok(await page.evaluate("Object.keys(window.__fbdb.vehicles||{}).length")==1,"fiche présente en base")
             await page.evaluate("goMode('planning')"); await page.wait_for_timeout(200); await page.click("#fab")
             await page.fill("#rvWhat","Test"); await page.click("#rvSave"); await page.wait_for_timeout(400)
