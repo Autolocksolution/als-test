@@ -49,7 +49,7 @@ async def main():
             await page.click("#navStock"); await page.wait_for_timeout(300)
             ok(await page.locator("#list li").count()>=1,"stock chargé depuis la base")
             # écriture : fiche véhicule + rdv
-            await page.click("#navBase"); await page.click("#fab")
+            await page.click("#navPlus"); await page.click("#plusList button:has-text('Base véhicules')"); await page.click("#fab")
             await page.fill("#vf_brand","Renault"); await page.fill("#vf_model","Clio"); await page.fill("#vf_gen","Clio 4")
             await page.fill("#vf_from","2012"); await page.fill("#vf_to","2019"); await page.click("#vhSave"); await page.wait_for_timeout(500)
             ok("Renault Clio" in await page.inner_text("#vBody"),"fiche véhicule créée via Firestore")

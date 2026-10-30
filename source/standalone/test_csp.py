@@ -11,8 +11,10 @@ async def main():
         await page.add_init_script(SDK);await page.goto("http://localhost:8772/app.html")
         await page.wait_for_selector("#lgForm:not([hidden])");await page.fill("#lgMail","a@x.fr");await page.fill("#lgPass","good");await page.click("#lgGo")
         await page.wait_for_selector("#syncT:has-text('Synchronisé')",timeout=8000)
-        for n in ["navStock","navCpt","navDvs","navBase","navHome"]:
-            await page.click("#"+n);await page.wait_for_timeout(250)
+        for n in ["navStock","navCpt","Devis & factures","Base véhicules","navHome"]:
+            if n.startswith("nav"): await page.click("#"+n)
+            else: await page.click("#navPlus"); await page.click("#plusList button:has-text('"+n+"')")
+            await page.wait_for_timeout(250)
         await page.click("#navCpt");await page.click("#fab");await page.wait_for_timeout(300);await page.click("#cCancel")
         r=await page.evaluate("()=>{window.__x=0;const s=document.createElement('script');s.textContent='window.__x=1';document.head.append(s);return window.__x}")
         if r==1: fails.append("un script injecté s'est exécuté")
