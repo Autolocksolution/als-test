@@ -163,7 +163,7 @@ async function importe() {
     await db.doc("vehicles/" + e.id).set(data);
     crees++;
   }
-  console.log(`Import ${LOT} : ${crees} créées, ${deja} déjà présentes, ${sautees} sautées (fiche manuelle existante), ${sansPhoto} sans photo.`);
+  console.log(`::notice::Import ${LOT} : ${crees} créées, ${deja} déjà présentes, ${sautees} sautées (fiche manuelle existante), ${sansPhoto} sans photo.`);
 }
 
 const MODE = process.env.MODE;
