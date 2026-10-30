@@ -11,6 +11,7 @@ import { FR } from "./base-vehicules/fr.mjs";
 import { EU } from "./base-vehicules/eu.mjs";
 import { ASIE } from "./base-vehicules/asie.mjs";
 import { US, AUTRES } from "./base-vehicules/autres.mjs";
+import { infos, NOTE } from "./base-vehicules/enrichir.mjs";
 
 export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES } };
 const LOT = process.env.LOT || "fr";
@@ -159,9 +160,8 @@ async function importe() {
       } catch (err) { /* sans photo */ }
     }
     if (!photoId) sansPhoto++;
-    const key = Object.keys(e.s).length > 0;
-    const data = { brand: e.brand, model: e.model, gen: e.gen, yFrom: e.yFrom, yTo: e.yTo, s: e.s,
-      t: key ? { notes: "⚠️ Infos clé pré-remplies automatiquement : à vérifier avant intervention." } : {},
+    const inf = infos(e);
+    const data = { brand: e.brand, model: e.model, gen: e.gen, yFrom: e.yFrom, yTo: e.yTo, s: { ...inf.s, ...e.s }, t: inf.t, enr: 1,
       links: "", diffs: [], photoId, credit, creditUrl: c ? c.page : "", auto: true, by: "auto", at: Date.now() };
     await db.doc("vehicles/" + e.id).set(data);
     crees++;
@@ -169,7 +169,37 @@ async function importe() {
   console.log(`::notice::Import ${LOT} : ${crees} créées, ${deja} déjà présentes, ${sautees} sautées (fiche manuelle existante), ${sansPhoto} sans photo.`);
 }
 
+// complète les fiches automatiques déjà importées : seulement les cases vides, une seule fois par fiche
+export function complete(v, e) {
+  const inf = infos(e), s = { ...(v.s || {}) }, t = { ...(v.t || {}) };
+  let n = 0;
+  for (const [k, x] of Object.entries(inf.s)) if (!s[k]) { s[k] = x; n++; }
+  for (const [k, x] of Object.entries(inf.t)) {
+    if (k === "notes") { if (!t.notes || /^⚠️ Infos clé pré-remplies automatiquement/.test(t.notes)) { if (t.notes !== x) n++; t.notes = x; } continue; }
+    if (!t[k]) { t[k] = x; n++; }
+  }
+  return { s, t, n };
+}
+
+async function enrichit() {
+  const admin = (await import("firebase-admin")).default;
+  admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
+  const db = admin.firestore();
+  const exist = new Map((await db.collection("vehicles").get()).docs.map(d => [d.id, d.data()]));
+  let maj = 0, deja = 0, champs = 0, absentes = 0;
+  for (const lot of Object.values(LOTS)) for (const e of entrees(lot)) {
+    const v = exist.get(e.id);
+    if (!v || !v.auto) { absentes++; continue; }
+    if (v.enr) { deja++; continue; }
+    const { s, t, n } = complete(v, e);
+    await db.doc("vehicles/" + e.id).update({ s, t, enr: 1 });
+    maj++; champs += n;
+  }
+  console.log(`::notice::Complément : ${maj} fiches complétées (${champs} cases remplies), ${deja} déjà faites, ${absentes} absentes.`);
+}
+
 const MODE = process.env.MODE;
-if (MODE === "apercu") await apercu();
+if (MODE === "enrichit") await enrichit();
+else if (MODE === "apercu") await apercu();
 else if (MODE === "import") await importe();
 else if (MODE) { console.error("MODE inconnu"); process.exit(2); }

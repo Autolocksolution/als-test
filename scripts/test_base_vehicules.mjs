@@ -22,3 +22,17 @@ import { LOTS } from "./base-vehicules.mjs";
   console.log("lots :", Object.entries(LOTS).map(([n, l]) => n + "=" + entrees(l).length).join(" ")); }
 { const ii = [{ width: 2000, height: 1000, thumburl: "x" }];
   assert.equal(trie([{ title: "File:Toyota Yaris 2006.jpg", index: 1, imageinfo: ii }, { title: "File:SEAT Leon 2.jpg", index: 2, imageinfo: ii }, { title: "File:Seat Ibiza interior.jpg", index: 3, imageinfo: ii }]).length, 2); }
+import { complete } from "./base-vehicules.mjs";
+import { infos } from "./base-vehicules/enrichir.mjs";
+{ const all = Object.values(LOTS).flatMap(l => entrees(l));
+  for (const e of all) { const i = infos(e); assert.ok(i.s.obd && i.t.notes, e.id); }
+  const m4 = all.find(e => e.id === "auto-renault-megane-4-phase-1"), i = infos(m4);
+  assert.ok(/HFM/.test(i.t.boxes) && /Lishi VA2/.test(i.t.lock) && /EMS3150/.test(i.t.ecuRefs), JSON.stringify(i));
+  assert.ok(/Électrique/.test(infos(all.find(e => e.id === "auto-renault-zoe-phase-1")).t.ecuRefs));
+  assert.ok(/PureTech/.test(infos(all.find(e => e.id === "auto-opel-corsa-f")).t.ecuRefs));
+  assert.ok(/CAS :/.test(infos(all.find(e => e.id === "auto-bmw-serie-3-e90")).t.boxes));
+  // complément : ne remplace jamais une case déjà remplie
+  const r = complete({ s: { obd: "Mon OBD", type: "x" }, t: { lock: "Ma méthode", notes: "⚠️ Infos clé pré-remplies automatiquement : à vérifier avant intervention." } }, m4);
+  assert.equal(r.s.obd, "Mon OBD"); assert.equal(r.t.lock, "Ma méthode"); assert.ok(r.t.ecuRefs && /calculateur/.test(r.t.notes));
+  const r2 = complete({ s: {}, t: { notes: "Ma note perso" } }, m4); assert.equal(r2.t.notes, "Ma note perso");
+  console.log("complément OK"); }
