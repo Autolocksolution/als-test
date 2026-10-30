@@ -29,16 +29,16 @@ export const US = {
   ],
   Tesla: [
     ["Model S", "Model S", 2012, null, "Tesla Model S", k(P)],
-    ["Model 3", "Model 3", 2017, null, "Tesla Model 3", k(C)],
-    ["Model Y", "Model Y", 2020, null, "Tesla Model Y", k(C)],
+    ["Model 3", "Model 3 phase 1", 2017, 2023, "Tesla Model 3", k(C), "auto-tesla-model-3"],
+    ["Model Y", "Model Y phase 1", 2020, 2025, "Tesla Model Y", k(C), "auto-tesla-model-y"],
   ],
 };
 
 export const AUTRES = {
   MG: [
-    ["ZS", "ZS", 2017, null, "MG ZS", k(F)],
+    ["ZS", "ZS 1", 2017, 2024, "MG ZS", k(F), "auto-mg-zs"],
     ["MG4", "MG4", 2022, null, "MG4 EV", k(P)],
-    ["HS", "HS", 2018, null, "MG HS", k(P)],
+    ["HS", "HS 1", 2018, 2024, "MG HS", k(P), "auto-mg-hs"],
   ],
   BYD: [
     ["Atto 3", "Atto 3", 2022, null, "BYD Atto 3", k(C)],

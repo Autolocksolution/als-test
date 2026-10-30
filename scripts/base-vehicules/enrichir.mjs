@@ -2,7 +2,7 @@
 // (emplacement + familles de références selon l'époque), autres boîtiers, outil de crochetage.
 // Règles générales par marque / époque : indicatives, chaque fiche porte la mention « à vérifier ».
 
-const ELEC = /zoe|5 e-tech|4 e-tech|e-tech electric|megane e-tech|scenic e-tech|spring|\bion\b|c-zero|id\.3|id\.4|\bborn\b|leaf|model [s3y]|atto|dolphin|mg4/i;
+const ELEC = /zoe|5 e-tech|4 e-tech|twingo e-tech|id\.7|id\. buzz|e-tron|ariya|bz4x|ioniq 5|\bev[236]\b|enyaq|elroq|tavascan|raval|explorer ev|capri ev|#[13]\b|ex30|500e|a290|a390|micra 6|leaf|urban cruiser|e vitara|inster|dolphin surf|ix3|\bt03\b|mazda 6e|e-tech electric|megane e-tech|scenic e-tech|spring|\bion\b|c-zero|id\.3|id\.4|\bborn\b|leaf|model [s3y]|atto|dolphin|mg4/i;
 const PSA = ["Peugeot", "Citroën", "DS"], VAG = ["Volkswagen", "Audi", "Seat", "Skoda", "Cupra"], FIAT = ["Fiat", "Alfa Romeo", "Lancia"];
 const opelPSA = e => e.brand === "Opel" && e.yFrom >= 2017 && /corsa f|astra l|mokka b|crossland|grandland|combo e|vivaro c/i.test(e.gen);
 const per = (y, steps) => { for (const [max, v] of steps) if (y < max) return v; return steps[steps.length - 1][1]; };

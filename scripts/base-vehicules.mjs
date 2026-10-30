@@ -13,8 +13,9 @@ import { ASIE } from "./base-vehicules/asie.mjs";
 import { US, AUTRES } from "./base-vehicules/autres.mjs";
 import { infos, NOTE } from "./base-vehicules/enrichir.mjs";
 import { MAJ } from "./base-vehicules/maj2026.mjs";
+import { RECENT } from "./base-vehicules/recent.mjs";
 
-export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES }, maj: MAJ };
+export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES }, maj: MAJ, recent: RECENT };
 const LOT = process.env.LOT || "fr";
 const DIR = new URL(`./base-vehicules/apercu-${LOT}/`, import.meta.url);
 const UA = "AutoLockSolution-base/1.0 (https://github.com/Autolocksolution/als-test)";
