@@ -34,20 +34,14 @@
 "auto-renault-megane-3-phase-2": 3,
 "auto-renault-megane-3-phase-3": 1,
 "auto-renault-megane-4-phase-1": 3,
-"auto-renault-megane-4-phase-2": {
-"q": "Renault Megane 2020"
-},
+"auto-renault-megane-4-phase-2": 0,
 "auto-renault-megane-e-tech": 1,
 "auto-renault-scenic-1-phase-1": 1,
 "auto-renault-scenic-1-phase-2": 2,
-"auto-renault-scenic-2-phase-1": {
-"q": "Renault Scenic II 2003"
-},
+"auto-renault-scenic-2-phase-1": 1,
 "auto-renault-scenic-2-phase-2": 1,
 "auto-renault-scenic-3-phase-1": 2,
-"auto-renault-scenic-3-phase-2": {
-"q": "Renault Grand Scenic 2012"
-},
+"auto-renault-scenic-3-phase-2": 1,
 "auto-renault-scenic-3-phase-3": 1,
 "auto-renault-scenic-4": 1,
 "auto-renault-scenic-e-tech": 2,
@@ -101,9 +95,7 @@
 "auto-renault-master-2-phase-2": 3,
 "auto-renault-master-3-phase-1": 2,
 "auto-renault-master-3-phase-2": 1,
-"auto-renault-master-4": {
-"q": "Renault Master E-Tech 2024"
-},
+"auto-renault-master-4": 0,
 "auto-peugeot-106-phase-2": 2,
 "auto-peugeot-107": 1,
 "auto-peugeot-108": 1,
@@ -112,17 +104,13 @@
 "n": 2
 },
 "auto-peugeot-206-phase-2": 1,
-"auto-peugeot-206": {
-"q": "Peugeot 206 Plus"
-},
+"auto-peugeot-206": 0,
 "auto-peugeot-207-phase-1": 3,
 "auto-peugeot-207-phase-2": 3,
 "auto-peugeot-208-1-phase-1": 1,
 "auto-peugeot-208-1-phase-2": 2,
 "auto-peugeot-208-2-phase-1": 2,
-"auto-peugeot-208-2-phase-2": {
-"q": "Peugeot 208 2024"
-},
+"auto-peugeot-208-2-phase-2": 0,
 "auto-peugeot-306-phase-2": 2,
 "auto-peugeot-306-phase-3": 2,
 "auto-peugeot-307-phase-1": 1,
@@ -132,9 +120,7 @@
 "auto-peugeot-308-2-phase-1": 1,
 "auto-peugeot-308-2-phase-2": 1,
 "auto-peugeot-308-3": 1,
-"auto-peugeot-406-phase-1": {
-"q": "Peugeot 406 sedan"
-},
+"auto-peugeot-406-phase-1": 1,
 "auto-peugeot-406-phase-2": 2,
 "auto-peugeot-407-phase-1": 2,
 "auto-peugeot-407-phase-2": 1,
@@ -142,9 +128,7 @@
 "auto-peugeot-508-1-phase-1": 3,
 "auto-peugeot-508-1-phase-2": 1,
 "auto-peugeot-508-2-phase-1": 2,
-"auto-peugeot-508-2-phase-2": {
-"q": "Peugeot 508 2024"
-},
+"auto-peugeot-508-2-phase-2": 0,
 "auto-peugeot-605": 2,
 "auto-peugeot-607-phase-1": 3,
 "auto-peugeot-607-phase-2": 2,
@@ -152,9 +136,7 @@
 "auto-peugeot-807": 2,
 "auto-peugeot-1007": 2,
 "auto-peugeot-2008-1-phase-1": 1,
-"auto-peugeot-2008-1-phase-2": {
-"q": "Peugeot 2008 GT Line 2016"
-},
+"auto-peugeot-2008-1-phase-2": 0,
 "auto-peugeot-2008-2-phase-1": 1,
 "auto-peugeot-2008-2-phase-2": 1,
 "auto-peugeot-3008-1-phase-1": 1,
@@ -163,9 +145,7 @@
 "auto-peugeot-3008-2-phase-2": 1,
 "auto-peugeot-3008-3": 1,
 "auto-peugeot-5008-1-phase-1": 1,
-"auto-peugeot-5008-1-phase-2": {
-"q": "Peugeot 5008 2014"
-},
+"auto-peugeot-5008-1-phase-2": 2,
 "auto-peugeot-5008-2-phase-1": 2,
 "auto-peugeot-5008-2-phase-2": 1,
 "auto-peugeot-5008-3": 2,
@@ -195,20 +175,14 @@
 "n": 1
 },
 "auto-citroen-zx": 2,
-"auto-citroen-xsara-phase-1": {
-"q": "Citroen Xsara 1998"
-},
-"auto-citroen-xsara-phase-2": {
-"q": "Citroen Xsara 2001"
-},
+"auto-citroen-xsara-phase-1": 1,
+"auto-citroen-xsara-phase-2": 1,
 "auto-citroen-xsara-picasso-phase-1": 1,
 "auto-citroen-xsara-picasso-phase-2": 3,
 "auto-citroen-xantia-phase-2": 1,
 "auto-citroen-evasion": 2,
 "auto-citroen-c1-1": 3,
-"auto-citroen-c1-2": {
-"q": "Citroen C1 2015"
-},
+"auto-citroen-c1-2": 2,
 "auto-citroen-c2": 2,
 "auto-citroen-c3-1-phase-1": 1,
 "auto-citroen-c3-1-phase-2": 2,
@@ -223,9 +197,7 @@
 "auto-citroen-c3-picasso": 1,
 "auto-citroen-c3-aircross-1-phase-1": 3,
 "auto-citroen-c3-aircross-1-phase-2": 3,
-"auto-citroen-c4-1-phase-1": {
-"q": "Citroen C4 Coupe 2005"
-},
+"auto-citroen-c4-1-phase-1": 1,
 "auto-citroen-c4-1-phase-2": 1,
 "auto-citroen-c4-2-phase-1": 1,
 "auto-citroen-c4-2-phase-2": 3,
@@ -261,37 +233,23 @@
 "auto-citroen-jumper-1-phase-2": 2,
 "auto-citroen-jumper-2-phase-1": 1,
 "auto-citroen-jumper-2-phase-2": 2,
-"auto-ds-ds-3-2016": {
-"q": "DS3 2017 DS Automobiles"
-},
-"auto-ds-ds-3-crossback": {
-"q": "DS3 Crossback"
-},
+"auto-ds-ds-3-2016": 0,
+"auto-ds-ds-3-crossback": 3,
 "auto-ds-ds-3-2022": 3,
 "auto-ds-ds-4-2015": 1,
 "auto-ds-ds-4-2": 2,
-"auto-ds-ds-5-2015": {
-"q": "DS5 2016 DS Automobiles"
-},
+"auto-ds-ds-5-2015": 0,
 "auto-ds-ds-7-crossback": 1,
 "auto-ds-ds-7-2022": 1,
 "auto-ds-ds-9": 1,
-"auto-dacia-logan-1-phase-1": {
-"q": "Dacia Logan 2005"
-},
+"auto-dacia-logan-1-phase-1": 1,
 "auto-dacia-logan-1-phase-2": 1,
 "auto-dacia-logan-2-phase-1": 1,
-"auto-dacia-logan-2-phase-2": {
-"q": "Dacia Logan 2017"
-},
+"auto-dacia-logan-2-phase-2": 1,
 "auto-dacia-logan-3": 1,
-"auto-dacia-sandero-1": {
-"q": "Dacia Sandero 2009"
-},
+"auto-dacia-sandero-1": 3,
 "auto-dacia-sandero-2-phase-1": 3,
-"auto-dacia-sandero-2-phase-2": {
-"q": "Dacia Sandero 2018"
-},
+"auto-dacia-sandero-2-phase-2": 3,
 "auto-dacia-sandero-3-phase-1": 2,
 "auto-dacia-sandero-3-phase-2": 3,
 "auto-dacia-duster-1-phase-1": 1,
@@ -310,7 +268,5 @@
 "auto-dacia-spring": 2,
 "auto-dacia-jogger": 1,
 "auto-dacia-bigster": 2,
-"auto-alpine-a110": {
-"q": "Alpine A110 2018"
-}
+"auto-alpine-a110": 1
 }

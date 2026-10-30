@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-bQNw0L4MazpmSeIhxKayam6pg1hIm0Vcs2KCYw7UNGg=' 'sha256-fJiUhxwxDYgVjTn+eH81ZWxV/EOBrq4S6m/lSTYAfEs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-THbHUG0DxiW825VUFKnKDo31zbe4hwKTGFQhZJIyfbg=' 'sha256-2wPjGXj8MAV0OItCLV7P9jCq5Bj2u5vXpVFJfuOvnKY=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -271,10 +271,12 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vx-cap{position:absolute;left:16px;right:16px;bottom:14px;color:#fff}
 .vx-cap small{display:block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
 .vx-cap h2{margin:2px 0 6px;font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.05;text-shadow:0 2px 10px rgba(0,0,0,.4);overflow-wrap:break-word}
+.vx-cred{position:absolute;right:10px;bottom:4px;max-width:60%;font-size:9px;line-height:1.2;color:rgba(255,255,255,.7);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vx-yrs{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:13px;font-weight:700}
 .vx-facts{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 6px;padding:2px 16px 4px}
 .vx-facts::-webkit-scrollbar{display:none}
 .vx-facts span{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:700;font-size:15px;white-space:nowrap}
+.vx-facts .vx-chk{border-color:var(--warn);color:var(--warn)}
 .vx-facts i{display:block;font-style:normal;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .vx-grp{display:flex;align-items:center;gap:10px;margin:16px 2px 8px;color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .vx-grp:after{content:"";flex:1;height:1px;background:var(--line)}
@@ -4048,11 +4050,12 @@ function vFiche(g){
     h("div",{class:"vx-badge"},(g.brand||"?").charAt(0).toUpperCase()),
     canWrite?h("button",{type:"button",class:"vx-edit",onclick:()=>vhOpen(g)},"Modifier"):null,
     h("div",{class:"vx-cap"},h("small",null,g.brand||""),h("h2",null,[g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:""].filter(Boolean).join(" · ")),
-      yrs?h("span",{class:"vx-yrs"},yrs):null));
+      yrs?h("span",{class:"vx-yrs"},yrs):null),
+    g.photoId&&g.credit?(safeUrl(g.creditUrl)?h("a",{class:"vx-cred",href:safeUrl(g.creditUrl),target:"_blank",rel:"noopener"},g.credit):h("span",{class:"vx-cred"},g.credit)):null);
   out.push(hero);
   /* l'essentiel d'un coup d'œil */
   const facts=[[s.type,"Clé"],[s.blade,"Lame"],[s.chip,"Puce"],[s.freq,"Fréq."],[s.batt,"Pile"]].filter(x=>x[0]);
-  if(facts.length)out.push(h("div",{class:"vx-facts"},facts.map(([v,l])=>h("span",null,h("i",null,l),v))));
+  if(facts.length)out.push(h("div",{class:"vx-facts"},g.by==="auto"?h("span",{class:"vx-chk"},h("i",null,"Infos auto"),"À vérifier"):null,facts.map(([v,l])=>h("span",null,h("i",null,l),v))));
   const ph=g.ph||{},np=k=>(ph[k]||[]).length;
   let ix=0;
   const tile=(sk,icon,label,sub,has,tone)=>{const n=np(sk),first=n?(ph[sk]||[])[0]:"";
@@ -4149,6 +4152,7 @@ $("vhForm").addEventListener("submit",async ev=>{
   VH_TXT.forEach(([k])=>{const v=$("vt_"+k).value.trim();if(v)t[k]=v;else delete t[k]});
   let photoId=vfPh.pid||null;if(vfPh.data){try{photoId=await putPhoto(vfPh.data)}catch(e){toast("Photo non enregistrée")}}
   const data={photoId,brand,model,gen:$("vf_gen").value.trim(),yFrom:yf||null,yTo:yt||null,s,t,links:$("vf_links").value.trim(),diffs:vDiffs.map(d=>({years:(d.years||"").trim(),text:(d.text||"").trim()})).filter(d=>d.years||d.text),by:uid,at:Date.now()};
+  if(vEditing&&vEditing.credit&&photoId!==vEditing.photoId){data.credit="";data.creditUrl=""}
   $("vhSave").disabled=true;
   try{
     let id;
@@ -4439,7 +4443,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-1947";
+const ALS_BUILD="20261030-2024";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
