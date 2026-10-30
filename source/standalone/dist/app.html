@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-o/m/81AN3uxvcFXpFXZ2Nbe7nsZsw5ikadkNpXRIgLg=' 'sha256-Zt72mWgHgCr7ZoNo2AjaX9BkspzhwDh4NhUldw5oLhc=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-qJksoPkYeibkilY6tzV4Bu5koY/376M5nmOVHyJOBFM=' 'sha256-lUxvCbJFBG9PxLtFg3zPQv5pD9OFGmdZdTOhz7arzXs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -261,6 +261,7 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vf-l{flex:1;min-width:0}.vf-l b{display:block;font-size:17px;font-weight:600}.vf-l small{display:block;color:var(--muted);font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vf-ch{color:var(--muted);font-size:24px;line-height:1}
 .vf-none{color:var(--muted)}
+.vf-add{width:100%;min-height:52px;border:2px dashed var(--line);border-radius:16px;background:none;color:var(--accent);font-weight:700;font-size:16px;margin:4px 0 14px}
 .vs-ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
 .vs-t{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--tint)}
 .vs-t img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
@@ -3823,7 +3824,7 @@ $("cMdBtn").addEventListener("click",()=>{const m=$("cModel").value.trim();mdOpe
 
 /* ================= ACCUEIL ================= */
 function hmGoStockLow(){sCat="urgent";sGroup=firstGroup(curCat());sSeries="";lowOnly=false;q="";$("q").value="";store("als-cat",sCat);goMode("stock")}
-const ICO={"plug": "<path d=\"M9 3v4M15 3v4\"/><rect x=\"6\" y=\"7\" width=\"12\" height=\"6\" rx=\"2\"/><path d=\"M12 13v4a3 3 0 0 1-3 3\"/>", "blade": "<circle cx=\"6\" cy=\"6\" r=\"3\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><path d=\"M8.5 7.5L20 18M8.5 16.5L20 6\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/><circle cx=\"12\" cy=\"16\" r=\"1\"/>", "info": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11v6M12 7.5v.5\"/>", "savings": "<path d=\"M5 11a7 6 0 0 1 14 0v4a2 2 0 0 1-2 2h-1v2h-3v-2h-2v2H8v-2a4 4 0 0 1-3-4z\"/><path d=\"M10 7.5h4\"/><circle cx=\"15.5\" cy=\"11\" r=\".6\"/>", "home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
+const ICO={"note": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 8h6M9 12h6M9 16h4\"/>", "plug": "<path d=\"M9 3v4M15 3v4\"/><rect x=\"6\" y=\"7\" width=\"12\" height=\"6\" rx=\"2\"/><path d=\"M12 13v4a3 3 0 0 1-3 3\"/>", "blade": "<circle cx=\"6\" cy=\"6\" r=\"3\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><path d=\"M8.5 7.5L20 18M8.5 16.5L20 6\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/><circle cx=\"12\" cy=\"16\" r=\"1\"/>", "info": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11v6M12 7.5v.5\"/>", "savings": "<path d=\"M5 11a7 6 0 0 1 14 0v4a2 2 0 0 1-2 2h-1v2h-3v-2h-2v2H8v-2a4 4 0 0 1-3-4z\"/><path d=\"M10 7.5h4\"/><circle cx=\"15.5\" cy=\"11\" r=\".6\"/>", "home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
 const icoSvg=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICO[n]||"")+'</svg>';
 document.querySelectorAll("[data-ico]").forEach(e=>e.innerHTML=icoSvg(e.dataset.ico));
 const ic=n=>{const e=h("span",{class:"msi"});e.innerHTML=icoSvg(n);return e};
@@ -3948,16 +3949,24 @@ const vxLabel=(f,l)=>l||((VH_TXT.find(x=>x[0]===f)||[])[1])||f;
 function vsOpen(id,sk,edit){
   document.querySelectorAll(".scrim.vs").forEach(x=>x.remove());
   const g=vehicles.find(v=>v.id===id);if(!g)return;
-  const S=VSECT[sk],s=g.s||{},t=g.t||{},ids=((g.ph||{})[sk]||[]).slice();
+  const cs=(g.cs||[]).find(c=>c.id===sk);
+  const S=cs?{t:cs.title||"Rubrique",s:[],x:[["__cs"]]}:VSECT[sk];if(!S)return;
+  const s=g.s||{},t=cs?{__cs:cs.text||""}:(g.t||{}),ids=((g.ph||{})[sk]||[]).slice();
   const close=()=>sc.remove();
   const body=[];
   if(edit){
+    if(cs){body.push(h("div",{class:"f"},h("label",{for:"ve___title"},"Nom de la rubrique"),h("input",{id:"ve___title",maxlength:"60",value:cs.title||""})),
+      h("div",{class:"f"},h("span",{class:"lab"},"Dans"),h("div",{class:"seg",id:"ve___grp"},...[["spec","Spécifications"],["cle","Clé"],["autre","Autres"]].map(([v,l])=>h("button",{type:"button","data-v":v,"aria-pressed":String((cs.grp||"cle")===v),onclick:e=>{[...e.target.parentNode.children].forEach(b=>b.setAttribute("aria-pressed",String(b===e.target)))}},l)))))}
     S.s.forEach(f=>{const l=(VH_SPECS.find(x=>x[0]===f)||[])[1]||f;body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},l),h("input",{id:"ve_"+f,maxlength:"80",value:s[f]||""})))});
-    S.x.forEach(([f,l])=>{const ta=h("textarea",{id:"ve_"+f,rows:"4",maxlength:"2000"});ta.value=t[f]||"";body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},vxLabel(f,l)),ta))});
+    S.x.forEach(([f,l])=>{const ta=h("textarea",{id:"ve_"+f,rows:"4",maxlength:"2000"});ta.value=t[f]||"";body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},f==="__cs"?"Texte":vxLabel(f,l)),ta))});
+    if(cs&&canWrite){let armed=false;const del=h("button",{type:"button",class:"btn del",style:"width:100%;margin-top:4px",onclick:async()=>{
+      if(!armed){armed=true;del.textContent="Confirmer la suppression de la rubrique";return}
+      const nph={...(g.ph||{})};delete nph[sk];
+      try{await db.doc("vehicles/"+g.id).update({cs:(g.cs||[]).filter(c=>c.id!==sk),ph:nph});toast("Rubrique supprimée")}catch(e){toast("Modification refusée");return}close()}},"Supprimer la rubrique");body.push(del)}
   }else{
     const sp=S.s.filter(f=>s[f]);
     if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
-    S.x.forEach(([f,l])=>{if(t[f])body.push(h("div",{class:"vh-card"},S.x.length>1||l?h("h3",null,vxLabel(f,l)):null,h("p",null,t[f])))});
+    S.x.forEach(([f,l])=>{if(t[f])body.push(h("div",{class:"vh-card"},f!=="__cs"&&(S.x.length>1||l)?h("h3",null,vxLabel(f,l)):null,h("p",null,t[f])))});
     if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length)body.push(h("p",{class:"vf-none"},"Rien de noté pour l'instant."));
   }
   const grid=h("div",{class:"vs-ph"},ids.map(pid=>{const im=photoImg({photoId:pid});im.onclick=async()=>{const d=await getPhoto(pid);if(d)openLb(d)};
@@ -3970,10 +3979,13 @@ function vsOpen(id,sk,edit){
     vsLater(g.id,sk,edit)});
   const acts=edit
     ?[h("button",{type:"button",class:"btn",onclick:()=>vsOpen(g.id,sk,false)},"Annuler"),h("button",{type:"button",class:"btn pri",onclick:async()=>{
-        const ns={...s},nt={...t};
-        S.s.forEach(f=>{const v=$("ve_"+f).value.trim();if(v)ns[f]=v;else delete ns[f]});
-        S.x.forEach(([f])=>{const v=$("ve_"+f).value.trim();if(v)nt[f]=v;else delete nt[f]});
-        try{await db.doc("vehicles/"+g.id).update({s:ns,t:nt,by:uid,at:Date.now()});toast("Enregistré")}catch(e){toast("Modification refusée");return}
+        let upd;
+        if(cs){const ti=$("ve___title").value.trim()||"Rubrique",gb=document.querySelector('#ve___grp [aria-pressed="true"]');
+          upd={cs:(g.cs||[]).map(c=>c.id===sk?{...c,title:ti,text:$("ve___cs").value.trim(),grp:gb?gb.dataset.v:"cle"}:c)}}
+        else{const ns={...s},nt={...t};
+          S.s.forEach(f=>{const v=$("ve_"+f).value.trim();if(v)ns[f]=v;else delete ns[f]});
+          S.x.forEach(([f])=>{const v=$("ve_"+f).value.trim();if(v)nt[f]=v;else delete nt[f]});upd={s:ns,t:nt}}
+        try{await db.doc("vehicles/"+g.id).update({...upd,by:uid,at:Date.now()});toast("Enregistré")}catch(e){toast("Modification refusée");return}
         vsLater(g.id,sk,false)}},"Enregistrer")]
     :[h("button",{type:"button",class:"btn",onclick:close},"Fermer"),canWrite?h("button",{type:"button",class:"btn pri",onclick:()=>vsOpen(g.id,sk,true)},"✏️ Ajouter / modifier"):null];
   const sc=h("div",{class:"scrim vs",onclick:e=>{if(e.target===sc)close()}},h("div",{class:"sheet"},h("h2",null,S.t),...body,inp,
@@ -3996,14 +4008,22 @@ function vFiche(g){
   const row=(sk,icon,label,sub)=>{const has=VSECT[sk].has(g)||np(sk);return h("button",{type:"button",class:"vf-row"+(has?"":" empty"),onclick:()=>vsOpen(g.id,sk)},
     h("span",{class:"vf-ic"},ic(icon)),h("span",{class:"vf-l"},h("b",null,label),(sub||np(sk))?h("small",null,[sub,np(sk)?"📷 "+np(sk):""].filter(Boolean).join(" · ")):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
   const sec=(icon,label,rows)=>[h("div",{class:"vf-sec"},ic(icon),h("span",null,label)),...rows];
+  const crow=c=>{const n=np(c.id);return h("button",{type:"button",class:"vf-row"+((c.text||n)?"":" empty"),onclick:()=>vsOpen(g.id,c.id)},
+    h("span",{class:"vf-ic"},ic("note")),h("span",{class:"vf-l"},h("b",null,c.title||"Rubrique"),(c.text||n)?h("small",null,[(c.text||"").split("\n")[0].slice(0,40),n?"📷 "+n:""].filter(Boolean).join(" · ")):null),h("span",{class:"vf-ch","aria-hidden":"true"},"›"))};
+  const cg=k=>(g.cs||[]).filter(c=>(c.grp||"cle")===k).map(crow);
+  const addSec=async()=>{const id="c_"+Date.now().toString(36);
+    try{await db.doc("vehicles/"+g.id).update({cs:[...(g.cs||[]),{id,title:"Nouvelle rubrique",text:"",grp:"cle"}]})}catch(e){toast("Modification refusée");return}
+    vsLater(g.id,id,true)};
   out.push(...sec("directions_car","Spécifications",[
     row("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · ")),
-    row("obd","plug","Emplacement de la prise OBD",s.obd||"")]));
+    row("obd","plug","Emplacement de la prise OBD",s.obd||""),...cg("spec")]));
   out.push(...sec("key","Clé",[
     row("lame","blade","Lame",s.blade||""),
     row("prog","key","Programmation",[t.proc1&&"ajout de clé",t.proc2&&"toutes clés perdues"].filter(Boolean).join(" · ")),
     row("lock","lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,40)),
-    row("notes","info","À savoir, pièges",(t.notes||"").split("\n")[0].slice(0,40))]));
+    row("notes","info","À savoir, pièges",(t.notes||"").split("\n")[0].slice(0,40)),...cg("cle")]));
+  if(cg("autre").length)out.push(...sec("note","Autres",cg("autre")));
+  if(canWrite)out.push(h("button",{type:"button",class:"vf-add",onclick:addSec},"+ Ajouter une rubrique"));
   const links=(g.links||"").split(/\n+/).map(x=>x.trim()).filter(safeUrl);
   if(links.length)out.push(h("div",{class:"vh-card"},h("h3",null,"Liens"),h("div",{class:"vh-links"},links.map(u=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},hostOf(u)||u)))));
   const mk=vNorm(g.model);
@@ -4365,7 +4385,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-1904";
+const ALS_BUILD="20261030-1917";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
