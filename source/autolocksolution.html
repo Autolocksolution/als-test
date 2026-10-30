@@ -239,6 +239,8 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .kchips{margin-bottom:6px}.kchips .chip{min-height:36px;flex:0 0 auto}.kchips .chip .n{opacity:.65;margin-left:5px;font-size:12px}
 .ksub .chip{min-height:30px;font-size:13px;border-radius:999px}
 .krow.zero{opacity:.55}
+.qtypes,.qcities{margin:4px 0 0}.qtypes .chip,.qcities .chip{min-height:34px;flex:0 0 auto}.qcities .chip{min-height:30px;font-size:13px;border-radius:999px}
+.seg4{flex-wrap:wrap}.seg4 button{flex:1 1 45%}
 .ord{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ord .kl{flex:1;min-width:0}
 .ord .cstep button{width:40px;height:40px;font-size:22px}
@@ -566,7 +568,7 @@ body{font-size:16px;-webkit-font-smoothing:antialiased;font-variant-numeric:tabu
 .bt small{font-size:13.5px;opacity:1;line-height:1.3}
 .bt small.al{font-weight:700}
 .t-st{background:var(--t-st);color:var(--t-st-i)}.t-cp{background:var(--t-cp);color:var(--t-cp-i)}.t-dv{background:var(--t-dv);color:var(--t-dv-i)}
-.t-pl{background:var(--t-pl);color:var(--t-pl-i)}.t-bs{background:var(--t-bs);color:var(--t-bs-i)}.t-hs{background:var(--t-hs);color:var(--t-hs-i)}
+.t-pl{background:var(--t-pl);color:var(--t-pl-i)}.t-bs,.t-ep{background:var(--t-bs);color:var(--t-bs-i)}.t-hs{background:var(--t-hs);color:var(--t-hs-i)}
 .bt small.al::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--t-al);margin-right:6px;vertical-align:1px}
 @media (prefers-reduced-motion:reduce){.bt{transition:none}}
 .nav button{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:54px!important;font-size:11.5px!important}
@@ -759,11 +761,12 @@ main{padding-top:10px}
       <div class="f"><span class="lab">Statut</span><div class="seg" id="cStSeg"><button type="button" data-v="prevu" aria-pressed="true">À faire</button><button type="button" data-v="reussi" aria-pressed="false">Réussi</button><button type="button" data-v="abandon" aria-pressed="false">Abandon</button></div></div>
       <div class="f"><label for="cBrand">Marque</label><select id="cBrand"></select></div>
       <div class="row2">
-        <div class="f"><label for="cModel">Modèle du véhicule</label><input id="cModel" maxlength="80" placeholder="Clio IV, Golf 7…"></div>
+        <div class="f"><span class="lab">Type d'intervention</span><div class="chips qtypes" id="cTypes"></div></div>
+      <div class="f"><label for="cModel">Modèle du véhicule</label><input id="cModel" maxlength="80" placeholder="Clio IV, Golf 7…"></div>
         <div class="f"><label for="cYear">Année</label><input id="cYear" inputmode="numeric" maxlength="4" placeholder="2016"></div>
       </div>
       <button type="button" class="lnk" id="cMdBtn" hidden style="text-align:left;margin:-4px 0 12px"></button>
-      <div class="f"><label for="cCity">Ville</label><input id="cCity" maxlength="80"></div>
+      <div class="f"><label for="cCity">Ville</label><input id="cCity" maxlength="80"><div class="chips qcities" id="cCities"></div></div>
       <div class="f"><label for="cAddr">Adresse d'intervention (facultatif)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"></div>
       <div class="tripbox">
         <div class="row2">
@@ -798,7 +801,8 @@ main{padding-top:10px}
     <div class="f"><label for="cAmt" id="cLamt">Tarif (€)</label><input id="cAmt" inputmode="decimal" required placeholder="0,00"></div>
     <div class="f" id="cgM"><span class="lab">Combien de fois ?</span><div class="seg" id="cMulSeg"><button type="button" data-v="1" aria-pressed="true">×1</button><button type="button" data-v="2" aria-pressed="false">×2</button><button type="button" data-v="3" aria-pressed="false">×3</button></div><span class="hint" id="cMulHint" style="margin:2px 0 0">Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois.</span></div>
     <div class="f" id="cgV" hidden><label for="cVat">dont TVA (€, facultatif)</label><input id="cVat" inputmode="decimal" placeholder="0,00"></div>
-    <div class="f"><span class="lab">Moyen de paiement</span><div class="seg" id="cPaySeg"><button type="button" data-v="carte" aria-pressed="true">Carte</button><button type="button" data-v="especes" aria-pressed="false">Espèces</button></div></div>
+    <div class="f"><span class="lab">Moyen de paiement</span><div class="seg seg4" id="cPaySeg"><button type="button" data-v="carte" aria-pressed="true">Carte</button><button type="button" data-v="especes" aria-pressed="false">Espèces</button><button type="button" data-v="virement" aria-pressed="false">Virement</button><button type="button" data-v="mixte" aria-pressed="false">Mixte</button></div></div>
+    <div class="f" id="cCashW" hidden><label for="cCash">Dont espèces (€) — le reste en carte</label><input id="cCash" inputmode="decimal" placeholder="0,00"><span class="hint" id="cCashH" style="margin:2px 0 0"></span></div>
     <div class="acts">
       <button type="button" class="btn del" id="cDel" hidden>Supprimer</button>
       <button type="button" class="btn" id="cCancel">Annuler</button>
@@ -1605,7 +1609,7 @@ function entryBrand(e){
   return b||inferBrand(e.model)||"autres";
 }
 $("cBrand").replaceChildren(h("option",{value:""},"— Marque —"),...BRANDS.map(b=>h("option",{value:b.id},b.label)));
-const CTABS=[{id:"recette",label:"Planning"},{id:"depense",label:"Dépenses"},{id:"idees",label:"Achats à venir"},{id:"stats",label:"Stats"},{id:"bilan",label:"Bilan"}];
+const CTABS=[{id:"recette",label:"Interventions"},{id:"depense",label:"Dépenses"},{id:"idees",label:"Achats à venir"},{id:"stats",label:"Stats"},{id:"bilan",label:"Bilan"}];
 const eur=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
 const eur0=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
 const money=c=>eur.format(c/100),money0=c=>eur0.format(c/100);
@@ -1624,12 +1628,41 @@ const FAYRE=/(^|[^a-zà-ÿ])fay(?:ss?|cal|çal|c|ç)(?![a-zà-ÿ])/i;
 const isFay=e=>!!(e&&(e.fay||FAYRE.test(e.note||"")));
 let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){return "tous"}})();
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
+const whoChips=()=>h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)));
 let cMul=1;
+const QTYPES=[["Double",130],["Perte",250],["Semi-perte",180],["Ouverture",100],["Taillage",50],["Décodage",100]];
+let cType="";
+function typePrice(t,dflt){
+  const n=normTxt(t),l=entries.filter(e=>e.kind==="recette"&&stat(e)==="reussi"&&cents(e)>0&&(e.type===t||normTxt(e.note||"").startsWith(n))).map(e=>cents(e)/100).sort((x,y)=>x-y);
+  if(l.length<3)return dflt;const m=l[Math.floor(l.length/2)];return Math.round(m/10)*10;
+}
+function cTypesUi(){
+  $("cTypes").replaceChildren(...QTYPES.map(([t,p])=>h("button",{class:"chip",type:"button","aria-pressed":String(cType===t),onclick:()=>{if(!canWrite)return;
+    const was=cType;cType=cType===t?"":t;
+    const note=$("cNote").value,known=QTYPES.map(q=>q[0]);
+    const strip=s=>{for(const k of known){if(normTxt(s).startsWith(normTxt(k))){return s.slice(k.length).replace(/^\s*·\s*/,"")}}return s};
+    $("cNote").value=cType?(cType+(strip(note).trim()?" · "+strip(note).trim():"")):strip(note);
+    if(cType&&(!$("cAmt").value.trim()||(was&&$("cAmt").dataset.auto==="1"))){$("cAmt").value=String(typePrice(t,p));$("cAmt").dataset.auto="1";cPayUi()}
+    cTypesUi()}},t)));
+}
+function cCitiesUi(){
+  const c=groupBy(entries.filter(e=>e.kind==="recette"&&(e.city||"").trim()),e=>normTxt(e.city),e=>e.city.trim()).sort((a,b)=>b.n-a.n).slice(0,6);
+  $("cCities").replaceChildren(...c.map(x=>h("button",{class:"chip",type:"button",onclick:()=>{if(canWrite)$("cCity").value=x.label}},x.label)));
+}
+function cPayUi(){
+  const show=cPay==="mixte"&&(cEditing?cEditing.kind:cTab)==="recette";$("cCashW").hidden=!show;
+  if(show){const t=parseNum($("cAmt").value),c=parseNum($("cCash").value);$("cCashH").textContent=t>0&&c>=0&&c<=t?"Carte : "+money(Math.round((t-c)*100))+" · espèces : "+money(Math.round(c*100)):"Indiquez la part payée en espèces."}
+}
 function cMulUi(){const b=parseNum($("cAmt").value);$("cMulHint").textContent=cMul>1?(b>0?"Total enregistré : "+money(Math.round(b*cMul*100))+" ("+cMul+" × "+money(Math.round(b*100))+")":"Le montant saisi sera compté "+cMul+" fois."):"Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois."}
 let cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
 function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
-const sum=list=>list.reduce((a,e)=>a+cents(e),0);
+const sum=list=>list.reduce((a,e)=>a+cents(e),0)
+/* paiement : carte, espèces, virement ou mixte (carte + espèces, e.cash = part espèces en €) */
+const cashC=e=>e.pay==="especes"?cents(e):e.pay==="mixte"?Math.min(cents(e),Math.round((Number(e.cash)||0)*100)):0;
+const bankC=e=>cents(e)-cashC(e);
+const sumCash=l=>l.reduce((a,e)=>a+cashC(e),0),sumBank=l=>l.reduce((a,e)=>a+bankC(e),0);
+const payLbl=e=>e.pay==="especes"?"Espèces":e.pay==="virement"?"Virement":e.pay==="mixte"?"Carte + espèces":"Carte";;
 const stat=e=>e.status||"reussi";
 /* Péages : les tickets scannés (Dépenses > divers > « Péage … ») sont répartis sur les interventions réussies du jour */
 const isToll=e=>e.kind==="depense"&&e.cat!=="essence"&&/p[ée]age/i.test(e.label||"");
@@ -1674,7 +1707,7 @@ const RESERVE=0.30;
 /* épargne de 30 % sur les espèces : en place depuis le 15 octobre 2026 (rien à mettre de côté avant) */
 const SAVE_FROM="2026-10-15";
 /* saveAll : toute l'intervention va dans l'épargne (carte ou espèces, quelle que soit la date) */
-const cashRes=e=>e.kind!=="recette"||stat(e)!=="reussi"?0:e.saveAll?cents(e):e.pay==="especes"&&(e.date||"")>=SAVE_FROM?Math.round(cents(e)*RESERVE):0;
+const cashRes=e=>e.kind!=="recette"||stat(e)!=="reussi"?0:e.saveAll?cents(e):cashC(e)>0&&(e.date||"")>=SAVE_FROM?Math.round(cashC(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
 async function setAside(e,on){
   if(!db||!canWrite)return;
@@ -1704,8 +1737,8 @@ function cJournal(inYear){
   const valid=mine.filter(counts);
   const out=[],tot=sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(cTab==="recette")out.push(h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l))));
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte",money(sum(valid.filter(e=>e.pay==="carte")))),card("Espèces",money(sum(valid.filter(e=>e.pay==="especes")))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sum(valid.filter(e=>e.pay==="especes"))-resTot(valid.filter(e=>e.pay==="especes")))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette")out.push(whoChips());
+  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
@@ -1728,7 +1761,7 @@ async function setStatus(e,s){
 function cEntry(e){
   const by=e.by&&names[e.by]?" · "+names[e.by]:"";
   if(e.kind==="recette"){
-    const s=stat(e),title=[e.model,e.year].filter(Boolean).join(" · ")||"Véhicule";
+    const s=stat(e),title=[e.type,e.model,e.year].filter(Boolean).join(" · ")||"Véhicule";
     const eb=entryBrand(e),br=eb!=="autres"?brandLabel(eb)+" · ":"";
     return h("div",{class:"ent-wrap"},
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
@@ -1741,8 +1774,8 @@ function cEntry(e){
           (()=>{const dd=docs.find(x=>x.entryId===e.id);return dd?h("div",{class:"ent-m"},(dd.type==="devis"?"Devis ":"Facture ")+dd.num):null})()),
         h("div",{class:"ent-r"},
           h("div",{class:"ent-a"+(s==="reussi"?"":" dim")+(s==="abandon"?" strike":""),style:s==="reussi"?"color:var(--in)":""},(s==="reussi"?"+":"")+money(cents(e))),
-          h("div",null,h("span",{class:"pay"+(e.pay==="especes"?" cash":"")},e.pay==="especes"?"Espèces":"Carte"),h("span",{class:"st st-"+s},s==="reussi"?"Réussi":s==="abandon"?"Abandon":"À faire")))),
-      s==="reussi"&&e.saveAll?h("div",{class:"quick"},h("span",{class:"qok",style:"padding:6px 10px;border-radius:8px"},"✓ "+money(cashRes(e))+" mis dans l'épargne (tout)")):s==="reussi"&&e.pay==="especes"&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
+          h("div",null,h("span",{class:"pay"+(cashC(e)>0?" cash":"")},payLbl(e)),h("span",{class:"st st-"+s},s==="reussi"?"Réussi":s==="abandon"?"Abandon":"À faire")))),
+      s==="reussi"&&e.saveAll?h("div",{class:"quick"},h("span",{class:"qok",style:"padding:6px 10px;border-radius:8px"},"✓ "+money(cashRes(e))+" mis dans l'épargne (tout)")):s==="reussi"&&cashC(e)>0&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
       s==="prevu"&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
@@ -1750,20 +1783,20 @@ function cEntry(e){
   return h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
     h("div",{class:"ent-l"},h("div",{class:"ent-t"},title),h("div",{class:"ent-m"},meta)),
     h("div",{class:"ent-r"},h("div",{class:"ent-a",style:"color:var(--"+(e.kind==="recette"?"in":"out")+")"},(e.kind==="recette"?"+":"−")+money(cents(e))),
-      e.pay?h("span",{class:"pay"+(e.pay==="especes"?" cash":"")},e.pay==="especes"?"Espèces":"Carte"):null));
+      e.pay?h("span",{class:"pay"+(cashC(e)>0?" cash":"")},payLbl(e)):null));
 }
 function cBilan(inYear){
-  const r=inYear.filter(e=>e.kind==="recette"&&counts(e)),d=inYear.filter(e=>e.kind==="depense");
-  const R=sum(r),D=sum(d),res=R-D,cash=sum(r.filter(e=>e.pay==="especes"))-sum(d.filter(e=>e.pay==="especes"));
+  const r=inYear.filter(e=>e.kind==="recette"&&counts(e)&&whoOk(e)),d=inYear.filter(e=>e.kind==="depense");
+  const R=sum(r),D=sum(d),res=R-D,cash=sumCash(r)-sumCash(d);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
   const rc=r.filter(e=>e.cost!=null&&e.cost!==""),Rc=sum(rc),Cc=rc.reduce((a,e)=>a+eurosC(e.cost),0);
   const card2=(l,v,c,sub)=>h("div",null,h("small",null,l),h("strong",{class:c},v),sub?h("span",{class:"sub"},sub):null);
-  const rCa=sum(r.filter(e=>e.pay!=="especes")),rEs=sum(r.filter(e=>e.pay==="especes"));
+  const rCa=sumBank(r),rEs=sumCash(r);
   const todo=resTot(r.filter(e=>!e.aside)),done=resTot(r.filter(e=>e.aside));
-  const out=[
+  const out=[whoChips(),
     h("h2",{class:"h2"},"Ce qu'on a gagné en "+Y),
     h("div",{class:"sum"},
-      card2("Encaissé",money(R),"","carte "+money(rCa)+" · espèces "+money(rEs)),
+      card2("Encaissé"+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(R),"","carte/virement "+money(rCa)+" · espèces "+money(rEs)),
       card2("Dépensé",money(D),"","essence, achats, divers"),
       card2("Bénéfice",money(res),res>=0?"pos":"neg","encaissé − dépensé, carte et espèces")),
     h("h2",{class:"h2"},"Épargne 30 % sur les espèces"),
@@ -1782,9 +1815,42 @@ function cBilan(inYear){
   out.push(h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Mois"),h("th",null,"Recettes"),h("th",null,"Dépenses"),h("th",null,"Résultat"),h("th",null,"Marge"))),h("tbody",null,rows),
     h("tfoot",null,h("tr",null,h("td",null,"Total "+Y),h("td",null,money(R)),h("td",null,money(D)),h("td",{style:"color:var(--"+(res>=0?"in":"out")+")"},money(res)),h("td",null,rc.length?money(Rc-Cc):"–"))))));
   out.push(h("p",{class:"hint",style:"margin-top:8px"},"« Marge » = prix de l'intervention moins prix d'achat de la pièce, carte et espèces confondues. Elle n'est calculée que si le « prix d'achat de la pièce » est rempli dans l'intervention ("+rc.length+" sur "+r.length+" cette année) ; sinon « – ». Le vrai gain reste le Bénéfice ci-dessus."));
+  out.push(...cDeclare(inYear));
   out.push(...cDetail(d));
   out.push(...cExport());
   return out;
+}
+/* récap à déclarer : encaissements réussis hors Fayss, par mois et par trimestre */
+function cDeclare(inYear){
+  const ok=inYear.filter(e=>e.kind==="recette"&&stat(e)==="reussi"&&!isFay(e));
+  const m=MS.map((n,i)=>{const l=ok.filter(e=>e.date.slice(5,7)===p2(i+1));return {i,ca:sumBank(l),es:sumCash(l)}});
+  const tr=(lab,a,b,c,cls)=>h("tr",{class:cls||""},h("td",null,lab),h("td",null,money0(a)),h("td",null,money0(b)),h("td",null,h("b",null,money0(c))));
+  const rows=[];
+  for(let q=0;q<4;q++){
+    const g=m.slice(q*3,q*3+3);
+    g.forEach(x=>rows.push(tr(MONTHS[x.i],x.ca,x.es,x.ca+x.es)));
+    const a=g.reduce((s,x)=>s+x.ca,0),b=g.reduce((s,x)=>s+x.es,0);
+    rows.push(tr("Trimestre "+(q+1),a,b,a+b,"cur"));
+  }
+  const A=m.reduce((s,x)=>s+x.ca,0),B=m.reduce((s,x)=>s+x.es,0);
+  const txt=()=>["Encaissements à déclarer "+Y+" (sans Fayss)",...m.filter(x=>x.ca+x.es).map(x=>MONTHS[x.i]+" : "+money(x.ca+x.es)+" (carte/virement "+money(x.ca)+", espèces "+money(x.es)+")"),"Total "+Y+" : "+money(A+B)].join("\n");
+  return [h("h2",{class:"h2"},"À déclarer (sans Fayss)"),
+    h("p",{class:"hint",style:"margin:-4px 0 8px"},"Interventions réussies, sans celles encaissées par Fayss, quel que soit le filtre en haut."),
+    h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Période"),h("th",null,"Carte/vir."),h("th",null,"Espèces"),h("th",null,"Total"))),h("tbody",null,rows),
+      h("tfoot",null,tr("Total "+Y,A,B,A+B)))),
+    h("div",{class:"expo",style:"margin-top:8px"},h("button",{class:"btn",type:"button",onclick:async()=>{try{await navigator.clipboard.writeText(txt());toast("Récap copié")}catch(e){toast("Copie impossible")}}},"Copier le récap"),
+      h("button",{class:"btn pri",type:"button",onclick:()=>declareCsv(m)},"Télécharger le récap"))];
+}
+async function declareCsv(m){
+  const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
+  if(!dl){toast("Téléchargement indisponible ici");return}
+  const nfr=c=>(c/100).toFixed(2).replace(".",",");
+  const rows=[["Période","Carte / virement (€)","Espèces (€)","Total (€)"]];
+  for(let q=0;q<4;q++){const g=m.slice(q*3,q*3+3);g.forEach(x=>rows.push([MONTHS[x.i]+" "+Y,nfr(x.ca),nfr(x.es),nfr(x.ca+x.es)]));
+    const a=g.reduce((s,x)=>s+x.ca,0),b=g.reduce((s,x)=>s+x.es,0);rows.push(["Trimestre "+(q+1),nfr(a),nfr(b),nfr(a+b)])}
+  const A=m.reduce((s,x)=>s+x.ca,0),B=m.reduce((s,x)=>s+x.es,0);rows.push(["Total "+Y,nfr(A),nfr(B),nfr(A+B)]);
+  try{await dl.save({filename:"a-declarer-"+Y+".csv",data:"\ufeff"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n")});toast("Récap prêt")}
+  catch(err){if(!err||err.code!=="declined")toast("Téléchargement impossible sur cet appareil")}
 }
 function cDetail(d){
   const blocks=[h("h2",{class:"h2"},"Détail des dépenses "+Y)];
@@ -1861,7 +1927,8 @@ function setSeg(id,val,set){for(const b of $(id).children)b.setAttribute("aria-p
 $("cNote").addEventListener("input",()=>{if(FAYRE.test($("cNote").value))$("cFay").checked=true});
 $("cMulSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite){setSeg("cMulSeg",b.dataset.v,v=>cMul=+v);cMulUi()}});
 $("cAmt").addEventListener("input",()=>cMulUi());
-$("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeg("cPaySeg",b.dataset.v,v=>cPay=v)});
+$("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeg("cPaySeg",b.dataset.v,v=>cPay=v);cPayUi()});
+$("cCash").addEventListener("input",cPayUi);$("cAmt").addEventListener("input",()=>{$("cAmt").dataset.auto="";cPayUi()});
 let brandAuto=true;
 $("cBrand").addEventListener("change",()=>{brandAuto=false});
 $("cModel").addEventListener("input",()=>{if(brandAuto&&canWrite){$("cBrand").value=inferBrand($("cModel").value)||""}});
@@ -1899,10 +1966,13 @@ function cOpen(e,date,prefill){
   {const mu=e&&e.kind==="depense"&&e.mult>1?e.mult:1;cMul=mu;setSeg("cMulSeg",String(mu),v=>cMul=+v);
   $("cAmt").value=e?String(Math.round(e.amount/mu*100)/100).replace(".",","):"";cMulUi();}
   setSeg("cPaySeg",e&&e.pay?e.pay:"carte",v=>cPay=v);
+  {const vb=$("cPaySeg").querySelectorAll('[data-v="mixte"],[data-v="virement"]');vb[0].hidden=!rec;$("cAmt").dataset.auto="";
+  $("cCash").value=e&&e.pay==="mixte"&&e.cash!=null?String(e.cash).replace(".",","):"";
+  cType=e&&e.type?e.type:"";if(rec){cTypesUi();cCitiesUi()}cPayUi();}
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay","cSaveAll"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay","cSaveAll","cCash"])$(id).disabled=!canWrite;
   $("cCity").dataset.auto=e?"":$("cCity").value;cRdvId="";cPlateDone="";cAuto={};clearTimeout(cPlateT);$("cPlateHint").hidden=true;
   if(prefill&&!e)cPrefill(prefill);
   cMarginUi();cMdUi();cTripUi("");
@@ -1990,7 +2060,9 @@ $("cForm").addEventListener("submit",async ev=>{
   const kind=cEditing?cEditing.kind:cTab;
   const amount=Math.round(parseNum($("cAmt").value)*100)/100;
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
-  const data={kind,date:$("cDate").value,amount,pay:cPay,by:uid,at:Date.now()};
+  if(cPay==="mixte"&&kind==="recette"){const c=parseNum($("cCash").value);if(!(c>=0&&c<=amount)){toast("Indiquez la part en espèces (entre 0 et le tarif)");return}}
+  const data={kind,date:$("cDate").value,amount,pay:kind!=="recette"&&cPay==="mixte"?"carte":cPay,by:uid,at:Date.now()};
+  if(kind==="recette"){data.cash=cPay==="mixte"?Math.round(parseNum($("cCash").value)*100)/100:null;data.type=cType||""}
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.saveAll=$("cSaveAll").checked;if(data.saveAll){data.aside=true;data.asideAt=(cEditing&&cEditing.asideAt)||Date.now()}else if(cEditing&&cEditing.saveAll){data.aside=false;data.asideAt=null}data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*cMul*100)/100;data.mult=cMul>1?cMul:null;data.amount=Math.round(amount*cMul*100)/100;if(data.litres&&cMul>1)data.litres=Math.round(data.litres*cMul*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
@@ -2480,7 +2552,7 @@ async function useKey(it){
     const upd={usedId:it.id,usedLabel:(lb.nm+(lb.path?" ("+lb.path+")":"")).slice(0,120)};
     if(Number(it.cost)>0&&(e.cost==null||e.cost===""))upd.cost=Number(it.cost);
     await db.doc("entries/"+e.id).update(upd);
-    toast(cur>0?"Stock mis à jour : "+lb.nm+", "+nq+" restant"+(nq>1?"s":""):"Noté. Cette pièce était déjà à 0 en stock")
+    toast(cur>0?(isLow({...it,qty:nq})?"⚠ Plus que "+nq+" "+lb.nm+" : à recommander (Stock › Commander)":"Stock mis à jour : "+lb.nm+", "+nq+" restant"+(nq>1?"s":"")):"Noté. Cette pièce était déjà à 0 en stock")
   }catch(err){toast("Mise à jour du stock impossible")}
   afterKey(e);
 }
@@ -2524,12 +2596,12 @@ function groupBy(list,keyFn,labelFn){
   return [...m.values()].map(g=>({label:g.label,v:g.n,n:g.n,sum:g.sum}));
 }
 function cStats(inYear){
-  const r=inYear.filter(e=>e.kind==="recette"&&stat(e)==="reussi"),dep=inYear.filter(e=>e.kind==="depense");
-  const ab=inYear.filter(e=>e.kind==="recette"&&stat(e)==="abandon").length;
+  const r=inYear.filter(e=>e.kind==="recette"&&stat(e)==="reussi"&&whoOk(e)),dep=inYear.filter(e=>e.kind==="depense");
+  const ab=inYear.filter(e=>e.kind==="recette"&&stat(e)==="abandon"&&whoOk(e)).length;
   const R=sum(r),D=sum(dep),n=r.length;
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(!n)return [h("div",{class:"empty"},h("strong",null,"Pas encore de statistiques "+Y),"Elles se remplissent dès qu'un véhicule passe en « Réussi » dans le planning.")];
-  const out=[h("div",{class:"sum"},card("Panier moyen",money(Math.round(R/n))),card("Interventions réussies",String(n)),card("Taux de réussite",Math.round(n/(n+ab)*100)+" %"),card("Gain par intervention",money(Math.round((R-D)/n)),R-D>=0?"pos":"neg"))];
+  if(!n)return [whoChips(),h("div",{class:"empty"},h("strong",null,"Pas encore de statistiques "+Y),"Elles se remplissent dès qu'un véhicule passe en « Réussi » dans le planning.")];
+  const out=[whoChips(),h("div",{class:"sum"},card("Panier moyen",money(Math.round(R/n))),card("Interventions réussies",String(n)),card("Taux de réussite",Math.round(n/(n+ab)*100)+" %"),card("Gain par intervention",money(Math.round((R-D)/n)),R-D>=0?"pos":"neg"))];
   const cities=groupBy(r,e=>normTxt(e.city),e=>(e.city||"").trim()).sort((a,b)=>b.n-a.n||b.sum-a.sum);
   out.push(bars("Villes","Nombre d'interventions · total encaissé",cities,x=>x.n+" · "+money0(x.sum)));
   const brands=groupBy(r,e=>entryBrand(e),e=>brandLabel(entryBrand(e))||"Autres").sort((a,b)=>b.n-a.n||b.sum-a.sum);
@@ -2540,8 +2612,8 @@ function cStats(inYear){
   const mo=MONTHS.map((l,i)=>({label:l,v:0,sum:0}));
   r.forEach(e=>{const k=+e.date.slice(5,7)-1;if(mo[k]){mo[k].v+=cents(e);mo[k].sum++}});
   out.push(bars("Recettes par mois",null,mo,x=>money0(x.v),12));
-  const card2=sum(r.filter(e=>e.pay==="carte")),esp=sum(r.filter(e=>e.pay==="especes"));
-  out.push(bars("Paiement","Part de chaque moyen",[{label:"Carte",v:card2},{label:"Espèces",v:esp}],x=>R?Math.round(x.v/R*100)+" % · "+money0(x.v):"0 %"));
+  const card2=sumBank(r),esp=sumCash(r);
+  out.push(bars("Paiement","Part de chaque moyen",[{label:"Carte / virement",v:card2},{label:"Espèces",v:esp}],x=>R?Math.round(x.v/R*100)+" % · "+money0(x.v):"0 %"));
   return out;
 }
 let xSel="all";
@@ -2564,8 +2636,8 @@ async function exportCsv(sel){
   const head=["Type","Date","Heure","Marque","Modèle","Année","Immatriculation","Ville","Détail","Litres","Montant (€)","Paiement","Clé utilisée","Notes","Coût pièce (€)","Marge (€)","Client"];
   const nfr=n=>Number(n).toFixed(2).replace(".",",");
   const rows=list.map(e=>e.kind==="recette"
-    ?["Recette",fmtDate(e.date),e.time||"",brandLabel(entryBrand(e)),e.model||"",e.year||"",e.plate||"",e.city||"","","",nfr(e.amount),e.pay==="especes"?"Espèces":"Carte",e.usedId&&e.usedId!=="none"?e.usedLabel||"":"",e.note||"",e.cost!=null&&e.cost!==""?nfr(e.cost):"",e.cost!=null&&e.cost!==""?nfr(e.amount-e.cost):"",e.clientName||""]
-    :["Dépense",fmtDate(e.date),"","","","","","",(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat":"Divers")+(e.label?" - "+e.label:""),e.litres?String(e.litres).replace(".",","):"",nfr(e.amount),e.pay==="especes"?"Espèces":"Carte","","","","",""]);
+    ?["Recette",fmtDate(e.date),e.time||"",brandLabel(entryBrand(e)),e.model||"",e.year||"",e.plate||"",e.city||"","","",nfr(e.amount),payLbl(e)+(e.pay==="mixte"?" ("+nfr(cashC(e)/100)+" esp.)":""),e.usedId&&e.usedId!=="none"?e.usedLabel||"":"",e.note||"",e.cost!=null&&e.cost!==""?nfr(e.cost):"",e.cost!=null&&e.cost!==""?nfr(e.amount-e.cost):"",e.clientName||""]
+    :["Dépense",fmtDate(e.date),"","","","","","",(e.cat==="essence"?"Essence":e.cat==="achat"?"Achat":"Divers")+(e.label?" - "+e.label:""),e.litres?String(e.litres).replace(".",","):"",nfr(e.amount),payLbl(e),"","","","",""]);
   const csv="﻿"+[head,...rows].map(r=>r.map(csvCell).join(";")).join("\r\n");
   try{await dl.save({filename:"comptes-autolocksolution-"+Y+(sel==="all"?"":"-"+p2(+sel+1))+".csv",data:csv});toast("Tableau prêt")}
   catch(err){if(!err||err.code!=="declined")toast("Téléchargement impossible sur cet appareil")}
@@ -3164,7 +3236,7 @@ function docFromEntry(e,type){
   const amount=Number(e.amount)||0;
   const pu=rate?Math.round(amount/(1+rate/100)*100)/100:amount;
   const subj=[[e.model,e.year].filter(Boolean).join(" "),e.plate].filter(Boolean).join(" · ");
-  return {type,clientId:e.clientId||"",subject:subj,pay:e.pay==="especes"?"especes":"carte",entryId:e.id,status:type==="facture"&&stat(e)==="reussi"?"payee":null,
+  return {type,clientId:e.clientId||"",subject:subj,pay:e.pay==="especes"?"especes":e.pay==="virement"?"virement":"carte",entryId:e.id,status:type==="facture"&&stat(e)==="reussi"?"payee":null,
     lines:[{d:"Intervention"+(subj?" — "+subj:""),q:1,p:pu}]};
 }
 
@@ -3655,7 +3727,7 @@ $("cMdBtn").addEventListener("click",()=>{const m=$("cModel").value.trim();mdOpe
 
 /* ================= ACCUEIL ================= */
 function hmGoStockLow(){sCat="urgent";sGroup=firstGroup(curCat());sSeries="";lowOnly=false;q="";$("q").value="";store("als-cat",sCat);goMode("stock")}
-const ICO={"home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
+const ICO={"savings": "<path d=\"M5 11a7 6 0 0 1 14 0v4a2 2 0 0 1-2 2h-1v2h-3v-2h-2v2H8v-2a4 4 0 0 1-3-4z\"/><path d=\"M10 7.5h4\"/><circle cx=\"15.5\" cy=\"11\" r=\".6\"/>", "home": "<path d=\"M3 11l9-7 9 7\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "key": "<circle cx=\"8\" cy=\"12\" r=\"4\"/><path d=\"M12 12h9M18 12v3M15 12v2\"/>", "account_balance_wallet": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"14\" rx=\"3\"/><path d=\"M3 10h18\"/><path d=\"M6 6l9-3 1 3\"/><circle cx=\"16.5\" cy=\"15\" r=\"1\"/>", "description": "<path d=\"M7 3h7l5 5v13H7z\"/><path d=\"M14 3v5h5M10 13h6M10 17h6\"/>", "calendar_month": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "directions_car": "<path d=\"M5 16V12l2-5h10l2 5v4\"/><path d=\"M3 16h18v3H3z\"/><circle cx=\"7.5\" cy=\"13.5\" r=\"0.6\"/><circle cx=\"16.5\" cy=\"13.5\" r=\"0.6\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7\"/><path d=\"M3 4v5h5\"/><path d=\"M12 8v4l3 2\"/>", "more_horiz": "<circle cx=\"5\" cy=\"12\" r=\"1.2\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/><circle cx=\"19\" cy=\"12\" r=\"1.2\"/>"};
 const icoSvg=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICO[n]||"")+'</svg>';
 document.querySelectorAll("[data-ico]").forEach(e=>e.innerHTML=icoSvg(e.dataset.ico));
 const ic=n=>{const e=h("span",{class:"msi"});e.innerHTML=icoSvg(n);return e};
@@ -3681,7 +3753,8 @@ function hmRender(){
     tile("t-cp","account_balance_wallet","Comptes",money0(sum(rec))+" en "+MONTHS[n.getMonth()].toLowerCase(),()=>{cTab="recette";Y=n.getFullYear();M=n.getMonth();cScroll=true;goMode("comptes")}),
     tile("t-dv","description","Devis",dueT?money0(dueT)+" à encaisser":open?pl(open,"devis en attente","devis en attente"):"Aucun en attente",()=>{dvTab="docs";dvFilter="all";goMode("devis")},due.some(isOverdue)),
     tile("t-pl","calendar_month","Planning",nToday?pl(nToday,"aujourd'hui","aujourd'hui"):"Rien aujourd'hui",()=>{pDay=today;goMode("planning")}),
-    tile("t-bs","directions_car","Base",pl(vehicles.length,"fiche véhicule","fiches véhicules"),()=>goMode("base")),
+    (()=>{const y=entries.filter(e=>(e.date||"").startsWith(n.getFullYear()+"-")),td=resTot(y.filter(e=>!e.aside));
+      return tile("t-ep","savings","Épargne",td?money0(td)+" à mettre de côté":"Tout est mis de côté",()=>{cTab="bilan";Y=n.getFullYear();goMode("comptes")},td>0)})(),
     tile("t-hs","history","Historique",pl(done,"intervention","interventions"),()=>goMode("historique"))));
   if(nToday){
     const ev=[...evE.map(e=>({time:e.time||"",title:[e.model,e.year].filter(Boolean).join(" · ")||"Intervention",sub:e.city||"",go:()=>cOpen(e)})),
@@ -3698,7 +3771,6 @@ function goMode(m){if(m==="decodage")m="accueil";mode=m;store("als-mode",mode);i
 function plusOpen(){
   const nNew=news.filter(n=>n.state==="new").length;
   $("plusList").replaceChildren(
-    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("base")}},h("span",null,"Base véhicules")),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("historique")}},h("span",null,"Historique")));
   $("plusScrim").hidden=false;
