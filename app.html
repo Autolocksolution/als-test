@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-tbtN6oF4zYQPHiw5kzudQhmRIygek9s/QykYGb2p5/A=' 'sha256-HM60j+irg67YWsCSoKO6FT4BjmNP9a1cLmb+NBo+YZQ=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-jE5QJaJp108Z8O2fS/hc1kNbHjxYQh/lc024+QWmpkc=' 'sha256-yBmspINcdAmkc0Z7LInH6yQG9UbQQD35fryTs4Q4UzQ=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -241,6 +241,10 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .ksub .chip{min-height:30px;font-size:13px;border-radius:999px}
 .krow.zero{opacity:.55}
 .qtypes,.qcities{margin:4px 0 0}.qtypes .chip,.qcities .chip{min-height:34px;flex:0 0 auto}.qcities .chip{min-height:30px;font-size:13px;border-radius:999px}
+.micbtn{font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.micbtn.on{background:var(--out);color:#fff;border-color:var(--out)}
+.rphoto{margin:4px 0 10px}.rphoto .btn{width:100%}
+.navpick{display:flex;flex-direction:column;gap:8px;margin:10px 0}.navpick a{display:block;text-align:center;padding:14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-weight:600;font-size:17px;color:inherit;text-decoration:none}
 .seg4{flex-wrap:wrap}.seg4 button{flex:1 1 45%}
 .ord{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ord .kl{flex:1;min-width:0}
@@ -796,7 +800,7 @@ main{padding-top:10px}
       </div>
       <button type="button" class="lnk" id="cMdBtn" hidden style="text-align:left;margin:-4px 0 12px"></button>
       <div class="f"><label for="cCity">Ville</label><input id="cCity" maxlength="80"><div class="chips qcities" id="cCities"></div></div>
-      <div class="f"><label for="cAddr">Adresse d'intervention (facultatif)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"></div>
+      <div class="f"><label for="cAddr">Adresse d'intervention (facultatif)</label><input id="cAddr" maxlength="140" placeholder="14 avenue Foch"><button type="button" class="lnk" id="cGo" hidden style="text-align:left;margin-top:4px">📍 Y aller (Waze, Google Maps, Plans)</button></div>
       <div class="tripbox">
         <div class="row2">
           <div class="f"><label for="cKm">Distance aller (km)</label><input id="cKm" inputmode="decimal" placeholder="ex. 27"></div>
@@ -804,8 +808,9 @@ main{padding-top:10px}
         </div>
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
-      <div class="f"><label for="cNote">Notes (envoyées dans l'historique si réussi)</label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
-      <div class="f"><label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> Tout mis dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
+      <div class="f"><label for="cNote" style="display:flex;justify-content:space-between;align-items:center;gap:8px">Notes (envoyées dans l'historique si réussi)<button type="button" class="micbtn" id="cMic" aria-label="Dicter la note">🎤 Dicter</button></label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
+      <div class="f"><div class="rphoto"><button type="button" class="btn" id="cPhBtn">📷 Photo (clé, boîtier, étiquette)</button><div class="tkrow" id="cPhRow" hidden><img id="cPhPrev" alt="Photo de l'intervention"><button type="button" class="lnk" id="cPhView">Voir</button><button type="button" class="lnk" id="cPhDel">Retirer</button></div></div>
+      <label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> Tout mis dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
         <div class="f"><label for="cPin">Code PIN</label><input id="cPin" maxlength="24"></div>
@@ -1661,6 +1666,39 @@ let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){retu
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
 const whoChips=()=>h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)));
 let cMul=1;
+/* ---- itinéraire : choix de l'appli GPS ---- */
+function navOpen(addr){
+  addr=String(addr||"").replace(/\s*\n+\s*/g,", ").trim();if(!addr){toast("Pas d'adresse");return}
+  const q=encodeURIComponent(addr);
+  const sc=h("div",{class:"scrim",onclick:e=>{if(e.target===sc)sc.remove()}},h("div",{class:"sheet"},h("h2",null,"Y aller"),h("p",{class:"hint"},addr),
+    h("div",{class:"navpick"},
+      h("a",{href:"https://waze.com/ul?q="+q+"&navigate=yes",target:"_blank",rel:"noopener noreferrer",onclick:()=>sc.remove()},"Waze"),
+      h("a",{href:"https://www.google.com/maps/dir/?api=1&destination="+q,target:"_blank",rel:"noopener noreferrer",onclick:()=>sc.remove()},"Google Maps"),
+      h("a",{href:"https://maps.apple.com/?daddr="+q,target:"_blank",rel:"noopener noreferrer",onclick:()=>sc.remove()},"Plans (Apple)")),
+    h("div",{class:"acts"},h("button",{type:"button",class:"btn",onclick:()=>sc.remove()},"Annuler"))));
+  document.body.append(sc);
+}
+const cAddrFull=()=>[$("cAddr").value.trim(),$("cCity").value.trim()].filter(Boolean).join(", ");
+function cGoUi(){$("cGo").hidden=!$("cAddr").value.trim()}
+/* ---- dictée de la note (reconnaissance vocale du téléphone) ---- */
+let micRec=null;
+function micToggle(){
+  if(micRec){try{micRec.stop()}catch(e){}return}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast("Dictée indisponible ici : utilisez le micro du clavier");$("cNote").focus();return}
+  const r=new SR();r.lang="fr-FR";r.interimResults=false;r.continuous=false;r.maxAlternatives=1;micRec=r;
+  $("cMic").classList.add("on");$("cMic").textContent="● J'écoute…";
+  r.onresult=ev=>{const t=[...ev.results].map(x=>x[0].transcript).join(" ").trim();if(t){const n=$("cNote");n.value=(n.value.trim()?n.value.trim()+" ":"")+t;if(FAYRE.test(n.value))$("cFay").checked=true}};
+  r.onerror=ev=>{if(ev.error==="not-allowed")toast("Autorisez le micro pour dicter");else if(ev.error!=="no-speech"&&ev.error!=="aborted")toast("Dictée interrompue")};
+  r.onend=()=>{micRec=null;$("cMic").classList.remove("on");$("cMic").textContent="🎤 Dicter"};
+  try{r.start()}catch(e){r.onend()}
+}
+/* ---- photo de l'intervention ---- */
+let rcData=null,rcPid="";
+function rcUi(){const has=!!(rcData||rcPid);$("cPhRow").hidden=!has;$("cPhBtn").textContent=has?"📷 Changer la photo":"📷 Photo (clé, boîtier, étiquette)";$("cPhDel").hidden=!canWrite;$("cPhBtn").disabled=!canWrite;
+  if(has){if(rcData)$("cPhPrev").src=rcData;else getPhoto(rcPid).then(d=>{if(d&&rcPid)$("cPhPrev").src=d})}}
+const rcIn=h("input",{type:"file",accept:"image/*",hidden:true});rcIn.setAttribute("capture","environment");document.body.append(rcIn);
+rcIn.addEventListener("change",async()=>{const f=rcIn.files[0];rcIn.value="";if(!f)return;try{rcData=await shrink(f,1100);rcUi()}catch(e){toast("Photo illisible")}});
 const QTYPES=[["Double",130],["Perte",250],["Semi-perte",180],["Ouverture",100],["Taillage",50],["Décodage",100]];
 let cType="";
 function typePrice(t,dflt){
@@ -1796,7 +1834,7 @@ function cEntry(e){
     const eb=entryBrand(e),br=eb!=="autres"?brandLabel(eb)+" · ":"";
     return h("div",{class:"ent-wrap"},
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
-        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by+(isFay(e)?" · encaissé par Fayss":"")),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
+        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by+(isFay(e)?" · encaissé par Fayss":"")+(e.photoId?" · 📷":"")),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
           e.clientId&&clientById(e.clientId)?h("div",{class:"ent-m"},"Client : "+clientById(e.clientId).name):null,
           (()=>{const pg=s==="reussi"?tollShare(e):0;if(!(e.tripCost>0)&&!pg)return null;
             return h("div",{class:"ent-m"},"🚗 "+(e.tripCost>0?frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100)):"")+(pg?(e.tripCost>0?" + ":"")+"péages "+money(pg):"")+(s==="reussi"?" · net "+money(cents(e)-Math.round((e.tripCost||0)*100)-pg):""))})(),
@@ -1959,7 +1997,11 @@ $("cNote").addEventListener("input",()=>{if(FAYRE.test($("cNote").value))$("cFay
 $("cMulSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite){setSeg("cMulSeg",b.dataset.v,v=>cMul=+v);cMulUi()}});
 $("cAmt").addEventListener("input",()=>cMulUi());
 $("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeg("cPaySeg",b.dataset.v,v=>cPay=v);cPayUi()});
-$("cCash").addEventListener("input",cPayUi);$("cAmt").addEventListener("input",()=>{$("cAmt").dataset.auto="";cPayUi()});
+$("cCash").addEventListener("input",cPayUi);
+$("cAddr").addEventListener("input",cGoUi);$("cGo").addEventListener("click",()=>navOpen(cAddrFull()));
+$("cMic").addEventListener("click",micToggle);
+$("cPhBtn").addEventListener("click",()=>rcIn.click());$("cPhDel").addEventListener("click",()=>{rcData=null;rcPid="";rcUi()});
+$("cPhView").addEventListener("click",async()=>{const d=rcData||(rcPid?await getPhoto(rcPid):"");if(d)openLb(d)});$("cAmt").addEventListener("input",()=>{$("cAmt").dataset.auto="";cPayUi()});
 let brandAuto=true;
 $("cBrand").addEventListener("change",()=>{brandAuto=false});
 $("cModel").addEventListener("input",()=>{if(brandAuto&&canWrite){$("cBrand").value=inferBrand($("cModel").value)||""}});
@@ -1999,11 +2041,12 @@ function cOpen(e,date,prefill){
   setSeg("cPaySeg",e&&e.pay?e.pay:"carte",v=>cPay=v);
   {const vb=$("cPaySeg").querySelectorAll('[data-v="mixte"],[data-v="virement"]');vb[0].hidden=!rec;$("cAmt").dataset.auto="";
   $("cCash").value=e&&e.pay==="mixte"&&e.cash!=null?String(e.cash).replace(".",","):"";
-  cType=e&&e.type?e.type:"";if(rec){cTypesUi();cCitiesUi()}cPayUi();}
+  cType=e&&e.type?e.type:"";if(rec){cTypesUi();cCitiesUi()}cPayUi();
+  rcData=null;rcPid=e&&e.kind==="recette"&&e.photoId?e.photoId:"";rcUi();cGoUi();if(micRec){try{micRec.stop()}catch(x){}}}
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
-  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay","cSaveAll","cCash"])$(id).disabled=!canWrite;
+  for(const id of["cDate","cTime","cPlate","cPin","cKeyCode","cBrand","cModel","cYear","cCity","cNote","cLabel","cLit","cOdo","cFull","cAddr","cKm","cRT","cAmt","cVat","cClient","cCost","cIdOk","cCgOk","cFay","cSaveAll","cCash","cMic"])$(id).disabled=!canWrite;
   $("cCity").dataset.auto=e?"":$("cCity").value;cRdvId="";cPlateDone="";cAuto={};clearTimeout(cPlateT);$("cPlateHint").hidden=true;
   if(prefill&&!e)cPrefill(prefill);
   cMarginUi();cMdUi();cTripUi("");
@@ -2093,7 +2136,8 @@ $("cForm").addEventListener("submit",async ev=>{
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   if(cPay==="mixte"&&kind==="recette"){const c=parseNum($("cCash").value);if(!(c>=0&&c<=amount)){toast("Indiquez la part en espèces (entre 0 et le tarif)");return}}
   const data={kind,date:$("cDate").value,amount,pay:kind!=="recette"&&cPay==="mixte"?"carte":cPay,by:uid,at:Date.now()};
-  if(kind==="recette"){data.cash=cPay==="mixte"?Math.round(parseNum($("cCash").value)*100)/100:null;data.type=cType||""}
+  if(kind==="recette"){data.cash=cPay==="mixte"?Math.round(parseNum($("cCash").value)*100)/100:null;data.type=cType||"";
+    if(rcData){try{data.photoId=await putPhoto(rcData)}catch(er){toast("Photo non enregistrée")}}else data.photoId=rcPid||null}
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.saveAll=$("cSaveAll").checked;if(data.saveAll){data.aside=true;data.asideAt=(cEditing&&cEditing.asideAt)||Date.now()}else if(cEditing&&cEditing.saveAll){data.aside=false;data.asideAt=null}data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*cMul*100)/100;data.mult=cMul>1?cMul:null;data.amount=Math.round(amount*cMul*100)/100;if(data.litres&&cMul>1)data.litres=Math.round(data.litres*cMul*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
@@ -3969,7 +4013,7 @@ function pRender(){
       h("h3",null,r.title||"Rendez-vous"),
       c?h("p",null,c.name):null,addr?h("p",null,addr):null,r.note?h("p",null,r.note):null,
       h("div",{class:"pl-acts"},
-        addr?h("a",{class:"go",href:"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(addr),target:"_blank",rel:"noopener noreferrer"},"Itinéraire"):null,
+        addr?h("button",{type:"button",class:"go",onclick:()=>navOpen(addr)},"Itinéraire"):null,
         ph?h("a",{href:"tel:"+ph},"Appeler"):null,
         canWrite?h("button",{type:"button",onclick:()=>rvToggle(r)},r.done?"Rouvrir":"Terminé"):null,
         canWrite&&r.clientId?h("button",{type:"button",onclick:()=>{goMode("devis");dcOpen(null,{type:"devis",clientId:r.clientId})}},"Devis"):null,
@@ -4223,7 +4267,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-1724";
+const ALS_BUILD="20261030-1749";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
