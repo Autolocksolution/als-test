@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-jE5QJaJp108Z8O2fS/hc1kNbHjxYQh/lc024+QWmpkc=' 'sha256-yBmspINcdAmkc0Z7LInH6yQG9UbQQD35fryTs4Q4UzQ=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-lZwZK2qE2zdDfMNpj6vzl4J69pWAp91rMkO0FnCblXI=' 'sha256-cXV2jF/wErApFQyZWrScSShmRTtPDCe074wHqro5Dbo=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -245,6 +245,7 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .micbtn.on{background:var(--out);color:#fff;border-color:var(--out)}
 .rphoto{margin:4px 0 10px}.rphoto .btn{width:100%}
 .navpick{display:flex;flex-direction:column;gap:8px;margin:10px 0}.navpick a{display:block;text-align:center;padding:14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-weight:600;font-size:17px;color:inherit;text-decoration:none}
+#navDvs,#navBase{display:none!important}
 .seg4{flex-wrap:wrap}.seg4 button{flex:1 1 45%}
 .ord{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .ord .kl{flex:1;min-width:0}
@@ -748,7 +749,7 @@ main{padding-top:10px}
   <button id="navHome" aria-selected="true"><span class="msi" data-ico="home"></span>Accueil</button>
   <button id="navStock" aria-selected="false"><span class="msi" data-ico="key"></span>Stock</button>
   <button id="navCpt" aria-selected="false"><span class="msi" data-ico="account_balance_wallet"></span>Comptes</button>
-  <button id="navDvs" aria-selected="false"><span class="msi" data-ico="description"></span>Devis</button>
+  <button id="navDvs" aria-selected="false" hidden><span class="msi" data-ico="description"></span>Devis</button>
   <button id="navBase" aria-selected="false" hidden><span class="msi" data-ico="directions_car"></span>Base</button>
   <button id="navPlus" aria-selected="false"><span class="msi" data-ico="more_horiz"></span>Plus</button>
 </nav>
@@ -1234,7 +1235,7 @@ function render(){
   const st=mode==="stock",cp=mode==="comptes",dc=mode==="decodage",hs=mode==="historique",dv=mode==="devis",bs=mode==="base",pl=mode==="planning",ac=mode==="actu";
   $("ttl").textContent=hm?"AutoLockSolution":st?"Stock":cp?"Comptes":dv?"Devis & factures":dc?"Décodage":bs?"Base de données":pl?"Planning":ac?"Actu":"Historique";
   $("base").hidden=!bs;$("plan").hidden=!pl;$("actu").hidden=!ac;
-  $("navBase").setAttribute("aria-selected",String(bs));$("navPlus").setAttribute("aria-selected",String(dc||hs||pl||ac||bs));
+  $("navBase").setAttribute("aria-selected",String(bs));$("navPlus").setAttribute("aria-selected",String(dc||hs||pl||ac||bs||dv));
   $("dvs").hidden=!dv;$("navDvs").setAttribute("aria-selected",String(dv));
   $("stkTabs").hidden=!st;$("stk").hidden=!st;
   $("cptTabs").hidden=!cp;$("cptSub").hidden=!cp||cTab==="idees";$("cpt").hidden=!cp;
@@ -3846,6 +3847,8 @@ function goMode(m){if(m==="decodage")m="accueil";mode=m;store("als-mode",mode);i
 function plusOpen(){
   const nNew=news.filter(n=>n.state==="new").length;
   $("plusList").replaceChildren(
+    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("devis")}},h("span",null,"Devis & factures")),
+    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("base")}},h("span",null,"Base véhicules")),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("historique")}},h("span",null,"Historique")));
   $("plusScrim").hidden=false;
@@ -4267,7 +4270,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-1749";
+const ALS_BUILD="20261030-1806";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
