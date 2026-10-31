@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-E2o4dePhM6wPw+56o06PqTAojIz2DePi4jWrjzfUrGo=' 'sha256-yBOvNZmL3yB77DEeUuk/3hpg8iPFFNHvb6z0okDWSUk=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-ZB/T/X8jIFGm0SaG/tbCirG0U+3I7CZQDkV4F6y2bS8=' 'sha256-SH1csRJwzZpPKYHaM+wg1u7EwYZYfAq7KwQL+QJ2WGk=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1748,6 +1748,11 @@ const isFay=e=>!!(e&&(e.fay||FAYRE.test(e.note||"")));
 let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){return "tous"}})();
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
 const whoChips=()=>h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)));
+/* filtre mode de paiement des recettes : tout, espèces seulement, carte/virement seulement */
+let cPayF=(()=>{try{return localStorage.getItem("als-cpay")||"tout"}catch(x){return "tout"}})();
+const payOk=e=>cPayF==="tout"||(cPayF==="especes"?cashC(e)>0:bankC(e)>0);
+const payAmt=e=>cPayF==="especes"?cashC(e):cPayF==="carte"?bankC(e):cents(e);
+const payChips=()=>h("div",{class:"chips",role:"group","aria-label":"Mode de paiement"},...[["tout","Tout"],["especes","💶 Espèces"],["carte","💳 Carte / virement"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cPayF===v),onclick:()=>{cPayF=v;try{localStorage.setItem("als-cpay",v)}catch(x){}cScroll=true;render()}},l)));
 let cMul=1;
 /* ---- itinéraire : choix de l'appli GPS ---- */
 function navOpen(addr){
@@ -1875,7 +1880,8 @@ function cRender(){
   $("months").hidden=!(cTab==="recette"||cTab==="depense");
   if(cTab==="recette"||cTab==="depense"){
     $("months").replaceChildren(...MS.map((n,i)=>{
-      const t=sum(inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)&&(cTab!=="recette"||whoOk(e))));
+      const ml=inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)&&(cTab!=="recette"||whoOk(e)));
+      const t=cTab==="recette"&&cPayF!=="tout"?ml.reduce((x,e)=>x+payAmt(e),0):sum(ml);
       return h("button",{class:"mo",role:"tab","aria-selected":String(i===M),onclick:()=>{M=i;cScroll=true;render()}},h("b",null,n),h("span",null,t?money0(t):"–"))}));
     if(cScroll){const s=$("months").querySelector('[aria-selected="true"]');if(s)requestAnimationFrame(()=>s.scrollIntoView({inline:"center",block:"nearest"}));cScroll=false}
   }
@@ -1885,12 +1891,14 @@ function cRender(){
 }
 function cJournal(inYear){
   const pre=Y+"-"+p2(M+1)+"-";
-  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre)&&(cTab!=="recette"||whoOk(e)));
+  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre)&&(cTab!=="recette"||(whoOk(e)&&payOk(e))));
   const valid=mine.filter(counts);
-  const out=[],tot=sum(valid);
+  const out=[],tot=cTab==="recette"&&cPayF!=="tout"?valid.reduce((x,e)=>x+payAmt(e),0):sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(cTab==="recette")out.push(whoChips());
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette"){out.push(whoChips(),payChips());
+    const yr=inYear.filter(e=>e.kind==="recette"&&counts(e)&&whoOk(e)),lbl=cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":"";
+    out.push(h("div",{class:"sum yr"},card("Espèces "+Y+lbl,money(sumCash(yr))),card("Carte / virement "+Y+lbl,money(sumBank(yr))),card("Total "+Y+lbl,money(sum(yr)))));}
+  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cPayF==="especes"?" en espèces":cPayF==="carte"?" par carte":"")+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
@@ -4490,7 +4498,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261030-2219";
+const ALS_BUILD="20261031-2123";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",

@@ -1717,6 +1717,11 @@ const isFay=e=>!!(e&&(e.fay||FAYRE.test(e.note||"")));
 let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){return "tous"}})();
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
 const whoChips=()=>h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)));
+/* filtre mode de paiement des recettes : tout, espèces seulement, carte/virement seulement */
+let cPayF=(()=>{try{return localStorage.getItem("als-cpay")||"tout"}catch(x){return "tout"}})();
+const payOk=e=>cPayF==="tout"||(cPayF==="especes"?cashC(e)>0:bankC(e)>0);
+const payAmt=e=>cPayF==="especes"?cashC(e):cPayF==="carte"?bankC(e):cents(e);
+const payChips=()=>h("div",{class:"chips",role:"group","aria-label":"Mode de paiement"},...[["tout","Tout"],["especes","💶 Espèces"],["carte","💳 Carte / virement"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cPayF===v),onclick:()=>{cPayF=v;try{localStorage.setItem("als-cpay",v)}catch(x){}cScroll=true;render()}},l)));
 let cMul=1;
 /* ---- itinéraire : choix de l'appli GPS ---- */
 function navOpen(addr){
@@ -1844,7 +1849,8 @@ function cRender(){
   $("months").hidden=!(cTab==="recette"||cTab==="depense");
   if(cTab==="recette"||cTab==="depense"){
     $("months").replaceChildren(...MS.map((n,i)=>{
-      const t=sum(inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)&&(cTab!=="recette"||whoOk(e))));
+      const ml=inYear.filter(e=>e.kind===cTab&&counts(e)&&e.date.slice(5,7)===p2(i+1)&&(cTab!=="recette"||whoOk(e)));
+      const t=cTab==="recette"&&cPayF!=="tout"?ml.reduce((x,e)=>x+payAmt(e),0):sum(ml);
       return h("button",{class:"mo",role:"tab","aria-selected":String(i===M),onclick:()=>{M=i;cScroll=true;render()}},h("b",null,n),h("span",null,t?money0(t):"–"))}));
     if(cScroll){const s=$("months").querySelector('[aria-selected="true"]');if(s)requestAnimationFrame(()=>s.scrollIntoView({inline:"center",block:"nearest"}));cScroll=false}
   }
@@ -1854,12 +1860,14 @@ function cRender(){
 }
 function cJournal(inYear){
   const pre=Y+"-"+p2(M+1)+"-";
-  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre)&&(cTab!=="recette"||whoOk(e)));
+  const mine=inYear.filter(e=>e.kind===cTab&&e.date.startsWith(pre)&&(cTab!=="recette"||(whoOk(e)&&payOk(e))));
   const valid=mine.filter(counts);
-  const out=[],tot=sum(valid);
+  const out=[],tot=cTab==="recette"&&cPayF!=="tout"?valid.reduce((x,e)=>x+payAmt(e),0):sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(cTab==="recette")out.push(whoChips());
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette"){out.push(whoChips(),payChips());
+    const yr=inYear.filter(e=>e.kind==="recette"&&counts(e)&&whoOk(e)),lbl=cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":"";
+    out.push(h("div",{class:"sum yr"},card("Espèces "+Y+lbl,money(sumCash(yr))),card("Carte / virement "+Y+lbl,money(sumBank(yr))),card("Total "+Y+lbl,money(sum(yr)))));}
+  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cPayF==="especes"?" en espèces":cPayF==="carte"?" par carte":"")+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
