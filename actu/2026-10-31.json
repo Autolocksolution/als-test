@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-c3-2021-lame-g3",
+    "title": "Citroën C3 2021 clé à lame : PIN par le CAN et ajout de clé avec OBDSTAR G3",
+    "url": "http://www.key-programmer.org/2025/01/03/obdstar-g3-program-2021-citroen-c3-blade-key/",
+    "source": "Car Key Programmer Blog",
+    "kind": "web",
+    "summary": "Il faut le logiciel Peugeot/Citroën v42.77 sur l'OBDSTAR G3. On lit le PIN à 4 chiffres par le CAN avec une clé qui marche (1 à 10 minutes), puis on passe par la détection automatique du modèle, menu clé à lame. La procédure efface toutes les clés : il faut toutes les réapprendre (5 au maximum), chacune insérée et contact mis dans les 15 secondes.",
+    "date": "2025-01-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-3008-2018-zedfull-telecommande",
+    "title": "Peugeot 3008 2018 clé à lame : ajout avec Zed-Full Plus, et le piège de la clé non programmée",
+    "url": "https://www.youtube.com/watch?v=Q6cHgYBESKk",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Démonstration sur un 3008 2016+ avec le Zed-Full Plus : télécommande universelle produite à partir de la clé d'origine lue, PIN obtenu en 10 à 15 secondes avec une clé qui marche, puis programmation qui efface toutes les clés. Il faut commencer par une clé déjà programmée : sinon la voiture peut se bloquer avec les warnings qui clignotent, et il faut parfois attendre 30 minutes contact coupé. Si la télécommande ne marche pas : clé retirée 1 minute, contact mis, appui de 5 secondes sur le verrouillage dans les 10 secondes.",
+    "date": "2025-10-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-duster-hitag-aes-g3",
+    "title": "Dacia Duster 2014-2018 (Hitag AES 4A) : clé télécommande avec OBDSTAR G3",
+    "url": "https://www.youtube.com/watch?v=bvS67IeSpy8",
+    "source": "Transponder Solution (YouTube)",
+    "kind": "video",
+    "summary": "Programmation d'une clé adaptable avec télécommande sur un Duster de 2016-2018 (système Hitag AES) avec l'OBDSTAR G3, menu Duster 2014-2018. L'outil doit être connecté à internet. Contact coupé et clé retirée quand l'outil le demande, sinon l'opération échoue. Selon l'auteur, la procédure est la même en toutes clés perdues.",
+    "date": "2024-08-31",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-2008-2017-lame-g3",
+    "title": "Peugeot 2008 2017 clé à lame : PIN, ajout de clé et synchro télécommande avec OBDSTAR G3",
+    "url": "https://www.youtube.com/watch?v=oSe19fLZ5GU",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Sur une 2008 de 2017, le PIN se lit par l'OBD (prise à gauche sous un cache) avec la clé du client au contact ; il faut le noter, il sera redemandé. Ensuite détection automatique du modèle par le VIN, menu clé à lame, et on programme la clé du client puis la nouvelle. Pour la télécommande : contact mis, rester appuyé 10 à 15 secondes sur le bouton de fermeture.",
+    "date": "2024-05-02",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-308-2013-ktmp-pin",
+    "title": "Peugeot 308 2013 : PIN et ajout de clé avec Xhorse Key Tool Max Pro",
+    "url": "https://www.youtube.com/watch?v=jLigz-zAM1Q",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Sur une 308 de 2013, la lecture du PIN avec le Key Tool Max Pro demande le contact, les warnings allumés et d'ouvrir puis refermer une porte. On passe ensuite par la sélection par modèle « avant 2015 », on reprogramme la clé du client puis la neuve. Dans la vidéo, démarrage et télécommande marchent sur les deux clés.",
+    "date": "2025-01-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-clio4-ph2-carte-zedfull",
+    "title": "Clio 4 phase 2 (2017) : programmer une carte avec Zed-Full Plus",
+    "url": "https://www.youtube.com/watch?v=HYefrg9eJ_0",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Il faut une connexion internet sur le Zed-Full Plus et une batterie bien chargée (chargeur ou câbles conseillés). La programmation efface toutes les anciennes cartes : on les reprogramme toutes, en commençant par la nouvelle. L'outil met le tableau de bord en mode programmation et lit la flash ; selon l'auteur c'est rapide, alors que l'OBDSTAR met 15 à 20 minutes sur cette phase 2.",
+    "date": "2025-12-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-fiat-500x-2015-dpplus",
+    "title": "Fiat 500X 2015 clé à lame : génération de clé et programmation avec OBDSTAR DP Plus et P001",
+    "url": "https://www.youtube.com/watch?v=f6xkmXeCwL8",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Il faut l'adaptateur vert en plus de la prise OBD, une connexion internet et le programmateur P001. On lit d'abord les données flash (PIN, nombre de clés) et on enregistre le fichier avec un nom clair, puis on génère la nouvelle clé dans le P001. Type 1 ou type 2 : essayer le type 1 d'abord, le type 2 est plutôt pour après 2017. Après le PIN, toutes les clés sont effacées : la première à remettre est celle du client, malgré le message « nouvelle clé ».",
+    "date": "2023-05-31",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-megane3-carte-x100pad",
+    "title": "Mégane 3 / Scénic 3 : programmer une carte avec Xtool X100 PAD",
+    "url": "https://www.youtube.com/watch?v=BmE2iEnjDWA",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Menu Renault, véhicule Mégane / Scénic III dans l'antidémarrage du X100 PAD. L'appareil doit être connecté à internet (partage de connexion du téléphone) et il faut allumer les warnings. On insère la nouvelle carte dans le lecteur, l'outil lit les données, puis on programme les cartes une par une.",
+    "date": "2023-03-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  },
+  {
+    "id": "c-fiev-sermi-blocages-2026",
+    "title": "SERMI : la FIEV signale des blocages persistants pour les réparateurs indépendants",
+    "url": "https://www.fiev.fr/communiques-de-presse/certification-sermi-la-fiev-alerte-sur-des-blocages-persistants-un-an-apres-son-entree-en-vigueur/",
+    "source": "FIEV",
+    "kind": "web",
+    "summary": "Un peu plus d'un an après l'entrée en vigueur de SERMI (1er novembre 2024), la FIEV dénonce des audits chers et longs, une démarche complexe et trop peu de réparateurs certifiés en France. Sans certification, certaines opérations sont bloquées et des véhicules sont renvoyés vers les réseaux constructeurs. Elle demande une liste officielle et commune des opérations concernées, plus de transparence et des mesures de transition.",
+    "date": "2026-02-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1793426722269
+  }
+]
