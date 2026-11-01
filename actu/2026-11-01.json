@@ -1,0 +1,86 @@
+[
+  {
+    "id": "c-renault5-avdi-ta65",
+    "title": "Renault 5 (2024+) : clé mains libres avec Abrites AVDI et la clé TA65",
+    "url": "https://www.youtube.com/watch?v=KutGuyfY3zo",
+    "source": "AVDI FAN (chaîne Abrites, YouTube)",
+    "kind": "video",
+    "summary": "Démonstration sur une Renault 5 : programmation d'une clé mains libres TA65 avec l'AVDI, directement sur la voiture, avec dépose du module mains libres. La clé TA65 couvre l'ajout de clé et le toutes clés perdues sur une partie des Renault et Dacia récentes (licence RR026 pour le toutes clés perdues depuis une lecture RH850). Le câble CB035 pour se brancher sur le module UPC n'est pas encore sorti : en attendant, il faut passer par le CAN interne avec le câble CB012.",
+    "date": "2026-10-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-clio5-2024-zedfull-cle",
+    "title": "Clio 5 2024 à clé : clé compatible IEA avec le Zed-Full Plus",
+    "url": "https://www.youtube.com/watch?v=zVYFfQIAqvQ",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "On écrit d'abord la clé universelle IEA sur l'antenne du Zed-Full (fichier « ID4A flip 433 » pour Clio), puis on passe par OBD standard > Renault > Clio 5 > 2024 > programmation de clé, avec le câble C18. Il faut annoncer le nombre total de clés (ici 2 : celle qui marche et la nouvelle), car la procédure efface toutes les clés. Conseil important : photographier les références de pièces affichées à l'écran, elles servent à la récupération si la procédure tourne mal.",
+    "date": "2025-10-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-kia-sportage-2026-akl-km100",
+    "title": "Kia Sportage 2026 toutes clés perdues : clé mains libres avec Autel KM100",
+    "url": "http://blog.autelshop.de/how-to-program-2026-kia-sportage-all-keys-lost-with-autel-km100/",
+    "source": "AutelShop.de Blog",
+    "kind": "web",
+    "summary": "Menu Smart Type 1 (CAN) > état IMMO > toutes clés perdues : l'outil prévient que toutes les clés existantes seront effacées. Contact coupé, ouvrir puis fermer la porte conducteur, vérifier le code de sécurité affiché, puis poser le dos de la clé contre le bouton Start pendant 5 secondes dans les 5 secondes. Le témoin de sécurité clignote quand c'est bon ; les anciennes clés doivent être réapprises pour remarcher.",
+    "date": "2026-09-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-dacia-resync-telecommande-sans-outil",
+    "title": "Dacia Duster, Sandero, Logan : resynchroniser une télécommande sans outil",
+    "url": "https://www.daciaforum.co.uk/threads/remote-sync-key-not-working-sync-procedure.25122/page-2",
+    "source": "UK Dacia Forum · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Méthode confirmée par plusieurs propriétaires (Duster 2017, Logan MCV 2019) : clé dans le contact, mettre puis couper le contact, appuyer plus de 10 secondes sur le bouton de condamnation centrale au tableau de bord, puis, sans relâcher, appuyer deux fois sur le bouton de verrouillage de la clé. Variante sur Logan : 10 secondes moteur tournant, puis encore 10 secondes moteur coupé jusqu'au deuxième bip. Avant de reprogrammer, vérifier qu'un chargeur branché dans la voiture ne bloque pas la télécommande et qu'il ne reste pas d'autocollant sur la pile neuve.",
+    "date": "2026-05-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-peugeot-2008-e208-mains-libres-reveil",
+    "title": "Peugeot 2008, e-208, 5008 : mains libres mort quand la voiture dort",
+    "url": "https://www.2008ownersclub.co.uk/threads/keyless-entry-has-stopped-working.4552/page-2",
+    "source": "Peugeot 2008 Owners Club · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Symptôme : la télécommande et le mains libres ne répondent plus après quelques minutes de stationnement, puis remarchent dès que la voiture est réveillée (ouverture du coffre, bouton Start). Plusieurs utilisateurs l'ont réglé en débranchant la batterie 12 V 15 à 20 minutes ; sur un 5008 2019 (date qui revenait au 01-01-2007), la cause était le fusible shunt mal positionné. Changer les piles des clés reste la première chose à vérifier, mais ça n'a pas suffi dans ces cas.",
+    "date": "2026-03-21",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-mercedes-w211-eis-ktp",
+    "title": "Mercedes W211 / W209 : clé sur table en lisant l'EIS avec Xhorse Key Tool Plus",
+    "url": "https://www.youtube.com/watch?v=XSwM3UglJSw",
+    "source": "AlterAcademy (YouTube)",
+    "kind": "video",
+    "summary": "Quand l'OBD ne suffit pas, on dépose l'EIS (3 vis T27 sous le volant, collier retiré avec l'outil Mercedes) et on ouvre le boîtier très doucement car le circuit est juste derrière. On repère le masque (ici W211 ST12), on pose l'EIS sur l'adaptateur sans soudure correspondant, on lit l'EEPROM, on prépare les fichiers de clé (version 51) puis on écrit une clé Xhorse dans un emplacement libre (ici le 7). Si la clé reçue est réglée en 315 MHz, il faut la passer en 433 MHz dans le Key Tool Plus pour que la centralisation marche.",
+    "date": "2026-10-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  },
+  {
+    "id": "c-bmw-cas-im608-erreur-programmateur",
+    "title": "BMW CAS avec Autel IM608 II : erreur « communication du programmateur »",
+    "url": "http://blog.autelshop.de/fixed-autel-im608-ii-bmw-cas-communication-error-of-the-programmer/",
+    "source": "AutelShop.de Blog",
+    "kind": "web",
+    "summary": "En lisant un CAS BMW, l'IM608 II affiche « Communication error of the programmer ». Dans le cas signalé, le XP400 Pro avec le faisceau APA109 mesurait 0 V : le CAS n'était pas alimenté. Il faut donc d'abord contrôler le branchement du faisceau APA109 et l'alimentation du CAS, vérifier que le XP400 Pro communique bien (voyant vert, lecture de clé), et mettre à jour l'IM608 II et le XP400 Pro.",
+    "date": "2026-10-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1793513378064
+  }
+]
