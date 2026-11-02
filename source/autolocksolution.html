@@ -3119,6 +3119,8 @@ function clOpen(c,after){
   const del=$("clDel");del.hidden=!(c&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("clSave").hidden=!canWrite;
   clHist();
+  /* la fiche client peut s'ouvrir par-dessus un devis ou une intervention : on la remet au premier plan */
+  document.body.appendChild($("clScrim"));
   $("clScrim").hidden=false;if(!c)setTimeout(()=>$("clName").focus(),50);
 }
 function clClose(){$("clScrim").hidden=true;clEditing=null;clAfter=null}
@@ -4011,6 +4013,9 @@ function moneyDetail(title,r,d){
       ln("Recettes (espèces + carte)",money(ce+cc)),ln("− Toutes les dépenses",money(de+dc)),ln("= Résultat total",money(ce+cc-de-dc),col(ce+cc-de-dc),1)),
     h("p",{class:"hint"},"Le résultat total = reste espèces + reste carte. Si le reste espèces est plus grand que le résultat total, c'est que les dépenses par carte ont dépassé ce qui est entré par carte (reste carte négatif).")]);
 }
+/* toute fenêtre qui s'ouvre passe au premier plan, même si une autre est déjà ouverte (ex. client depuis un devis) */
+try{const mo=new MutationObserver(ms=>{for(const m of ms){const el=m.target;if(el.classList&&el.classList.contains("scrim")&&!el.hidden&&el.nextElementSibling&&[...document.querySelectorAll(".scrim")].some(s=>s!==el&&!s.hidden&&(el.compareDocumentPosition(s)&Node.DOCUMENT_POSITION_FOLLOWING)))document.body.appendChild(el)}});
+  document.querySelectorAll(".scrim").forEach(s=>mo.observe(s,{attributes:true,attributeFilter:["hidden"]}))}catch(e){}
 function vdOpen(title,blocks){
   const sc=h("div",{class:"scrim",onclick:e=>{if(e.target===sc)sc.remove()}},h("div",{class:"sheet"},h("h2",null,title),...blocks,
     h("div",{class:"acts"},h("button",{type:"button",class:"btn",onclick:()=>sc.remove()},"Fermer"))));

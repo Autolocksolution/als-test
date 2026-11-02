@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-74e7AX8IR95spf0RyXYN35Q1JYqYgNrgDZTcMsZqPt4=' 'sha256-B+3zOYQZSCH1yf8jtDZkNzPf6IIaMxpZWVbBc7Ntvf0=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-5oQ1D3Wog7pnrV23KgWdccgNBQD2GZ60FYmY27fmuR0=' 'sha256-dNntuI456g1hSrq+jziSAyBfgIu5cPE34+ARMyyXYDA=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3150,6 +3150,8 @@ function clOpen(c,after){
   const del=$("clDel");del.hidden=!(c&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("clSave").hidden=!canWrite;
   clHist();
+  /* la fiche client peut s'ouvrir par-dessus un devis ou une intervention : on la remet au premier plan */
+  document.body.appendChild($("clScrim"));
   $("clScrim").hidden=false;if(!c)setTimeout(()=>$("clName").focus(),50);
 }
 function clClose(){$("clScrim").hidden=true;clEditing=null;clAfter=null}
@@ -4042,6 +4044,9 @@ function moneyDetail(title,r,d){
       ln("Recettes (espèces + carte)",money(ce+cc)),ln("− Toutes les dépenses",money(de+dc)),ln("= Résultat total",money(ce+cc-de-dc),col(ce+cc-de-dc),1)),
     h("p",{class:"hint"},"Le résultat total = reste espèces + reste carte. Si le reste espèces est plus grand que le résultat total, c'est que les dépenses par carte ont dépassé ce qui est entré par carte (reste carte négatif).")]);
 }
+/* toute fenêtre qui s'ouvre passe au premier plan, même si une autre est déjà ouverte (ex. client depuis un devis) */
+try{const mo=new MutationObserver(ms=>{for(const m of ms){const el=m.target;if(el.classList&&el.classList.contains("scrim")&&!el.hidden&&el.nextElementSibling&&[...document.querySelectorAll(".scrim")].some(s=>s!==el&&!s.hidden&&(el.compareDocumentPosition(s)&Node.DOCUMENT_POSITION_FOLLOWING)))document.body.appendChild(el)}});
+  document.querySelectorAll(".scrim").forEach(s=>mo.observe(s,{attributes:true,attributeFilter:["hidden"]}))}catch(e){}
 function vdOpen(title,blocks){
   const sc=h("div",{class:"scrim",onclick:e=>{if(e.target===sc)sc.remove()}},h("div",{class:"sheet"},h("h2",null,title),...blocks,
     h("div",{class:"acts"},h("button",{type:"button",class:"btn",onclick:()=>sc.remove()},"Fermer"))));
@@ -4529,7 +4534,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261102-1227";
+const ALS_BUILD="20261102-1315";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
