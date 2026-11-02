@@ -182,6 +182,7 @@ export const RECENT = {
     ["Santa Fe", "Santa Fe 4", 2018, 2023, "Hyundai Santa Fe 2018", k(P)],
     ["Santa Fe", "Santa Fe 5", 2023, null, "Hyundai Santa Fe 2024", k(P)],
     ["Ioniq 5", "Ioniq 5", 2021, null, "Hyundai Ioniq 5", k(P)],
+    ["Ioniq 6", "Ioniq 6", 2022, null, "Hyundai Ioniq 6", k(P)],
     ["Inster", "Inster", 2024, null, "Hyundai Inster", k(F)],
     ["Bayon", "Bayon", 2021, null, "Hyundai Bayon", k(F, "HY22")],
   ],

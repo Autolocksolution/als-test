@@ -1185,6 +1185,7 @@ main{padding-top:10px}
   <form class="sheet" id="anForm" autocomplete="off">
     <h2>Ajouter à une fiche</h2>
     <p class="hint" id="anFor"></p>
+    <div class="f"><label for="anBrand">Marque</label><select id="anBrand"></select></div>
     <div class="f"><label for="anVeh">Fiche véhicule</label><select id="anVeh"></select></div>
     <div class="acts"><button type="submit" class="btn pri">Ajouter</button><button type="button" class="btn" id="anCancel">Annuler</button></div>
   </form>
@@ -4351,18 +4352,30 @@ function aRender(){
   $("aBody").replaceChildren(...kids);
 }
 async function aSet(n,patch){try{await db.doc("news/"+n.id).update(patch)}catch(e){toast("Modification impossible")}}
+/* choix de la fiche : d'abord la marque (pré-choisie si elle est dans le titre de l'actu), puis la fiche de cette marque */
+function anFill(keep){
+  const b=$("anBrand").value;
+  const vs=vehicles.filter(v=>!b||(v.brand||"")===b).sort((a,c)=>vCmp(a.brand,c.brand)||vCmp(a.model,c.model)||vSort(a,c));
+  $("anVeh").replaceChildren(h("option",{value:""},b?"— Choisir une fiche "+b+" —":"— Aucune —"),...vs.map(v=>h("option",{value:v.id},(b?vName(v)||vLabel(v):vLabel(v))+(vYears(v)?" ("+vYears(v)+")":""))));
+  $("anVeh").value=keep&&vs.some(v=>v.id===keep)?keep:"";
+}
 function anOpen(n){
   anCur=n;$("anFor").textContent=n.title||"";
-  const vs=[...vehicles].sort((a,b)=>vCmp(a.brand,b.brand)||vCmp(a.model,b.model)||vSort(a,b));
-  $("anVeh").replaceChildren(h("option",{value:""},"— Aucune —"),...vs.map(v=>h("option",{value:v.id},vLabel(v)+(vYears(v)?" ("+vYears(v)+")":""))));
-  $("anVeh").value=vehicles.some(v=>v.id===n.vehicleId)?n.vehicleId:"";
+  const brands=[...new Set(vehicles.map(v=>v.brand||"").filter(Boolean))].sort(vCmp);
+  $("anBrand").replaceChildren(h("option",{value:""},"— Toutes les marques —"),...brands.map(b=>h("option",{value:b},b+" ("+vehicles.filter(v=>v.brand===b).length+")")));
+  const cur=vehicles.find(v=>v.id===n.vehicleId);
+  let b=cur?cur.brand:"";
+  if(!b){const t=" "+normTxt([n.title,n.summary].join(" "))+" ";b=brands.find(x=>t.includes(" "+normTxt(x)+" "))||""}
+  $("anBrand").value=b;anFill(cur?cur.id:"");
   $("anScrim").hidden=false;
 }
+$("anBrand").addEventListener("change",()=>anFill($("anVeh").value));
 $("anCancel").addEventListener("click",()=>$("anScrim").hidden=true);
 $("anScrim").addEventListener("click",e=>{if(e.target===$("anScrim"))$("anScrim").hidden=true});
 $("anForm").addEventListener("submit",async ev=>{
   ev.preventDefault();if(!anCur||!db)return;
   const id=$("anVeh").value;
+  if(!id&&$("anBrand").value){toast("Choisis une fiche "+$("anBrand").value);return}
   await aSet(anCur,{vehicleId:id,state:anCur.state==="new"?"saved":anCur.state});
   $("anScrim").hidden=true;toast(id?"Ajoutée à la fiche":"Retirée de la fiche");
 });

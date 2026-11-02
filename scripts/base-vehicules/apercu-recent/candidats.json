@@ -3259,5 +3259,14 @@
    "license": "CC BY-SA 4.0"
   }
  ],
- "auto-leapmotor-t03": []
+ "auto-leapmotor-t03": [],
+ "auto-hyundai-ioniq-6": [
+  {
+   "title": "File:Hyundai Ioniq 6 1X7A7258.jpg",
+   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Hyundai_Ioniq_6_1X7A7258.jpg/1280px-Hyundai_Ioniq_6_1X7A7258.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Ioniq_6_1X7A7258.jpg",
+   "artist": "Alexander-93",
+   "license": "CC BY-SA 4.0"
+  }
+ ]
 }

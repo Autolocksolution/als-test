@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-EikvCuM5b0ZQ4f6oe29wwoHFId+7zhhGA0DonXQPx8g=' 'sha256-nSUXq34eQaDt4yGKc+EmZruOnnQkWVZc4CyTgOy8+aA=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-66+8UOT4zdxwccGWDEJlSrNqFZexHD3Kn1D/7xEjM/E=' 'sha256-lD6EUBww3QZ0+T/JML35UuPuMWNKcVLRrTxhiRQgYZs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1216,6 +1216,7 @@ main{padding-top:10px}
   <form class="sheet" id="anForm" autocomplete="off">
     <h2>Ajouter à une fiche</h2>
     <p class="hint" id="anFor"></p>
+    <div class="f"><label for="anBrand">Marque</label><select id="anBrand"></select></div>
     <div class="f"><label for="anVeh">Fiche véhicule</label><select id="anVeh"></select></div>
     <div class="acts"><button type="submit" class="btn pri">Ajouter</button><button type="button" class="btn" id="anCancel">Annuler</button></div>
   </form>
@@ -4382,18 +4383,30 @@ function aRender(){
   $("aBody").replaceChildren(...kids);
 }
 async function aSet(n,patch){try{await db.doc("news/"+n.id).update(patch)}catch(e){toast("Modification impossible")}}
+/* choix de la fiche : d'abord la marque (pré-choisie si elle est dans le titre de l'actu), puis la fiche de cette marque */
+function anFill(keep){
+  const b=$("anBrand").value;
+  const vs=vehicles.filter(v=>!b||(v.brand||"")===b).sort((a,c)=>vCmp(a.brand,c.brand)||vCmp(a.model,c.model)||vSort(a,c));
+  $("anVeh").replaceChildren(h("option",{value:""},b?"— Choisir une fiche "+b+" —":"— Aucune —"),...vs.map(v=>h("option",{value:v.id},(b?vName(v)||vLabel(v):vLabel(v))+(vYears(v)?" ("+vYears(v)+")":""))));
+  $("anVeh").value=keep&&vs.some(v=>v.id===keep)?keep:"";
+}
 function anOpen(n){
   anCur=n;$("anFor").textContent=n.title||"";
-  const vs=[...vehicles].sort((a,b)=>vCmp(a.brand,b.brand)||vCmp(a.model,b.model)||vSort(a,b));
-  $("anVeh").replaceChildren(h("option",{value:""},"— Aucune —"),...vs.map(v=>h("option",{value:v.id},vLabel(v)+(vYears(v)?" ("+vYears(v)+")":""))));
-  $("anVeh").value=vehicles.some(v=>v.id===n.vehicleId)?n.vehicleId:"";
+  const brands=[...new Set(vehicles.map(v=>v.brand||"").filter(Boolean))].sort(vCmp);
+  $("anBrand").replaceChildren(h("option",{value:""},"— Toutes les marques —"),...brands.map(b=>h("option",{value:b},b+" ("+vehicles.filter(v=>v.brand===b).length+")")));
+  const cur=vehicles.find(v=>v.id===n.vehicleId);
+  let b=cur?cur.brand:"";
+  if(!b){const t=" "+normTxt([n.title,n.summary].join(" "))+" ";b=brands.find(x=>t.includes(" "+normTxt(x)+" "))||""}
+  $("anBrand").value=b;anFill(cur?cur.id:"");
   $("anScrim").hidden=false;
 }
+$("anBrand").addEventListener("change",()=>anFill($("anVeh").value));
 $("anCancel").addEventListener("click",()=>$("anScrim").hidden=true);
 $("anScrim").addEventListener("click",e=>{if(e.target===$("anScrim"))$("anScrim").hidden=true});
 $("anForm").addEventListener("submit",async ev=>{
   ev.preventDefault();if(!anCur||!db)return;
   const id=$("anVeh").value;
+  if(!id&&$("anBrand").value){toast("Choisis une fiche "+$("anBrand").value);return}
   await aSet(anCur,{vehicleId:id,state:anCur.state==="new"?"saved":anCur.state});
   $("anScrim").hidden=true;toast(id?"Ajoutée à la fiche":"Retirée de la fiche");
 });
@@ -4545,7 +4558,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261102-1322";
+const ALS_BUILD="20261102-1338";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
