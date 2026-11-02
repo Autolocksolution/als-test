@@ -24,7 +24,7 @@ const an = new Date().getFullYear();
   par[k] = (par[k] || 0) + 1;
 });
 console.log(`::notice::Diagnostic : ${total} lignes depuis ${lim} ; anomalies date=${bad.date} type=${bad.kind} montant=${bad.amount} année hors limites=${bad.futur}`);
-for (const [k, n] of Object.entries(par).sort()) console.log(`::notice::${n} × ${k}`);
+console.log("::notice::Détail 60 j : " + Object.entries(par).sort().map(([k, n]) => `${n}× ${k}`).join(" | "));
 // toutes les collections : documents modifiés ces 30 derniers jours, par auteur
 const depuis = Date.now() - 30 * 864e5, auteurs = {};
 for (const c of await db.listCollections()) {
@@ -34,5 +34,4 @@ for (const c of await db.listCollections()) {
     const qui = v.by ? (noms[v.by] || "compte " + v.by.slice(0, 4)) : "sans auteur";
     const k = `${c.id} · ${qui}`; auteurs[k] = (auteurs[k] || 0) + 1; });
 }
-for (const [k, n] of Object.entries(auteurs).sort()) console.log(`::notice::30 j : ${n} × ${k}`);
-console.log(`::notice::Prénoms connus : ${[...new Set(Object.values(noms))].join(", ") || "aucun"}`);
+console.log("::notice::Activité 30 j : " + Object.entries(auteurs).sort().map(([k, n]) => `${n}× ${k}`).join(" | ") + " || Prénoms : " + ([...new Set(Object.values(noms))].join(", ") || "aucun"));
