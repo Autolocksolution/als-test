@@ -13,8 +13,8 @@ export const US = {
     ["Orlando", "Orlando", 2011, 2015, "Chevrolet Orlando", k(F, "HU100", "ID46")],
   ],
   Jeep: [
-    ["Renegade", "Renegade", 2014, null, "Jeep Renegade", k(F, "SIP22")],
-    ["Compass", "Compass 2", 2017, null, "Jeep Compass 2017", k(F, "SIP22")],
+    ["Renegade", "Renegade phase 1", 2014, 2018, "Jeep Renegade", k(F, "SIP22"), "auto-jeep-renegade"],
+    ["Compass", "Compass 2 phase 1", 2017, 2020, "Jeep Compass 2017", k(F, "SIP22"), "auto-jeep-compass-2"],
     ["Cherokee", "Cherokee (KL)", 2014, 2023, "Jeep Cherokee KL", k(P)],
     ["Grand Cherokee", "Grand Cherokee (WK)", 2005, 2010, "Jeep Grand Cherokee WK", k(T, "Y170")],
     ["Wrangler", "Wrangler (JK)", 2007, 2018, "Jeep Wrangler JK", k(T, "Y170")],
@@ -28,7 +28,7 @@ export const US = {
     ["Journey", "Journey", 2008, 2020, "Dodge Journey", k(P)],
   ],
   Tesla: [
-    ["Model S", "Model S", 2012, null, "Tesla Model S", k(P)],
+    ["Model S", "Model S phase 1", 2012, 2021, "Tesla Model S", k(P), "auto-tesla-model-s"],
     ["Model 3", "Model 3 phase 1", 2017, 2023, "Tesla Model 3", k(C), "auto-tesla-model-3"],
     ["Model Y", "Model Y phase 1", 2020, 2025, "Tesla Model Y", k(C), "auto-tesla-model-y"],
   ],
@@ -36,7 +36,7 @@ export const US = {
 
 export const AUTRES = {
   MG: [
-    ["ZS", "ZS 1", 2017, 2024, "MG ZS", k(F), "auto-mg-zs"],
+    ["ZS", "ZS 1 phase 1", 2017, 2020, "MG ZS", k(F), "auto-mg-zs"],
     ["MG4", "MG4", 2022, null, "MG4 EV", k(P)],
     ["HS", "HS 1", 2018, 2024, "MG HS", k(P), "auto-mg-hs"],
   ],
