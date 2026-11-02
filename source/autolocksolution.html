@@ -494,6 +494,9 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vh-empty b{display:block;color:var(--ink);font-family:var(--f-display);font-size:20px;font-weight:600;margin-bottom:4px}
 .vh-res{display:flex;flex-direction:column;gap:8px}
 .vh-res button{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.rv-in{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:6px 0 2px;padding:10px 12px;border-radius:14px;border:1px dashed var(--accent);background:var(--tint)}
+.rv-in>div{display:flex;flex-direction:column;min-width:0}.rv-in small{color:var(--muted);font-size:12px}.rv-in b{font-size:15px}.rv-in span{font-size:13px;color:var(--muted)}
+.rv-in button{flex:0 0 auto;border:0;border-radius:10px;padding:8px 10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:13px}
 .md{background:var(--tint);border-radius:14px;padding:12px 14px;margin:0 0 10px}
 .md h3{margin:0 0 6px;font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .md-l{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:15px}
@@ -1877,14 +1880,21 @@ function cJournal(inYear){
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
+  /* rendez-vous du Planning (ex. saisis par Fayss) pas encore transformés en intervention : affichés aussi ici */
+  const rvDay={};
+  if(cTab==="recette")rdv.filter(r=>(r.date||"").startsWith(pre)&&!entries.some(e=>e.rdvId===r.id)).forEach(r=>(rvDay[+r.date.slice(8,10)]||(rvDay[+r.date.slice(8,10)]=[])).push(r));
+  const rvCard=r=>{const who=r.by&&r.by!==uid?(names[r.by]?String(names[r.by]).split(" ")[0]:"ton associé"):"";
+    return h("div",{class:"rv-in"},h("div",null,h("small",null,"📅 Rendez-vous du planning"+(r.time?" · "+r.time:"")+(who?" · ajouté par "+who:"")),h("b",null,r.title||"Rendez-vous"),r.note?h("span",null,r.note):null),
+      canWrite?h("button",{type:"button",onclick:()=>r.done?rvToEntry(r):rvToggle(r)},r.done?"Saisir l'intervention":"Terminé → saisir"):null)};
   const nd=new Date(Y,M+1,0).getDate(),ul=h("ul",{class:"days"});
   for(let d=1;d<=nd;d++){
+    const rl=(rvDay[d]||[]).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99"));
     const list=(byDay[d]||[]).sort((a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99")||(a.at||0)-(b.at||0)),k=key(Y,M,d);
     const wd=new Date(Y,M,d).toLocaleDateString("fr-FR",{weekday:"short"}).replace(".","");
-    ul.append(h("li",{class:"day"+(k===TODAY?" today":"")+(list.length?"":" empty")},
+    ul.append(h("li",{class:"day"+(k===TODAY?" today":"")+(list.length||rl.length?"":" empty")},
       h("div",{class:"dh"},h("div",{class:"dn"},h("b",null,String(d)),h("span",null,wd)),list.some(counts)?h("span",{class:"dt"},money(sum(list.filter(counts)))):null,
         canWrite?h("button",{class:"plus",type:"button","aria-label":"Ajouter le "+d+" "+MONTHS[M].toLowerCase(),onclick:()=>cOpen(null,k)},"+"):null),
-      list.map(cEntry)));
+      list.map(cEntry),rl.map(rvCard)));
   }
   out.push(ul);return out;
 }
