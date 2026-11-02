@@ -25,3 +25,14 @@ const an = new Date().getFullYear();
 });
 console.log(`::notice::Diagnostic : ${total} lignes depuis ${lim} ; anomalies date=${bad.date} type=${bad.kind} montant=${bad.amount} année hors limites=${bad.futur}`);
 for (const [k, n] of Object.entries(par).sort()) console.log(`::notice::${n} × ${k}`);
+// toutes les collections : documents modifiés ces 30 derniers jours, par auteur
+const depuis = Date.now() - 30 * 864e5, auteurs = {};
+for (const c of await db.listCollections()) {
+  if (["photos", "importkeys"].includes(c.id)) continue;
+  const s = await c.get();
+  s.forEach(d => { const v = d.data(); const t = typeof v.at === "number" ? v.at : 0; if (t < depuis) return;
+    const qui = v.by ? (noms[v.by] || "compte " + v.by.slice(0, 4)) : "sans auteur";
+    const k = `${c.id} · ${qui}`; auteurs[k] = (auteurs[k] || 0) + 1; });
+}
+for (const [k, n] of Object.entries(auteurs).sort()) console.log(`::notice::30 j : ${n} × ${k}`);
+console.log(`::notice::Prénoms connus : ${[...new Set(Object.values(noms))].join(", ") || "aucun"}`);
