@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-tip-clio4-captur-hfm-vierge",
+    "title": "Clio 4, Captur 1, Dacia (UCH/HFM 4A) : éviter l'HFM vierge lors de l'ajout de carte",
+    "url": "http://blog.obdii365.com/2021/11/29/get-pin-code-when-bricks-renault-2015-4a-system-uch/",
+    "source": "OBDII365 (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur les Renault 2015+ en 4A (Clio 4, Captur, Dacia avec UCH Johnson Controls), l'outil vide l'HFM pour récupérer PIN et ISK par serveur : si le serveur ou la tension lâche, on se retrouve avec un HFM vierge et plus aucune carte. Précautions données : batterie de maintien, bonne connexion, sauvegarde de la flash de l'HFM avant de commencer, et vérifier que la carte valide passe dans le lecteur. À la fin, réapprendre d'abord avec la carte valide, jamais avec la carte vierge (erreur 5). En cas d'échec, lire la flash de l'HFM sur table pour retrouver le code.",
+    "date": "2021-11-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-tip-sandero-2020-uch-continental-johnson",
+    "title": "Sandero 2020 clé à lame 4A : UCH Continental ou Johnson Controls avec Autel KM100",
+    "url": "http://blog.obdii365.com/2024/09/28/autel-km100-renault-4a-continental-vs-johnson-control/",
+    "source": "OBDII365 (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Selon ce retour, les Autel KM100, IM508 et IM608 font la clé à lame 4A Renault sur UCH Continental comme sur UCH Johnson Controls. Exemple : Sandero 2020 (Johnson), environ 10 minutes de lecture de la flash puis 2 minutes pour le PIN, avec sauvegarde, avant de faire une clé concession. Conditions : alimentation stabilisée au-dessus de 14 V, bonne connexion internet et même VIN dans tous les calculateurs ; une chute de tension peut tuer l'UCH.",
+    "date": "2024-09-28",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-tip-boxer-2012-id46-menu-ducato",
+    "title": "Peugeot Boxer 2012 clé ID46 : passer par le menu Fiat Ducato (OBDSTAR), et le piège de la clé d'origine",
+    "url": "https://obdstar.blogspot.com/2020/12/program-peugeot-boxer-2012-remote-key.html",
+    "source": "OBDSTAR (blog)",
+    "kind": "web",
+    "summary": "Boxer 2012 à clé à lame 3 boutons (puce PCF7946, ID46, 433 MHz, système Magneti Marelli) : avec l'OBDSTAR X300 DP Plus, passer par Fiat > Ducato > 2012+ > Marelli MB91465P + 95640 (ID46) > Type 1. Lecture du PIN, clé concession et programmation réussies, sans le câble FCA 12+8 demandé. Piège : la clé d'origine n'a pas été réapprise au premier passage ; il a fallu relancer la programmation, sinon elle reste désactivée.",
+    "date": "2020-12-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-tip-polo-6r-telecommande-activer",
+    "title": "VW Polo 6R 2013 : ajouter une télécommande que le concessionnaire disait impossible",
+    "url": "https://www.autobiz.ie/garage/vw-polo-remote-coding-that-dealer-couldnt-do",
+    "source": "Autobiz (Irlande) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Polo 6R 2013 vendue avec deux clés sans télécommande : deux concessionnaires affirmaient que le modèle n'avait pas de verrouillage à distance. Un garage a codé une télécommande Silca 3 boutons avec l'Autel IM608 PRO. L'apprentissage de la télécommande a d'abord échoué ; il a fallu activer la fonction télécommande dans les fonctions spéciales, puis refaire l'apprentissage.",
+    "date": "2024-07-29",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-tip-qashqai-j11-bcm-a-risque",
+    "title": "Nissan Qashqai J11 : vérifier la référence du BCM avant d'ajouter une clé",
+    "url": "https://obdstar-repair.blogspot.com/2022/10/how-to-add-new-key-on-nissan-qashqai.html",
+    "source": "OBDSTAR (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur un Qashqai 2015, la nouvelle clé ouvrait les portes mais ne démarrait pas, avec « key ID fault » et des clics dans la boîte à fusibles. Conseils relevés : maintien de tension vers 13,8 V (pas de câbles ni booster), lire la référence du BCM avant tout et la comparer à la liste à risque (4B0A, 3ZP0A, 4CB1A à 4CB5A, 4CE1A), et programmer d'abord la seule clé d'origine pour tester. Ces BCM peuvent casser quel que soit l'outil, même en concession ; l'auteur refuse ces travaux.",
+    "date": "2022-10-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-tip-qashqai-j10-ne-demarre-plus",
+    "title": "Nissan Qashqai J10 mains libres : ne démarre plus après ajout de clé avec Autel IM608",
+    "url": "https://blog.obdii365.com/2024/05/16/autel-im608-nissan-qashqai-j10-car-not-start-solution/",
+    "source": "OBDII365 (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Qashqai J10 2014 (ancien système mains libres) : après l'ajout d'une clé avec l'IM608, défaut i-key et voyant rouge, la voiture ne démarre plus. Solution qui a marché : tension au-dessus de 12 V, retirer les piles des clés, refaire l'apprentissage en mode clé à lame, et bien suivre les étapes contact sur LOCK, retirer la clé, ouvrir puis fermer la porte conducteur. Remettre ensuite les piles et apprendre les télécommandes à part.",
+    "date": "2024-05-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-lonsdor-yaris-2021-4a-akl",
+    "title": "Lonsdor K518 Pro : Toyota Yaris 2021+ clé à lame 4A en toutes clés perdues par l'OBD",
+    "url": "https://blog.obdexpress.co.uk/2026/01/09/lonsdor-k518-pro-update-support-toyota-yaris-2021-4a-mechanical-akl/",
+    "source": "OBDexpress (blog)",
+    "kind": "web",
+    "summary": "Mise à jour de janvier 2026 : le K518 Pro fait le toutes clés perdues de la Yaris 2021+ à clé à lame 4A par l'OBD (menu Toyota > Asia > Yaris > 2021- > Mechanical Key (4A)). Il faut activer une licence Yaris 4A et acheter un code tournant (environ 15 dollars). Avant de commencer : aucun voyant au tableau de bord, écran central éteint (aucune clé détectée) et aucun autre outil branché sur la prise OBD.",
+    "date": "2026-01-09",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-ioniq6-2024-ajout-cle-im608",
+    "title": "Hyundai Ioniq 6 2024 : ajout de clé avec Autel IM608 II là où Smart Pro échouait",
+    "url": "http://blog.autelshop.de/how-to-add-2024-hyundai-ioniq-6-key-with-autel-im608-ii/",
+    "source": "AutelShop.de (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur une Ioniq 6 2024, la Smart Pro et le Smart Aerial Plus s'arrêtaient sur des erreurs pendant l'apprentissage. Avec l'IM608 II (outil connecté à internet), passer par le diagnostic, module IBU-SMK, fonctions spéciales, « Smart key code saving », avec le code PIN obtenu avant. Pour chaque clé, appuyer sur le bouton Start avec la clé elle-même dans les 5 secondes. Le parcours de menu décrit est celui des véhicules USA.",
+    "date": "2026-09-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  },
+  {
+    "id": "c-sermi-lkq-acces-bloque-2026-09",
+    "title": "SERMI : même certifiés, des réparateurs ne peuvent pas finir les travaux d'antidémarrage (LKQ)",
+    "url": "https://www.auto-infos.fr/article/sermi-l-acces-aux-donnees-reste-un-frein-pour-les-reparateurs-independants.293620",
+    "source": "Auto Infos",
+    "kind": "web",
+    "summary": "Pour le distributeur LKQ Europe, un technicien peut avoir les habilitations et identifiants SERMI et ne pas pouvoir terminer le travail (programmation de clés, antidémarrage) à cause de changements de logiciels, de pratiques différentes selon les constructeurs ou de difficultés de mise en place des accès. Certains véhicules repartent alors vers le réseau constructeur. LKQ dit avoir signalé ces problèmes aux constructeurs et à la Commission européenne.",
+    "date": "2026-09-23",
+    "state": "new",
+    "by": "claude",
+    "at": 1793600246776
+  }
+]
