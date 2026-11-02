@@ -35,3 +35,8 @@ for (const c of await db.listCollections()) {
     const k = `${c.id} · ${qui}`; auteurs[k] = (auteurs[k] || 0) + 1; });
 }
 console.log("::notice::Activité 30 j : " + Object.entries(auteurs).sort().map(([k, n]) => `${n}× ${k}`).join(" | ") + " || Prénoms : " + ([...new Set(Object.values(noms))].join(", ") || "aucun"));
+// fiche entreprise : seulement quels champs sont remplis (pas leur contenu)
+{ const c = (await db.doc("meta/company").get()).data() || {};
+  const f = ["name", "owner", "address", "phone", "email", "siret", "tvaMode", "tvaNum", "iban", "validity", "mentions", "reviewUrl"];
+  console.log("::notice::Entreprise : " + f.map(k => `${k}=${c[k] !== undefined && c[k] !== "" && c[k] !== null ? "rempli" : "vide"}`).join(", ") + ` ; mentions ${String(c.mentions || "").length} caractères ; 293B=${/293\s*B/i.test(c.mentions || "")} ; EI=${/\bEI\b|entrepreneur individuel/i.test((c.name || "") + " " + (c.owner || "") + " " + (c.mentions || ""))} ; assurance=${/assurance|RC ?pro/i.test(c.mentions || "")} ; RM=${/r[ée]pertoire des m[ée]tiers|\bRM\b|RNE/i.test((c.mentions || "") + (c.siret || ""))}`);
+}
