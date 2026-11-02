@@ -968,12 +968,16 @@ main{padding-top:10px}
     <p class="hint">Ces informations s'impriment en haut de vos devis et factures. Rien n'est pré-rempli : saisissez uniquement ce qui est exact pour votre activité, et faites vérifier les mentions légales par votre comptable.</p>
     <div class="f"><label for="coName">Nom de l'entreprise</label><input id="coName" required maxlength="120"></div>
     <div class="f"><label for="coOwner">Nom du dirigeant (facultatif)</label><input id="coOwner" maxlength="120"></div>
+    <div class="f"><label for="coLegal">Statut / forme juridique</label><input id="coLegal" maxlength="80" list="coLegalList" placeholder="ex. EI (Entrepreneur individuel)"><datalist id="coLegalList"><option value="EI (Entrepreneur individuel)"><option value="EI – Micro-entreprise"><option value="EURL"><option value="SASU"><option value="SARL"><option value="SAS"></datalist></div>
     <div class="f"><label for="coAddr">Adresse</label><textarea id="coAddr" rows="2" maxlength="300"></textarea></div>
     <div class="row2">
       <div class="f"><label for="coPhone">Téléphone</label><input id="coPhone" type="tel" maxlength="30"></div>
       <div class="f"><label for="coMail">E-mail</label><input id="coMail" type="email" maxlength="120"></div>
     </div>
-    <div class="f"><label for="coSiret">SIRET</label><input id="coSiret" inputmode="numeric" maxlength="20"></div>
+    <div class="row2">
+      <div class="f"><label for="coSiret">SIRET</label><input id="coSiret" inputmode="numeric" maxlength="20"></div>
+      <div class="f"><label for="coRne">Immatriculation (RNE / RM)</label><input id="coRne" maxlength="80" placeholder="ex. RNE n° … (Aude)"></div>
+    </div>
     <div class="f"><span class="lab">Régime de TVA</span><div class="seg" id="coTvaSeg"><button type="button" data-v="franchise" aria-pressed="false">Sans TVA (franchise)</button><button type="button" data-v="rate" aria-pressed="false">Avec TVA</button></div></div>
     <div id="coRateWrap" hidden>
       <div class="row2">
@@ -983,6 +987,8 @@ main{padding-top:10px}
     </div>
     <div class="f"><label for="coRev">Lien pour laisser un avis (Google)</label><input id="coRev" type="url" inputmode="url" placeholder="https://…" maxlength="300"></div>
     <div class="f"><label for="coIban">IBAN (facultatif, imprimé sur les factures)</label><input id="coIban" maxlength="40"></div>
+    <div class="f"><label for="coPayT">Conditions de paiement (imprimées sur les devis et factures)</label><input id="coPayT" maxlength="200" placeholder="ex. Paiement à la fin de l'intervention, carte ou espèces"></div>
+    <div class="f"><label for="coIns">Assurance professionnelle (facultatif : assureur, n° de contrat, zone couverte)</label><input id="coIns" maxlength="200"></div>
     <div class="f"><label for="coValid">Validité des devis (jours)</label><input id="coValid" type="number" inputmode="numeric" min="1" step="1"></div>
     <div class="f"><label for="coMent">Mentions en bas de page (facultatif)</label><textarea id="coMent" rows="3" maxlength="600"></textarea><button type="button" class="lnk" id="coFill" style="text-align:left;margin-top:4px">Insérer un exemple de texte à vérifier</button></div>
     <div class="acts">
@@ -3065,7 +3071,7 @@ function coReady(){return company&&company.name&&(company.tvaMode==="franchise"|
 function dvRender(){
   const tabs=[["docs","Documents"],["clients","Clients"]];
   $("dvChips").replaceChildren(...tabs.map(([id,l])=>h("button",{class:"chip2",type:"button","aria-pressed":String(dvTab===id),onclick:()=>{dvTab=id;$("dvQ").value="";render()}},l)),
-    h("button",{class:"chip2",type:"button",onclick:coOpen},"Mes informations"+(coReady()?"":" ⚠")));
+    h("button",{class:"chip2",type:"button",onclick:coOpen},"Mes informations"+(coReady()&&company.legal?"":" ⚠")));
   $("dvFil").hidden=dvTab!=="docs";
   $("dvFil").replaceChildren(...[["all","Tout"],["devis","Devis"],["facture","Factures"],["late","Impayées"]].map(([id,l])=>h("button",{class:"chip2",type:"button","aria-pressed":String(dvFilter===id),onclick:()=>{dvFilter=id;render()}},l)));
   $("dvQ").placeholder=dvTab==="docs"?"Rechercher un numéro, un client, un véhicule…":"Rechercher un client ou un téléphone…";
@@ -3075,6 +3081,7 @@ function dvRender(){
 $("dvQ").addEventListener("input",()=>{if(mode==="devis")dvRender()});
 function dvDocs(){
   const out=[];
+  if(coReady()&&!company.legal)out.push(h("div",{class:"ro"},"À compléter dans ",h("button",{class:"lnk",type:"button",onclick:coOpen},"Mes informations"),": votre statut (ex. « EI ») et, si vous l'avez, le n° d'immatriculation et les conditions de paiement. Ils s'imprimeront sur vos devis et factures."));
   if(!coReady())out.push(h("div",{class:"ro"},"Avant de faire un PDF, renseignez ",h("button",{class:"lnk",type:"button",onclick:coOpen},"Mes informations"),
     " (nom, adresse, SIRET, régime de TVA). Rien n'est écrit sur vos documents sans que vous l'ayez saisi."));
   const card=(l,v)=>h("div",null,h("small",null,l),h("strong",null,v));
@@ -3183,7 +3190,7 @@ function coOpen(){
   const c=company||{};
   $("coName").value=c.name||"";$("coOwner").value=c.owner||"";$("coAddr").value=c.address||"";$("coPhone").value=c.phone||"";$("coMail").value=c.email||"";$("coSiret").value=c.siret||"";
   setSeg("coTvaSeg",c.tvaMode||"",v=>coTva=v);coTvaUi();
-  $("coRate").value=c.tvaRate!=null?String(c.tvaRate).replace(".",","):"20";$("coTvaNum").value=c.tvaNum||"";$("coIban").value=c.iban||"";$("coRev").value=c.reviewUrl||"";$("coValid").value=c.validity!=null?c.validity:30;$("coMent").value=c.mentions||"";
+  $("coRate").value=c.tvaRate!=null?String(c.tvaRate).replace(".",","):"20";$("coTvaNum").value=c.tvaNum||"";$("coIban").value=c.iban||"";$("coRev").value=c.reviewUrl||"";$("coValid").value=c.validity!=null?c.validity:30;$("coMent").value=c.mentions||"";$("coLegal").value=c.legal||"";$("coRne").value=c.rne||"";$("coPayT").value=c.payTerms||"";$("coIns").value=c.insur||"";
   for(const el of $("coForm").querySelectorAll("input,textarea,button[data-v]"))el.disabled=!canWrite;
   $("coSave").hidden=!canWrite;$("coFill").hidden=!canWrite;
   $("coScrim").hidden=false;
@@ -3202,7 +3209,7 @@ $("coForm").addEventListener("submit",async ev=>{
   const rate=parseNum($("coRate").value);
   const data={name,owner:$("coOwner").value.trim(),address:$("coAddr").value.trim(),phone:$("coPhone").value.trim(),email:$("coMail").value.trim(),siret:$("coSiret").value.trim(),
     tvaMode:coTva,tvaRate:coTva==="rate"&&rate>0&&rate<100?rate:(coTva==="rate"?20:0),tvaNum:$("coTvaNum").value.trim(),reviewUrl:$("coRev").value.trim(),iban:$("coIban").value.trim(),
-    validity:Math.max(1,Math.floor(parseNum($("coValid").value))||30),mentions:$("coMent").value.trim(),by:uid,at:Date.now()};
+    validity:Math.max(1,Math.floor(parseNum($("coValid").value))||30),mentions:$("coMent").value.trim(),legal:$("coLegal").value.trim(),rne:$("coRne").value.trim(),payTerms:$("coPayT").value.trim(),insur:$("coIns").value.trim(),by:uid,at:Date.now()};
   $("coSave").disabled=true;
   try{await db.doc("meta/company").set(data);$("coScrim").hidden=true;toast("Informations enregistrées")}catch(err){toast("Enregistrement impossible, réessayez")}
   $("coSave").disabled=false;
@@ -3435,11 +3442,13 @@ function pdfBuild(d,co){
   let y=18;
   text(L,y,co.name||"",{size:16,bold:true});y+=6;
   const head=[];
+  if(co.legal)head.push(co.legal);
   if(co.owner)head.push(co.owner);
   String(co.address||"").split(/\r?\n/).forEach(s=>s.trim()&&head.push(s.trim()));
   if(co.phone)head.push("Tél. "+co.phone);
   if(co.email)head.push(co.email);
   if(co.siret)head.push("SIRET : "+co.siret);
+  if(co.rne)head.push(co.rne);
   if(rate&&co.tvaNum)head.push("N° TVA : "+co.tvaNum);
   head.forEach(s=>{text(L,y,s,{size:9,gray:0.25});y+=4.3});
   text(R,18,isF?"FACTURE":"DEVIS",{size:20,bold:true,align:"right"});
@@ -3482,6 +3491,8 @@ function pdfBuild(d,co){
   if(!rate&&!/293\s*B/i.test(co.mentions||"")){text(L,y+3,"TVA non applicable, article 293 B du CGI.",{size:9,gray:0.25});y+=6}
   if(isF&&d.pay){const lab={carte:"Carte bancaire",especes:"Espèces",virement:"Virement",cheque:"Chèque"}[d.pay]||"";if(lab){text(L,y+3,"Mode de règlement : "+lab+(d.status==="payee"?" (réglée)":""),{size:9,gray:0.25});y+=5.5}}
   if(isF&&co.iban){text(L,y+3,"IBAN : "+co.iban,{size:9,gray:0.25});y+=5.5}
+  if(co.payTerms){pdfWrap("Conditions de paiement : "+co.payTerms,R-L,9,false).forEach(s=>{text(L,y+3,s,{size:9,gray:0.25});y+=4.4});y+=1.1}
+  if(co.insur){pdfWrap("Assurance professionnelle : "+co.insur,R-L,9,false).forEach(s=>{text(L,y+3,s,{size:9,gray:0.25});y+=4.4});y+=1.1}
   if(d.fromDevis){text(L,y+3,"Suite au devis n° "+d.fromDevis,{size:9,gray:0.25});y+=5.5}
   if(d.note){pdfWrap(d.note,R-L,9,false).forEach(s=>{text(L,y+3,s,{size:9});y+=4.4});y+=2}
   if(!isF){
