@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-ducato-2023-akl-bcm-obdstar-avdi",
+    "title": "Fiat Ducato 2022-2025 (puce 4A) toutes clés perdues : BCM sur table, pré-codage avec AVDI ou Zed-Full",
+    "url": "https://blog.obdii365.com/2026/11/02/program-2023-fiat-ducato-bcm-all-keys-lost-with-obdstar-avdi/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Par l'OBD, il faut l'outil Stellantis officiel et une clé concession pré-codée ; avec les outils du marché, on passe par le BCM sur table (Autel IM608 et Xhorse ne le font pas pour l'instant). On démonte le BCM, on le lit avec l'OBDSTAR G3 et l'adaptateur C4-09, et on récupère le PIN dans la sauvegarde. Piège : le G3 apprend le transpondeur mais la télécommande ne marche pas, car son pré-codage est mauvais ; il faut faire le pré-codage avec Abrites AVDI ou Zed-Full puis réécrire les données, en se branchant sur le CAN côté droit.",
+    "date": "2026-11-02",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-obdstar-2026-10-toyota-yaris-4a-b6",
+    "title": "OBDSTAR octobre 2026 : clés mains libres Toyota Yaris 2025-2026 (4A-B6) et Renault Express",
+    "url": "https://www.key-programmer.org/2026/11/02/obdstar-g3-update-toyota-yaris-avalon-4a-b6-key-programming/",
+    "source": "Car Key Programmer Blog",
+    "kind": "web",
+    "summary": "La mise à jour immo OBDSTAR d'octobre 2026 (X300 Classic G3, Key Pro4) ajoute les clés mains libres 4A-B6, dont la Toyota Yaris Europe 2025-2026, avec un nouveau choix manuel « Proximity type 18 ». Elle ajoute aussi les clés 4A-BA de la Camry 2024-2026. Côté Renault, elle ajoute les clés à lame, même toutes clés perdues, pour le Renault Express 2021-2024.",
+    "date": "2026-11-02",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-xhorse-xm38-hyundai-tucson-2025-4a",
+    "title": "Hyundai Tucson 2025 (4A) : télécommande Xhorse XM38 générable, mais programmation avec un autre outil",
+    "url": "https://blog.vvdishop.com/xhorse-generate-2025-hyundai-tucson-id4a-smart-key-using-xm38/",
+    "source": "VVDIshop",
+    "kind": "web",
+    "summary": "La base de l'appli Xhorse permet maintenant de générer une XM38 pour le Tucson 2025 (option « Tucson 2025 ID4A-95440-N8100 »). Avant, il fallait une clé d'origine. La Key Tool Plus n'a pas le menu pour la programmer sur la voiture : des utilisateurs l'ont fait avec l'Autel IM608 ou le Launch X431 IMMO. Il faudra souvent acheter le code PIN, car beaucoup d'outils ne le lisent pas sur ce modèle.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-gprog-abrites-pn020-bsi-crypte",
+    "title": "Peugeot 5008 2021 et Berlingo 2020 BSI crypté : toutes clés perdues et démarrage d'urgence avec Abrites PN020",
+    "url": "https://www.youtube.com/watch?v=d2RJDVfqVe4",
+    "source": "Gprog (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Un serrurier français montre la version PN020 d'Abrites sur deux PSA à BSI Delphi crypté (selon lui, 80 à 90 % des BSI Delphi le sont ; les modèles au nouveau logo ont un BSI VSM). Quand le logiciel demande l'émulateur, le BSI est crypté : avec l'émulateur, le PIN sort instantanément, sans saisir de PIN ni démonter de calculateur. L'émulateur garde les données et permet un démarrage d'urgence en moins d'une minute, en mains libres comme en clé à lame ; l'attente de 30 minutes reste nécessaire pour programmer la clé.",
+    "date": "2025-10-28",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-corsa-f-electrique-akl-avdi-bsi",
+    "title": "Opel Corsa-e (F) mains libres toutes clés perdues : PIN depuis le BSI lu sur table avec AVDI",
+    "url": "https://www.youtube.com/watch?v=SS3ks0ZPuSc",
+    "source": "Giano Tech (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Sans clé, l'AVDI ne lit pas le PIN par l'OBD et demande la sauvegarde du BSI. Le technicien démonte le BSI, soude sur l'EEPROM 95128, la lit, remonte tout et charge la sauvegarde : le PIN sort et la clé s'apprend, avec l'attente d'environ 30 minutes. Après l'ajout, ni la télécommande ni le mains libres ne marchaient tout de suite : il a ouvert la porte en décodant la serrure HU83, démarré avec la clé dans l'emplacement de secours, puis refait l'apprentissage et l'adaptation du mains libres.",
+    "date": "2024-09-08",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-peugeot-208-2013-akl-smart-pro",
+    "title": "Peugeot 208 2013 toutes clés perdues avec Smart Pro : batterie sous maintien et cycles de contact pour le PIN",
+    "url": "https://www.youtube.com/watch?v=N13chgq4Y0A",
+    "source": "Mr Lloyd (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Après avoir crocheté et décodé la serrure pour tailler la lame, le serrurier lance la lecture du PIN sans clé. Le Smart Pro demande d'abord un « reset » batterie et un maintien de tension (14,5 V ici). Le calcul annoncé dure de 2 à 4 heures mais a pris environ 15 minutes, puis il a fallu répéter une dizaine de fois « contact coupé, 10 secondes, contact remis » avant d'obtenir le PIN. La télécommande s'est synchronisée en restant appuyé 5 secondes sur le verrouillage, contact mis.",
+    "date": "2025-09-26",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-gendarmerie-senlis-reseau-vols-2026",
+    "title": "Oise : un réseau volait des voitures françaises avec du matériel électronique, avec l'aide de garages",
+    "url": "https://www.gendarmerie.interieur.gouv.fr/gendinfo/criminalite-organisee-et-enquetes/2026/oise-la-brigade-de-recherches-de-senlis-demonte-un-reseau-de-malfaiteurs-specialise-dans-le-vol-et-la-revente-de-vehicules",
+    "source": "Gendarmerie nationale (Gendinfo)",
+    "kind": "web",
+    "summary": "La gendarmerie de Senlis a démantelé en mars 2026 un réseau soupçonné d'une quarantaine de vols de voitures de marques françaises en Île-de-France et dans les Hauts-de-France, pour près d'un million d'euros de préjudice. Les voleurs utilisaient du matériel électronique pour ouvrir sans effraction, parfois un simple tournevis. Des garages complices aidaient à maquiller les véhicules ou à les démonter pour revendre les pièces en ligne.",
+    "date": "2026-03-23",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-captur-2019-uch-smart-pro",
+    "title": "Renault Captur II (2019+) : ajout de clé en se branchant sur l'UCH derrière la boîte à gants (Smart Pro)",
+    "url": "https://www.youtube.com/watch?v=kCTWc83hh4I",
+    "source": "Key Solutions (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Pour programmer une clé sur un Captur 2019+, le technicien démonte les panneaux et la boîte à gants (Torx T20, outil de garnissage) pour atteindre l'UCH. Il débranche deux connecteurs, qu'il repère par couleur grâce aux instructions du Smart Pro, et branche les câbles ADC2000 et ADC2017 en plus de l'OBD, avec la clé d'origine présente. La procédure est longue et demande d'ouvrir et fermer la porte conducteur ; un message d'alerte peut apparaître mais disparaît une fois tout rebranché.",
+    "date": "2025-12-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  },
+  {
+    "id": "c-clio3-ajout-cle-x100-pad",
+    "title": "Clio 3 sans carte : PIN et ajout de clé par l'OBD avec Xtool X100 PAD",
+    "url": "https://www.youtube.com/watch?v=W18MRy9YHqg",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Dans le menu immo Renault, on choisit Clio 3 puis « sans smart » et on met le contact avec la clé d'origine : la tablette donne le PIN gratuitement. On apprend ensuite chaque clé l'une après l'autre en vérifiant que le voyant du code de sécurité est éteint, avec des attentes de 15 secondes entre les étapes. Il faut reprogrammer l'ancienne clé en même temps que la nouvelle.",
+    "date": "2023-03-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1793685969966
+  }
+]
