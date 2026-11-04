@@ -44,3 +44,15 @@ import { fusionne } from "./base-vehicules.mjs";
   assert.deepEqual(r.ph.lame, ["a", "b"]); assert.deepEqual(r.ph.specs, ["pM"]); assert.equal(r.photoId, "pA"); assert.equal(r.by, "u1"); assert.equal(r.cs.length, 1);
   assert.ok(entrees(LOTS.fr).some(e => e.id === "auto-renault-arkana" && e.gen === "Arkana phase 1" && e.yTo === 2023));
   console.log("fusion OK"); }
+// fiches clé à lame / main libre
+{ const { VARIANTES } = await import("./base-vehicules/variantes.mjs");
+  const all = Object.values(LOTS).flatMap(l => entrees(l));
+  for (const [b, gens] of Object.entries(VARIANTES)) for (const g of gens)
+    assert.ok(all.some(e => e.brand === b && e.gen.split(" · ")[0] === g && !e.jumelle), "variante inconnue : " + b + " " + g);
+  const a3 = all.filter(e => e.brand === "Audi" && /^A3 \(8V\)/.test(e.gen));
+  assert.deepEqual(a3.map(e => e.gen).sort(), ["A3 (8V) · clé à lame", "A3 (8V) · main libre"]);
+  const ml = a3.find(e => e.jumelle); assert.equal(ml.id, "auto-audi-a3-8v-ml"); assert.equal(ml.s.type, "Clé mains-libres (keyless)"); assert.equal(ml.pair, "auto-audi-a3-8v");
+  assert.equal(a3.find(e => !e.jumelle).pair, ml.id);
+  const m3 = all.filter(e => /^Megane 3 phase 1/.test(e.gen)).map(e => e.s.type).sort(); assert.deepEqual(m3, ["Carte", "Carte mains-libres"]);
+  const q1 = all.filter(e => e.brand === "Nissan" && /^Qashqai 1/.test(e.gen)); assert.ok(q1.some(e => e.gen === "Qashqai 1 · clé à lame" && /repliable/.test(e.s.type)));
+  console.log("variantes : " + all.filter(e => e.jumelle).length + " fiches jumelles"); }

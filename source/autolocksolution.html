@@ -261,6 +261,7 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vf-ch{color:var(--muted);font-size:24px;line-height:1}
 .vf-none{color:var(--muted)}
 /* ===== fiche véhicule : style AutoLockSolution ===== */
+.vx-var{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}.vx-var button{flex:1;min-width:130px;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:15px;padding:6px 10px}.vx-var button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.vx-var .add{flex:0 1 auto;min-width:0;background:none;border-style:dashed;color:var(--muted);font-weight:500;font-size:14px}
 .vx-hero{position:relative;height:230px;border-radius:24px;overflow:hidden;margin:0 0 12px;box-shadow:0 10px 30px rgba(0,0,0,.18);animation:vxIn .4s ease both}
 .vx-hero img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.02)}
 .vx-pat{position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.18),transparent 40%),linear-gradient(135deg,var(--accent),#1d2f3a)}
@@ -4129,6 +4130,25 @@ function vsOpen(id,sk,edit){
 }
 /* rouvre la rubrique une fois la fiche mise à jour par la synchro */
 function vsLater(id,sk,edit){setTimeout(()=>vsOpen(id,sk,edit),350)}
+const vVarML=v=>/mains-libres|keyless|main libre/i.test(((v.s||{}).type||"")+" "+((v.gen||"").split(" · ")[1]||""))?1:0;
+const vVarLbl=v=>{const x=(v.gen||"").split(" · ")[1];return x?x.charAt(0).toUpperCase()+x.slice(1):((v.s||{}).type||"Version")};
+async function vDup(g){
+  if(!db||!canWrite)return;
+  const ml=vVarML(g),carte=/^carte/i.test((g.s||{}).type||"")&&g.brand!=="Nissan";
+  const mine=carte?(ml?"carte mains-libres":"carte"):(ml?"main libre":"clé à lame"),other=carte?(ml?"carte simple":"carte mains-libres"):(ml?"clé à lame":"main libre");
+  const base=(g.gen||g.model||"").split(" · ")[0],s=g.s||{},t=g.t||{};
+  const ns={};["obd","freq","btn","batt"].forEach(k=>{if(s[k])ns[k]=s[k]});
+  ns.type=carte?(ml?"Carte":"Carte mains-libres"):(ml?"Clé repliable à télécommande":"Clé mains-libres (keyless)");
+  if(s.blade)ns.blade=s.blade.replace(" (lame de secours)","")+(ml||carte?"":" (lame de secours)");
+  const nt={};["ecuLoc","ecuRefs","boxes","lock"].forEach(k=>{if(t[k])nt[k]=t[k]});
+  nt.notes="Version « "+other+" » créée à part : type de clé, puce et procédure à vérifier.";
+  try{
+    const ref=await db.collection("vehicles").add({brand:g.brand,model:g.model,gen:base+" · "+other,yFrom:g.yFrom||null,yTo:g.yTo||null,s:ns,t:nt,links:"",diffs:[],photoId:g.photoId||null,credit:g.credit||"",creditUrl:g.creditUrl||"",pair:g.id,by:uid,at:Date.now()});
+    await db.doc("vehicles/"+g.id).update({pair:ref.id,...((g.gen||"").includes(" · ")?{}:{gen:base+" · "+mine}),at:Date.now()});
+    toast("Version « "+other+" » créée");
+    setTimeout(()=>{const v=vehicles.find(x=>x.id===ref.id);if(v)vSelect(v)},400);
+  }catch(e){toast("Création impossible, réessayez")}
+}
 function vFiche(g){
   const out=[];
   const s=g.s||{},t=g.t||{},yrs=vYears(g);
@@ -4143,6 +4163,11 @@ function vFiche(g){
       yrs?h("span",{class:"vx-yrs"},yrs):null),
     g.photoId&&g.credit?(safeUrl(g.creditUrl)?h("a",{class:"vx-cred",href:safeUrl(g.creditUrl),target:"_blank",rel:"noopener"},g.credit):h("span",{class:"vx-cred"},g.credit)):null);
   out.push(hero);
+  /* deux versions du même modèle : clé à lame / main libre */
+  const pr=g.pair?vehicles.find(v=>v.id===g.pair):null;
+  if(pr)out.push(h("div",{class:"vx-var",role:"group","aria-label":"Version de clé"},
+    [g,pr].sort((a,b)=>vVarML(a)-vVarML(b)).map(v=>h("button",{type:"button","aria-pressed":String(v.id===g.id),onclick:()=>{if(v.id!==g.id)vSelect(v)}},vVarLbl(v)))));
+  else if(canWrite)out.push(h("div",{class:"vx-var"},h("button",{type:"button",class:"add",onclick:()=>vDup(g)},"＋ Créer la version "+(vVarML(g)?"clé à lame":"main libre")+" à part")));
   /* l'essentiel d'un coup d'œil */
   const facts=[[s.type,"Clé"],[s.blade,"Lame"],[s.chip,"Puce"],[s.freq,"Fréq."],[s.batt,"Pile"]].filter(x=>x[0]);
   if(facts.length)out.push(h("div",{class:"vx-facts"},g.by==="auto"?h("span",{class:"vx-chk"},h("i",null,"Infos auto"),"À vérifier"):null,facts.map(([v,l])=>h("span",null,h("i",null,l),v))));

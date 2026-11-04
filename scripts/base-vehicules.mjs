@@ -16,6 +16,7 @@ import { MAJ } from "./base-vehicules/maj2026.mjs";
 import { RECENT } from "./base-vehicules/recent.mjs";
 import { UTILITAIRES } from "./base-vehicules/utilitaires.mjs";
 import { MAJ2020 } from "./base-vehicules/maj2020.mjs";
+import { avecVariantes } from "./base-vehicules/variantes.mjs";
 
 export const LOTS = { fr: FR, eu: EU, monde: { ...ASIE, ...US, ...AUTRES }, maj: MAJ, recent: RECENT, utilitaires: UTILITAIRES, n2020: MAJ2020 };
 const LOT = process.env.LOT || "fr";
@@ -29,9 +30,10 @@ export function entrees(lot = LOTS[LOT]) {
   const out = [];
   for (const [brand, rows] of Object.entries(lot))
     for (const [model, gen, yFrom, yTo, q, s, id] of rows)
-      out.push({ id: id || "auto-" + slug(brand + " " + gen), brand, model, gen, yFrom, yTo, q, s: s || {} });
-  if (new Set(out.map(e => e.id)).size !== out.length) throw new Error("identifiants en double");
-  return out;
+      out.push({ id: id || "auto-" + slug(brand + " " + gen), brand, model, gen, yFrom, yTo, q, s: { ...(s || {}) } });
+  const res = avecVariantes(out);
+  if (new Set(res.map(e => e.id)).size !== res.length) throw new Error("identifiants en double");
+  return res;
 }
 
 const MAUVAIS = /interior|innen|innenraum|cockpit|dashboard|armaturen|engine|motor\b|heck|\brear\b|\bback\b|arri[eè]re|int[eé]rieur|badge|logo|emblem|detail|\bwheel|felge|\btrunk|kofferraum|\btail|crash|wreck|unfall|rally|rallye|\brace\b|racing|tuning|police|polizei|polizia|gendarmerie|\btaxi|model ?car|miniature|\btoys?\b|\bscale\b|diecast|sketch|drawing|\bkeys?\b|schl[uü]ssel|\blights?\b|\blamp|scheinwerfer|steering|lenkrad|concept|prototype/i;
@@ -96,7 +98,7 @@ const choixFile = new URL(`./base-vehicules/choix-${LOT}.json`, import.meta.url)
 async function apercu() {
   const sharp = (await import("sharp")).default;
   fs.mkdirSync(DIR, { recursive: true });
-  const E = entrees(), PAR = 20;
+  const E = entrees().filter(e => !e.jumelle), PAR = 20;
   if (process.env.RETRY) { // nouvelles recherches pour les fiches marquées {"q": "..."} dans choix
     const cand = JSON.parse(fs.readFileSync(new URL("candidats.json", DIR), "utf8")), choix = JSON.parse(fs.readFileSync(choixFile, "utf8"));
     const R = E.filter(e => choix[e.id] && choix[e.id].q);
@@ -147,6 +149,7 @@ async function importe() {
   const manuelles = exist.filter(v => !v.auto);
   let crees = 0, deja = 0, sautees = 0, sansPhoto = 0;
   for (const e of entrees()) {
+    if (e.jumelle) continue; // créées par MODE=variantes, avec la photo de la fiche d'origine
     if (manuelles.some(v => memeFiche(v, e))) { sautees++; continue; }
     if (exist.some(v => v.id === e.id)) { deja++; continue; } // déjà importée : on n'y touche plus (photos et notes ajoutées)
     const c = retenue(choix, cand, e.id);
@@ -244,8 +247,39 @@ async function maj() {
   console.log(`::notice::Mise à jour : ${fus} fiche Clio 4 fusionnée (${man.length} trouvée), ${liens} lien(s) déplacé(s), ${renom} fiche(s) renommée(s)/années corrigées.`);
 }
 
+// fiches « clé à lame » / « main libre » : renomme la fiche d'origine et crée la fiche jumelle (photo reprise,
+// infos techniques automatiques, aucune note ni photo personnelle copiée). Ne touche pas aux fiches faites à la main.
+async function variantes() {
+  const admin = (await import("firebase-admin")).default;
+  admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, "utf8"))) });
+  const db = admin.firestore();
+  const byId = new Map((await db.collection("vehicles").get()).docs.map(d => [d.id, d.data()]));
+  let renom = 0, crees = 0, deja = 0, sansOrig = 0;
+  for (const lot of Object.values(LOTS)) for (const e of entrees(lot)) {
+    if (!e.pair) continue;
+    if (!e.jumelle) {
+      const v = byId.get(e.id);
+      if (!v || !v.auto) { sansOrig++; continue; }
+      const upd = { pair: e.pair };
+      if (!String(v.gen || "").includes(" · ")) upd.gen = e.gen;
+      if (v.pair !== e.pair || upd.gen) { await db.doc("vehicles/" + e.id).update(upd); if (upd.gen) renom++; }
+      continue;
+    }
+    if (byId.has(e.id)) { deja++; continue; }
+    const o = byId.get(e.pair);
+    if (!o || !o.auto) continue;
+    const inf = infos(e);
+    const t = { ...inf.t, notes: inf.t.notes + "\n\nFiche « " + e.gen.split(" · ").pop() + " » créée à part : type de clé, puce et procédure à vérifier pour cette version." };
+    await db.doc("vehicles/" + e.id).set({ brand: e.brand, model: e.model, gen: e.gen, yFrom: e.yFrom, yTo: e.yTo, s: { ...inf.s, ...e.s }, t, enr: 1,
+      links: "", diffs: [], photoId: o.photoId || null, credit: o.credit || "", creditUrl: o.creditUrl || "", pair: e.pair, auto: true, by: "auto", at: Date.now() });
+    crees++;
+  }
+  console.log(`::notice::Variantes : ${renom} fiche(s) renommée(s), ${crees} fiche(s) jumelle(s) créée(s), ${deja} déjà présente(s), ${sansOrig} sans fiche automatique d'origine.`);
+}
+
 const MODE = process.env.MODE;
 if (MODE === "maj") await maj();
+else if (MODE === "variantes") await variantes();
 else if (MODE === "enrichit") await enrichit();
 else if (MODE === "apercu") await apercu();
 else if (MODE === "import") await importe();
