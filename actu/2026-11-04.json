@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c-movano-ducato-boxer-2026-sgw-pin",
+    "title": "Movano, Ducato, Jumper, Boxer 2026 : lire le PIN en contournant la passerelle derrière la boîte à gants",
+    "url": "https://www.youtube.com/watch?v=iQ-oaqJRRZA",
+    "source": "The Diagnostic Box (YouTube)",
+    "kind": "video",
+    "summary": "Sur un Movano 2026 (même base que Ducato, Jumper et Boxer), on ne passe pas par la prise OBD : on démonte l'habillage sous la boîte à gants (6 vis) pour atteindre la passerelle sécurisée (SGW). On débranche ses deux connecteurs (petit ressort à pousser, accès difficile) et on branche le câble de contournement TDB094, puis l'outil TDB1000 sur l'OBD. L'outil affiche un QR code que l'on photographie sur le site WikiKey pour calculer le code PIN.",
+    "date": "2026-10-09",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-abrites-rr026-renault-akl-dump",
+    "title": "Abrites RR026 : Renault et Dacia récentes toutes clés perdues par lecture du HFM ou du BCM",
+    "url": "https://abrites.com/products/rr026",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "La licence RR026 sort le code PIN en lisant le HFM (voitures à carte mains libres) ou le BCM (voitures à clé) avec le programmateur Abrites RH850/V850. Elle couvre notamment Clio V, Captur II, Zoé, Arkana, Austral, Mégane IV ph2, Rafale, Symbioz, Renault 5 et 4, ainsi que Sandero III, Logan III et Jogger. Il faut l'AVDI, l'abonnement annuel AMS et les licences RR022 et RR018. Sur les modèles 2025 et plus, le programmateur RH850 est aussi nécessaire pour un simple ajout de clé ; prix affiché 400 € HT.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-trafic-2023-g3-dflash-uch",
+    "title": "Renault Trafic 2023 (clé 4A) : ajout de clé avec OBDSTAR G3 en lisant l'UCH derrière la boîte à gants",
+    "url": "https://www.youtube.com/watch?v=lQEg1WB9iZc",
+    "source": "Autowave Limited (YouTube)",
+    "kind": "video",
+    "summary": "Clé à lame 4A (Hitag AES) : l'OBDSTAR G3 lit la D-flash de l'UCH par la méthode 3, avec le câble 40 broches BCM Nissan branché sur l'UCH derrière la boîte à gants (les photos des méthodes 1 et 2 ne correspondaient pas au véhicule). On sauvegarde le fichier avec le VIN, on en tire le PIN de 28 caractères, on fabrique une clé concession puis on programme toutes les clés. Les clés existantes sont effacées pendant l'opération et doivent être réapprises ; garder la sauvegarde pour pouvoir restaurer l'UCH.",
+    "date": "2026-09-25",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-zoe-2020-gateway-bcm-hfm",
+    "title": "Renault Zoé 2020+ (base Clio V) : contourner la passerelle au BCM, et où lire les données immo",
+    "url": "http://blog.obdii365.com/2024/12/19/how-to-bypass-renault-zoe-2022-security-gateway/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur les Renault de la plateforme Clio V, les données immo sont dans le HFM si la voiture a une carte, et dans le BCM si elle a une clé à lame : en toutes clés perdues, il faut lire le bon module. Le câble 40 broches Nissan (Lonsdor) se monte en rallonge sur le connecteur gris du BCM, sans couper de fil, et fournit une prise OBD qui passe la passerelle. Lonsdor K518 Pro, OBDSTAR G3 et Autel IM508/IM608 programment alors une carte sans PIN ; avec Autel, ne jamais quitter l'apprentissage avant la fin. La bobine de secours est devant le levier de vitesse, pas dans le bouton de démarrage ; garder un maintien de batterie.",
+    "date": "2024-12-19",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-corolla-2023-akl-xm38-lonsdor",
+    "title": "Toyota Corolla 2023 toutes clés perdues : seule la télécommande Xhorse XM38 a tout fait fonctionner",
+    "url": "http://blog.obdii365.com/2025/12/22/autel-ikey-vs-xhorse-xm38-vs-keydiy-key-for-toyota-corolla-2023/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "L'alarme active bloquait la sauvegarde des données immo par l'OBD avec le Lonsdor K518 Pro ; il a fallu brancher le câble FP30 directement sur le CAN. Une clé KeyDiy démarrait la voiture mais sans les boutons, et deux clés Autel iKey Toyota ont refusé d'apprendre. La Xhorse XM38, générée avec le Key Tool Max puis ajoutée au Lonsdor, a marché après passage au deuxième firmware, un petit réglage de fréquence (312-314 MHz selon la source) et le réglage des boutons coffre et panique.",
+    "date": "2025-12-22",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-uch-renault-claque-condensateurs",
+    "title": "UCH Renault qui claque dès le contact : réparation sur table au lieu de la changer",
+    "url": "https://www.youtube.com/watch?v=gSuZ7WK5XT8",
+    "source": "GAMAX ÉLECTRONIQUE (YouTube)",
+    "kind": "video",
+    "summary": "Une UCH Renault qui claque en permanence au contact est câblée sur table (ligne K et alimentations) et testée en temps réel avec un Autel AP200. Le défaut venait de soudures fatiguées (relais, prises) et de trois condensateurs de filtrage sous le connecteur. Après réfection des soudures et remplacement des condensateurs, le claquement disparaît et la communication fonctionne (test des clignotants réussi).",
+    "date": "2026-06-19",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-espace4-carte-oem-g3",
+    "title": "Renault Espace 4 : programmer une carte mains libres d'origine (PCF7936) avec OBDSTAR G3",
+    "url": "https://www.youtube.com/watch?v=6ta5LYrPSco",
+    "source": "PRO SERVICES (YouTube)",
+    "kind": "video",
+    "summary": "Sur un Espace 4 de 2007, une carte 3 boutons mains libres Renault d'origine vierge est programmée avec l'OBDSTAR G3 (version 41.71) : Immo, Renault, détection auto ou Espace 4 2002-2015, puis programmation de clé en suivant les cycles de contact avec les feux de détresse allumés. La lecture du PIN a d'abord échoué, mais la programmation a réussi et l'ancienne comme la nouvelle carte fonctionnent (télécommande, démarrage, mains libres). L'auteur met en garde contre les fausses cartes « d'origine » vendues comme neuves.",
+    "date": "2026-05-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  },
+  {
+    "id": "c-peugeot-107-2009-akl-4d70",
+    "title": "Peugeot 107, C1, Aygo 2009 toutes clés perdues (4D70) : passer par le dump du boîtier immo 24C04",
+    "url": "https://mhhauto.com/Thread-Peugeot-107-2009-%E2%80%93-All-Keys-Lost-%E2%80%93Key-Programming-4D70-Need-Help?pid=3282716",
+    "source": "MHH Auto · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Sur ce boîtier immo à mémoire 24C04, générer la clé directement depuis le dump avec Xhorse ne marchait pas. Les solutions qui ont fonctionné dans le fil : générer une clé 4D70 « Toyota Europe » en position 1 avec le VVDI2, laisser l'outil créer le nouveau dump et le réécrire dans le boîtier ; ou écrire un dump vierge du boîtier puis apprendre les clés avec Diagbox, Autel ou Key Tool Plus.",
+    "date": "2026-04-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1793772784939
+  }
+]
