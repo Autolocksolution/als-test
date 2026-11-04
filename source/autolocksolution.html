@@ -383,6 +383,8 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .chk{border-color:var(--warn)!important;background:var(--warn-bg)!important}
 .tkwarn{font-size:13px;color:var(--warn);background:var(--warn-bg);border-radius:10px;padding:8px 10px;margin:0 0 12px}
 .tkrow{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.phgrid{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}.phgrid:empty{display:none}.pht{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--tint)}.pht img{width:100%;height:100%;object-fit:cover;display:block}.pht button.x{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:12px;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.phhint{font-size:13px;color:var(--muted);margin:4px 0 0}
+.hph{display:flex;gap:6px;margin-top:6px;overflow-x:auto}.hph span{flex:0 0 auto;width:52px;height:52px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--tint)}.hph img{width:100%;height:100%;object-fit:cover;display:block}
 .tkrow img{width:44px;height:58px;object-fit:cover;border-radius:6px;border:1px solid var(--line,#ccc)}
 .tkrow .lnk{font-size:14px}
 .tkimg{max-width:70vw;max-height:40vh;border-radius:10px;display:block;margin:10px auto}
@@ -871,7 +873,7 @@ main{padding-top:10px}
         <p class="hint" id="cTripHint" style="margin:6px 0 0"></p>
       </div>
       <div class="f"><label for="cNote" style="display:flex;justify-content:space-between;align-items:center;gap:8px">Notes (envoyées dans l'historique si réussi)<button type="button" class="micbtn" id="cMic" aria-label="Dicter la note">🎤 Dicter</button></label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
-      <div class="f"><div class="rphoto"><button type="button" class="btn" id="cPhBtn">📷 Photo (clé, boîtier, étiquette)</button><div class="tkrow" id="cPhRow" hidden><img id="cPhPrev" alt="Photo de l'intervention"><button type="button" class="lnk" id="cPhView">Voir</button><button type="button" class="lnk" id="cPhDel">Retirer</button></div></div>
+      <div class="f"><div class="rphoto"><button type="button" class="btn" id="cPhBtn">📷 Ajouter des photos (clé, boîtier, étiquette)</button><div class="phgrid" id="cPhGrid"></div><p class="phhint">Depuis la photothèque ou l'appareil photo, plusieurs à la fois.</p></div>
       <label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> Tout mis dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
@@ -1029,6 +1031,7 @@ main{padding-top:10px}
     <div class="f"><label for="vPlate">Immatriculation</label><input id="vPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"></div>
     <div class="f"><label for="vPin">Code PIN</label><input id="vPin" maxlength="24"></div>
     <div class="f"><label for="vKeyCode">Code de clé</label><input id="vKeyCode" maxlength="40"></div>
+    <div class="f"><span class="lab">Photos (boîtiers, clé, étiquette)</span><div class="rphoto"><button type="button" class="btn" id="vPhBtn">📷 Ajouter des photos</button><div class="phgrid" id="vPhGrid"></div><p class="phhint">Depuis la photothèque ou l'appareil photo, plusieurs à la fois.</p></div></div>
     <div class="acts"><button type="button" class="btn" id="vSkip">Passer</button><button type="submit" class="btn pri" id="vSave">Enregistrer</button></div>
   </form>
 </div>
@@ -1767,11 +1770,26 @@ function micToggle(){
   try{r.start()}catch(e){r.onend()}
 }
 /* ---- photo de l'intervention ---- */
-let rcData=null,rcPid="";
-function rcUi(){const has=!!(rcData||rcPid);$("cPhRow").hidden=!has;$("cPhBtn").textContent=has?"📷 Changer la photo":"📷 Photo (clé, boîtier, étiquette)";$("cPhDel").hidden=!canWrite;$("cPhBtn").disabled=!canWrite;
-  if(has){if(rcData)$("cPhPrev").src=rcData;else getPhoto(rcPid).then(d=>{if(d&&rcPid)$("cPhPrev").src=d})}}
-const rcIn=h("input",{type:"file",accept:"image/*",hidden:true});rcIn.setAttribute("capture","environment");document.body.append(rcIn);
-rcIn.addEventListener("change",async()=>{const f=rcIn.files[0];rcIn.value="";if(!f)return;try{rcData=await shrink(f,1100);rcUi()}catch(e){toast("Photo illisible")}});
+/* plusieurs photos par intervention : photothèque ou appareil photo (pas de « capture », sinon l'iPhone force l'appareil) */
+const PH_MAX=8;
+const entPhotos=e=>e?(Array.isArray(e.photoIds)&&e.photoIds.length?e.photoIds.filter(Boolean):e.photoId?[e.photoId]:[]):[];
+function mkPics(btnId,gridId,label){
+  const P={list:[]};
+  const inp=h("input",{type:"file",accept:"image/*",multiple:true,hidden:true});document.body.append(inp);
+  P.ui=()=>{const g=$(gridId);const n=P.list.length;$(btnId).textContent=n?(n>=PH_MAX?"📷 "+PH_MAX+" photos maximum":"📷 Ajouter d'autres photos"):label;$(btnId).disabled=!canWrite||n>=PH_MAX;
+    g.replaceChildren(...P.list.map(x=>{const im=h("img",{alt:"Photo de l'intervention"});if(x.d)im.src=x.d;else getPhoto(x.pid).then(d=>{if(d)im.src=d});
+      return h("div",{class:"pht"},h("button",{type:"button",style:"all:unset;display:block;width:100%;height:100%","aria-label":"Agrandir",onclick:async()=>{const d=x.d||await getPhoto(x.pid);if(d)openLb(d)}},im),
+        canWrite?h("button",{type:"button",class:"x","aria-label":"Retirer la photo",onclick:()=>{P.list=P.list.filter(y=>y!==x);P.ui()}},"✕"):null)}))};
+  P.set=ids=>{P.list=(ids||[]).map(pid=>({pid}));P.ui()};
+  P.save=async()=>{const out=[];for(const x of P.list){if(x.pid){out.push(x.pid);continue}try{x.pid=await putPhoto(x.d);x.d=null;out.push(x.pid)}catch(e){toast("Une photo n'a pas pu être enregistrée")}}return out};
+  $(btnId).addEventListener("click",()=>inp.click());
+  inp.addEventListener("change",async()=>{const fs=[...inp.files];inp.value="";if(!fs.length)return;let bad=0,cut=0;
+    for(const f of fs){if(P.list.length>=PH_MAX){cut++;continue}try{P.list.push({d:await shrink(f,1100)});P.ui()}catch(e){bad++}}
+    if(bad)toast(bad>1?bad+" photos illisibles":"Photo illisible");else if(cut)toast(PH_MAX+" photos maximum par intervention")});
+  return P;
+}
+const rcPics=mkPics("cPhBtn","cPhGrid","📷 Ajouter des photos (clé, boîtier, étiquette)");
+const rcUi=()=>rcPics.ui();
 const QTYPES=[["Double",130],["Perte",250],["Semi-perte",180],["Ouverture",100],["Taillage",50],["Décodage",100]];
 let cType="";
 function typePrice(t,dflt){
@@ -1917,7 +1935,7 @@ function cEntry(e){
     const eb=entryBrand(e),br=eb!=="autres"?brandLabel(eb)+" · ":"";
     return h("div",{class:"ent-wrap"},
       h("button",{class:"ent",type:"button",onclick:()=>cOpen(e),"aria-label":"Modifier : "+title},
-        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by+(isFay(e)?" · encaissé par Fayss":"")+(e.photoId?" · 📷":"")),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
+        h("div",{class:"ent-l"},h("div",{class:"ent-t"},e.time?h("span",{class:"tm"},fmtTime(e.time)):null,title),h("div",{class:"ent-m"},br+(e.city||"Ville non précisée")+(e.plate?" · "+e.plate:"")+by+(isFay(e)?" · encaissé par Fayss":"")+(entPhotos(e).length?" · 📷"+(entPhotos(e).length>1?" "+entPhotos(e).length:""):"")),e.note?h("div",{class:"ent-n"},e.note):null,e.usedLabel&&e.usedId!=="none"?h("div",{class:"ent-m"},"Clé utilisée : "+e.usedLabel):null,
           e.clientId&&clientById(e.clientId)?h("div",{class:"ent-m"},"Client : "+clientById(e.clientId).name):null,
           (()=>{const pg=s==="reussi"?tollShare(e):0;if(!(e.tripCost>0)&&!pg)return null;
             return h("div",{class:"ent-m"},"🚗 "+(e.tripCost>0?frN(e.tripKm,0)+" km · trajet "+money(Math.round(e.tripCost*100)):"")+(pg?(e.tripCost>0?" + ":"")+"péages "+money(pg):"")+(s==="reussi"?" · net "+money(cents(e)-Math.round((e.tripCost||0)*100)-pg):""))})(),
@@ -2083,8 +2101,7 @@ $("cPaySeg").addEventListener("click",e=>{const b=e.target.closest("button");if(
 $("cCash").addEventListener("input",cPayUi);
 $("cAddr").addEventListener("input",cGoUi);$("cGo").addEventListener("click",()=>navOpen(cAddrFull()));
 $("cMic").addEventListener("click",micToggle);
-$("cPhBtn").addEventListener("click",()=>rcIn.click());$("cPhDel").addEventListener("click",()=>{rcData=null;rcPid="";rcUi()});
-$("cPhView").addEventListener("click",async()=>{const d=rcData||(rcPid?await getPhoto(rcPid):"");if(d)openLb(d)});$("cAmt").addEventListener("input",()=>{$("cAmt").dataset.auto="";cPayUi()});
+$("cAmt").addEventListener("input",()=>{$("cAmt").dataset.auto="";cPayUi()});
 let brandAuto=true;
 $("cBrand").addEventListener("change",()=>{brandAuto=false});
 $("cModel").addEventListener("input",()=>{if(brandAuto&&canWrite){$("cBrand").value=inferBrand($("cModel").value)||""}});
@@ -2125,7 +2142,7 @@ function cOpen(e,date,prefill){
   {const vb=$("cPaySeg").querySelectorAll('[data-v="mixte"],[data-v="virement"]');vb[0].hidden=!rec;$("cAmt").dataset.auto="";
   $("cCash").value=e&&e.pay==="mixte"&&e.cash!=null?String(e.cash).replace(".",","):"";
   cType=e&&e.type?e.type:"";if(rec){cTypesUi();cCitiesUi()}cPayUi();
-  rcData=null;rcPid=e&&e.kind==="recette"&&e.photoId?e.photoId:"";rcUi();cGoUi();if(micRec){try{micRec.stop()}catch(x){}}}
+  rcPics.set(e&&e.kind==="recette"?entPhotos(e):[]);cGoUi();if(micRec){try{micRec.stop()}catch(x){}}}
   setSeg("cCatSeg",e&&e.cat?e.cat:"essence",v=>cCat=v);cCatUi();
   const del=$("cDel");del.hidden=!(e&&canWrite);del.textContent="Supprimer";del.classList.remove("sure");
   $("cSave").hidden=!canWrite;
@@ -2220,7 +2237,7 @@ $("cForm").addEventListener("submit",async ev=>{
   if(cPay==="mixte"&&kind==="recette"){const c=parseNum($("cCash").value);if(!(c>=0&&c<=amount)){toast("Indiquez la part en espèces (entre 0 et le tarif)");return}}
   const data={kind,date:$("cDate").value,amount,pay:kind!=="recette"&&cPay==="mixte"?"carte":cPay,by:uid,at:Date.now()};
   if(kind==="recette"){data.cash=cPay==="mixte"?Math.round(parseNum($("cCash").value)*100)/100:null;data.type=cType||"";
-    if(rcData){try{data.photoId=await putPhoto(rcData)}catch(er){toast("Photo non enregistrée")}}else data.photoId=rcPid||null}
+    {const ids=await rcPics.save();data.photoIds=ids;data.photoId=ids[0]||null}}
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.saveAll=$("cSaveAll").checked;if(data.saveAll){data.aside=true;data.asideAt=(cEditing&&cEditing.asideAt)||Date.now()}else if(cEditing&&cEditing.saveAll){data.aside=false;data.asideAt=null}data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
   else{data.cat=cCat;data.label=$("cLabel").value.trim();const l=parseNum($("cLit").value);data.litres=cCat==="essence"&&l>0?l:null;{const o=parseNum($("cOdo").value);data.odo=cCat==="essence"&&o>0?Math.round(o):null;data.full=cCat==="essence"?$("cFull").checked:null}const vv=$("cVat").value.trim(),vn=parseNum(vv);data.vat=vv===""||!(vn>=0)?null:Math.round(vn*cMul*100)/100;data.mult=cMul>1?cMul:null;data.amount=Math.round(amount*cMul*100)/100;if(data.litres&&cMul>1)data.litres=Math.round(data.litres*cMul*100)/100;
     if(tkData){try{data.photoId=await putPhoto(tkData)}catch(er){toast("Photo du ticket non enregistrée");}}else if(tkPid)data.photoId=tkPid}
@@ -2384,7 +2401,7 @@ function hRender(){
         h("button",{class:"lnk",type:"button",style:"margin:6px 2px;text-align:left",onclick:()=>mdOpen(g.label,items)},"Résumé du modèle : prix, pièces, notes"),
         items.map(e=>h("button",{class:"hrow",type:"button",onclick:()=>cOpen(e),"aria-label":"Voir ou modifier cette intervention"},
           h("div",{class:"hrow-top"},h("b",null,fmtDate(e.date)),e.year?h("span",null,"Année "+e.year):null,e.city?h("span",null,e.city):null),
-          e.note?h("div",{class:"hnote"},e.note):h("div",{class:"hnote none"},"Pas de note"),e.usedLabel&&e.usedId!=="none"?h("div",{class:"hrow-top"},h("span",null,"Clé utilisée : "+e.usedLabel)):null,(e.plate||e.pin||e.keycode)?hDet(e):null)));
+          e.note?h("div",{class:"hnote"},e.note):h("div",{class:"hnote none"},"Pas de note"),e.usedLabel&&e.usedId!=="none"?h("div",{class:"hrow-top"},h("span",null,"Clé utilisée : "+e.usedLabel)):null,(e.plate||e.pin||e.keycode)?hDet(e):null,hPh(e))));
       if(hOpen.has(k))d.open=true;
       d.addEventListener("toggle",()=>{d.open?hOpen.add(k):hOpen.delete(k)});
       out.push(d);
@@ -2392,6 +2409,8 @@ function hRender(){
   }
   list.replaceChildren(...out);
 }
+function hPh(e){const ids=entPhotos(e);if(!ids.length)return null;
+  return h("div",{class:"hph"},ids.map(pid=>h("span",{role:"button",tabindex:"0","aria-label":"Agrandir la photo",onclick:async ev=>{ev.preventDefault();ev.stopPropagation();const d=await getPhoto(pid);if(d)openLb(d);else toast("Photo indisponible hors ligne")}},photoImg({photoId:pid}))))}
 /* PIN et code clé masqués dans l'Historique */
 const hShow=new Set();
 function hDet(e){
@@ -2413,9 +2432,10 @@ let vEntry=null;
 function vOpen(e){
   vEntry=e;
   $("vFor").textContent="Pour : "+([e.model,e.year].filter(Boolean).join(" · ")||"ce véhicule")+". Tout est facultatif. Votre note s'affichera sur la fiche du véhicule et dans l'Historique.";
-  $("vPlate").value=e.plate||"";$("vPin").value=e.pin||"";$("vKeyCode").value=e.keycode||"";$("vHow").value=e.note||"";
+  $("vPlate").value=e.plate||"";$("vPin").value=e.pin||"";$("vKeyCode").value=e.keycode||"";$("vHow").value=e.note||"";vPics.set(entPhotos(e));
   $("vScrim").hidden=false;setTimeout(()=>$("vHow").focus(),60);
 }
+const vPics=mkPics("vPhBtn","vPhGrid","📷 Ajouter des photos");
 function vClose(){$("vScrim").hidden=true;vEntry=null}
 $("vSkip").addEventListener("click",vClose);
 $("vScrim").addEventListener("click",e=>{if(e.target===$("vScrim"))vClose()});
@@ -2423,7 +2443,8 @@ $("vForm").addEventListener("submit",async ev=>{
   ev.preventDefault();const e=vEntry;if(!e||!db)return;
   const d={plate:$("vPlate").value.trim().toUpperCase(),pin:$("vPin").value.trim(),keycode:$("vKeyCode").value.trim(),note:$("vHow").value.trim()};
   $("vSave").disabled=true;
-  try{await db.doc("entries/"+e.id).update(d);vClose();toast(d.note||d.plate||d.pin||d.keycode?"Enregistré":"Rien à enregistrer")}
+  const ids=await vPics.save();d.photoIds=ids;d.photoId=ids[0]||null;
+  try{await db.doc("entries/"+e.id).update(d);vClose();toast(d.note||d.plate||d.pin||d.keycode||ids.length?"Enregistré":"Rien à enregistrer")}
   catch(err){toast("Enregistrement impossible, réessayez")}
   $("vSave").disabled=false;
 });
