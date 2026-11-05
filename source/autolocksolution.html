@@ -4127,7 +4127,7 @@ function vsOpen(id,sk,edit){
     if(sk==="specs")VH_SPEC_GROUPS.forEach(([gl,fs])=>{body.push(h("h3",{class:"vsg"},gl),h("div",{class:"vh-specs"},fs.map(f=>{const v=vSpecVal(g,f);
       return h("div",{class:"vh-spec"+(v?"":" none")},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,v||"—"))})))});
     if(sk==="specs"&&(g.sx||[]).length)body.push(h("h3",{class:"vsg"},"Mes encadrés"),h("div",{class:"vh-specs"},g.sx.map(c=>h("div",{class:"vh-spec"},h("small",null,c.l||"—"),h("b",null,...linkText(c.v||"—"))))));
-    else if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
+    if(sk!=="specs"&&sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
     S.x.forEach(([f,l])=>{if(!t[f])return;
       const ttl=f!=="__cs"&&f!=="forum"&&(S.x.length>1||l)?h("h3",null,f==="ecuRefs"?"Références calculateur":f==="ecuLoc"?"Emplacement":vxLabel(f,l)):null;
       if(f==="boxes"){body.push(h("div",{class:"vh-card"},h("h3",null,"Boîtiers"),...t[f].split(/\n+/).map(x=>x.trim()).filter(Boolean).map(r=>{const m=r.match(/^([^:–-]{1,40})\s*[:–-]\s*(.+)$/);
