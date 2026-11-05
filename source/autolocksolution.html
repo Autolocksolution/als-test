@@ -3990,7 +3990,7 @@ const VH_SPECS=[["chip","Transpondeur"],["blade","Lame"],["ml","Mains libre"],["
   ["pinRead","Lecture code PIN"],["pinLen","Nombre de chiffres du code PIN"],["akl","Programmation en perte totale ?"],["add","Ajout de clé ?"],["immoProg","Programmation antidémarrage"],["rcProg","Programmation télécommande"],["precode","Précodage puce nécessaire ?"],["immoRead","Lecture données immo ?"],
   ["lishi","Lishi"],["tool","Matériel utilisé"],
   ["type","Type de clé"],["freq","Fréquence"],["batt","Batterie"],["gw","Présence gateway"],["obd","Prise OBD"]];
-const VH_SPEC_GROUPS=[["Clé",["ml","clone","immo"]],["Programmation",["pinRead","pinLen","akl","add","immoProg","rcProg","precode","immoRead"]],["Outils & accès",["lishi","tool"]],["Autres spécifications",["type","freq","batt","gw"]]];
+const VH_SPEC_GROUPS=[["Clé",["chip","blade","ml","clone","immo"]],["Programmation",["pinRead","pinLen","akl","add","immoProg","rcProg","precode","immoRead"]],["Outils & accès",["lishi","tool"]],["Autres spécifications",["type","freq","batt","gw"]]];
 const VH_SUGG={ml:"yn",clone:"yn",precode:"yn",gw:"yn",immoRead:"yn",pinRead:"obd",akl:"obd",immoProg:"obd",rcProg:"obd",add:"add",tool:"tool",pinLen:"pin"};
 {const L={yn:["OUI","NON"],obd:["OUI PAR OBD","OUI SUR TABLE (BANC)","OUI","NON"],add:["OUI PAR OBD","NON, TOUTES LES CLÉS DOIVENT ÊTRE REPROGRAMMÉES","NON"],tool:["AUTEL","ZED-FULL","AUTEL + ZED-FULL"],pin:["4","5","6"]};
   for(const k in L){const d=document.createElement("datalist");d.id="dl_"+k;L[k].forEach(v=>{const o=document.createElement("option");o.value=v;d.append(o)});document.body.append(d)}}
