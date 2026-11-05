@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-mu9WHMakItZto8wZD3kuhu6NPb2t8fx1qETspfjzHhY=' 'sha256-sFHeWXRbCm62E8Mr3Tsa7f0t5S2NFAo4Aq5xJz9XBsM=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-loeODXegIAxhEhyicRYmhHt5/LqF7ZX0B47gS2arxMo=' 'sha256-QyJGgocXlaI5K/Mc/HMRz6GPWdElribfusgtUqOzRwI=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -315,6 +315,19 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 @media (prefers-reduced-motion:reduce){.vx-hero,.vx-tile,.scrim.vs,.scrim.vs .sheet{animation:none!important}}
 
 .vf-add{width:100%;min-height:52px;border:2px dashed var(--line);border-radius:16px;background:none;color:var(--accent);font-weight:700;font-size:16px;margin:4px 0 14px}
+.pcs{display:flex;flex-direction:column;gap:12px;margin:10px 0}
+.pc{border:1.5px solid var(--accent);border-radius:16px;overflow:hidden;background:var(--surface)}
+.pc-t{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;font-weight:600;font-size:16px;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere}
+.pc-t i{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--acc-soft);color:var(--acc-ink);font-style:normal;font-size:13px;display:flex;align-items:center;justify-content:center}
+.pc-t.none{color:var(--muted);font-weight:400;font-style:italic}
+.pc-i{position:relative;background:#fff;margin:0 10px 10px;border-radius:12px;overflow:hidden;cursor:zoom-in}
+.pc-i img{width:100%;max-height:340px;object-fit:contain;display:block;margin:0 auto;min-height:120px}
+.pc-v{position:absolute;right:10px;bottom:10px;border:0;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;padding:8px 14px;font-size:15px}
+.pc-e{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:10px;align-items:start}
+.pc-e .th{width:72px;height:72px;border-radius:10px;overflow:hidden;background:var(--tint)}.pc-e .th img{width:100%;height:100%;object-fit:cover}
+.pc-e textarea{width:100%;min-height:72px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:16px;background:var(--bg);color:var(--ink)}
+.pc-e .ops{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}.pc-e .ops button{border:1px solid var(--line);background:var(--tint);border-radius:8px;padding:6px 12px;font-size:14px}
+.pc-e .ops .rm{color:var(--out)}
 .vs-ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
 .vs-t{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--tint)}
 .vs-t img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
@@ -4100,7 +4113,7 @@ const VSECT={
 /* texte avec liens cliquables (http/https seulement) */
 function linkText(txt){return String(txt||"").split(/(https?:\/\/[^\s]+)/g).map((p,i)=>i%2&&safeUrl(p)?h("a",{href:safeUrl(p),target:"_blank",rel:"noopener noreferrer"},hostOf(p)||p):p)}
 const vQuery=g=>[g.brand,g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:"",g.yFrom||""].filter(Boolean).join(" ");
-for(const k in VSECT)VSECT[k].has=g=>VSECT[k].s.some(f=>(g.s||{})[f])||VSECT[k].x.some(([f])=>(g.t||{})[f]);
+for(const k in VSECT)VSECT[k].has=g=>VSECT[k].s.some(f=>(g.s||{})[f])||VSECT[k].x.some(([f])=>(g.t||{})[f])||!!((g.pc||{})[k]||[]).length;
 const vxLabel=(f,l)=>l||((VH_TXT.find(x=>x[0]===f)||[])[1])||f;
 function vsOpen(id,sk,edit){
   document.querySelectorAll(".scrim.vs").forEach(x=>x.remove());
@@ -4133,12 +4146,31 @@ function vsOpen(id,sk,edit){
       const sl=sk==="ecu"?[["Chercher les références",`https://www.google.com/search?q=${enc(q+" calculateur moteur référence emplacement")}`]]
         :[["Forums (Google)",`https://www.google.com/search?q=${enc(q+" programmation clé forum")}`],["Groupes Facebook",`https://www.facebook.com/search/groups/?q=${enc(g.brand+" "+g.model+" clé programmation")}`],["Publications Facebook",`https://www.facebook.com/search/posts/?q=${enc(q+" clé")}`]];
       body.push(h("div",{class:"vx-search"},sl.map(([l,u])=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},"🔎 "+l))))}
-    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="boxes"?"Rien de noté pour l'instant. Ajoute les boîtiers utiles (HFM, BCM, gateway, UCH…) avec leur emplacement et une photo.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
+    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length&&!((g.pc||{})[sk]||[]).length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="boxes"?"Rien de noté pour l'instant. Ajoute les boîtiers utiles (HFM, BCM, gateway, UCH…) avec leur emplacement et une photo.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
   }
   const grid=h("div",{class:"vs-ph"},ids.map(pid=>{const im=photoImg({photoId:pid});im.onclick=async()=>{const d=await getPhoto(pid);if(d)openLb(d)};
     return h("div",{class:"vs-t"},im,edit&&canWrite?h("button",{type:"button",class:"vs-x","aria-label":"Retirer la photo",onclick:async()=>{
       try{await db.doc("vehicles/"+g.id).update({ph:{...(g.ph||{}),[sk]:ids.filter(x=>x!==pid)}});toast("Photo retirée")}catch(e){toast("Modification refusée")}vsLater(g.id,sk,true)}},"✕"):null)}));
   if(ids.length)body.push(grid);
+  /* cartes « texte + photo » (ex. étapes de programmation) : le texte est lié à sa photo */
+  let pcs=(((g.pc||{})[sk])||[]).map(c=>({...c}));
+  const pcBox=h("div",{class:"pcs"});
+  const pcRead=()=>{if(edit)pcs.forEach(c=>{const ta=document.getElementById("pc_"+c.id);if(ta)c.text=ta.value.trim().slice(0,1000)})};
+  const pcDraw=()=>{pcBox.replaceChildren(...pcs.map((c,i)=>{const im=photoImg({photoId:c.pid});im.alt=c.text||"Photo";
+    const show=async()=>{const d=await getPhoto(c.pid);if(d)openLb(d);else toast("Photo indisponible hors ligne")};
+    if(!edit)return h("div",{class:"pc"},h("div",{class:"pc-t"+(c.text?"":" none")},h("i",null,String(i+1)),c.text||"Sans texte"),
+      h("div",{class:"pc-i",onclick:show},im,h("button",{type:"button",class:"pc-v",onclick:ev=>{ev.stopPropagation();show()}},"🔍 Voir")));
+    const ta=h("textarea",{id:"pc_"+c.id,maxlength:"1000",placeholder:"Texte lié à cette photo (étape, réglage, remarque…)"});ta.value=c.text||"";
+    return h("div",{class:"pc"},h("div",{class:"pc-e"},h("div",{class:"th",onclick:show},im),ta,
+      h("div",{class:"ops"},i>0?h("button",{type:"button","aria-label":"Monter",onclick:()=>{pcRead();[pcs[i-1],pcs[i]]=[pcs[i],pcs[i-1]];pcDraw()}},"↑ Monter"):null,
+        h("button",{type:"button",class:"rm",onclick:()=>{pcRead();pcs=pcs.filter(x=>x!==c);pcDraw()}},"✕ Retirer"))))}))};
+  pcDraw();body.push(pcBox);
+  const pcIn=h("input",{type:"file",accept:"image/*",multiple:true,hidden:true});
+  pcIn.addEventListener("change",async()=>{const fs=[...pcIn.files];pcIn.value="";if(!fs.length)return;pcRead();
+    let n=0;for(const f of fs){try{const pid=await putPhoto(await shrink(f,1400));pcs.push({id:Date.now().toString(36)+n,pid,text:""});n++}catch(e){}}
+    if(!n){toast("Photo non enregistrée");return}
+    try{await db.doc("vehicles/"+g.id).update({pc:{...(g.pc||{}),[sk]:pcs},by:uid,at:Date.now()});toast(n>1?n+" photos ajoutées : écris le texte de chacune":"Photo ajoutée : écris son texte")}catch(e){toast("Modification refusée");return}
+    vsLater(g.id,sk,true);setTimeout(()=>{const l=pcs[pcs.length-n];const ta=l&&document.getElementById("pc_"+l.id);if(ta)ta.focus()},800)});
   const inp=h("input",{type:"file",accept:"image/*",hidden:true});
   inp.addEventListener("change",async()=>{const f=inp.files[0];inp.value="";if(!f)return;
     try{const d=await shrink(f,1400);const pid=await putPhoto(d);await db.doc("vehicles/"+g.id).update({ph:{...(g.ph||{}),[sk]:[...ids,pid]}});toast("Photo ajoutée")}catch(e){toast("Photo non enregistrée")}
@@ -4151,11 +4183,13 @@ function vsOpen(id,sk,edit){
         else{const ns={...s},nt={...t};
           S.s.forEach(f=>{const v=$("ve_"+f).value.trim();if(v)ns[f]=v;else delete ns[f]});
           S.x.forEach(([f])=>{const v=$("ve_"+f).value.trim();if(v)nt[f]=v;else delete nt[f]});upd={s:ns,t:nt}}
+        pcRead();upd.pc={...(g.pc||{}),[sk]:pcs};
         try{await db.doc("vehicles/"+g.id).update({...upd,by:uid,at:Date.now()});toast("Enregistré")}catch(e){toast("Modification refusée");return}
         vsLater(g.id,sk,false)}},"Enregistrer")]
     :[h("button",{type:"button",class:"btn",onclick:close},"Fermer"),canWrite?h("button",{type:"button",class:"btn pri",onclick:()=>vsOpen(g.id,sk,true)},"✏️ Ajouter / modifier"):null];
-  const sc=h("div",{class:"scrim vs",onclick:e=>{if(e.target===sc)close()}},h("div",{class:"sheet"},h("h2",null,S.t),...body,inp,
-    canWrite?h("button",{type:"button",class:"btn",style:"width:100%;margin:6px 0",onclick:()=>inp.click()},"📷 Ajouter une photo"):null,
+  const sc=h("div",{class:"scrim vs",onclick:e=>{if(e.target===sc)close()}},h("div",{class:"sheet"},h("h2",null,S.t),...body,inp,pcIn,
+    canWrite?h("button",{type:"button",class:"btn pri",style:"width:100%;margin:6px 0",onclick:()=>pcIn.click()},"🖼️ Ajouter une photo avec texte"):null,
+    canWrite?h("button",{type:"button",class:"btn",style:"width:100%;margin:0 0 6px",onclick:()=>inp.click()},"📷 Ajouter une photo seule"):null,
     h("div",{class:"acts"},...acts.filter(Boolean))));
   document.body.append(sc);
 }
@@ -4223,7 +4257,7 @@ function vFiche(g){
     tile("boxes","box","Autres boîtiers",(()=>{const L=(t.boxes||"").split("\n").map(x=>x.trim()).filter(Boolean);return L.length?L.map(x=>x.split(/\s*[:–-]\s*/)[0]).join(" · ").slice(0,60):""})(),has("boxes"),"a"),...cg("spec")]));
   out.push(...grp("Clé",[
     tile("lame","blade","Lame",s.blade||(t.lameNote||"").slice(0,60),has("lame"),"b"),
-    tile("prog","key","Programmation",[t.proc1&&"Ajout de clé",t.proc2&&"Toutes clés perdues"].filter(Boolean).join(" · "),has("prog"),"b"),
+    tile("prog","key","Programmation",[t.proc1&&"Ajout de clé",t.proc2&&"Toutes clés perdues",((g.pc||{}).prog||[]).length&&((g.pc||{}).prog.length+" photo"+((g.pc||{}).prog.length>1?"s":"")+" avec texte")].filter(Boolean).join(" · "),has("prog"),"b"),
     tile("lock","lock","Crochetage",(t.lock||"").split("\n")[0].slice(0,60),has("lock"),"b"),
     tile("notes","info","À savoir",(t.notes||"").split("\n")[0].slice(0,60),has("notes"),"b"),...cg("cle")]));
   out.push(...grp("Communauté",[tile("forum","forum","Infos forums",(t.forum||"").split("\n")[0].slice(0,60)||"Forums et groupes Facebook",has("forum"),"c")]));
@@ -4604,7 +4638,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261104-1846";
+const ALS_BUILD="20261105-1213";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
