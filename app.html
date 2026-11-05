@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-loeODXegIAxhEhyicRYmhHt5/LqF7ZX0B47gS2arxMo=' 'sha256-QyJGgocXlaI5K/Mc/HMRz6GPWdElribfusgtUqOzRwI=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-HS5dLBzMiyBzih95FScK3loa6rXTr/+4NaYwJayL4eM=' 'sha256-pdzK7XvIJaUPbYJ1liVIY7sy+ETTpLSBono7t5EdLT8=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -493,6 +493,9 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .vh-spec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 13px;min-width:0}
 .vh-spec small{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .vh-spec b{font-size:17px;font-weight:600;overflow-wrap:anywhere}
+.sxrow{display:grid;grid-template-columns:1fr 1.3fr 40px;gap:6px;margin-bottom:6px}.sxrow input{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:16px;background:var(--bg);color:var(--ink)}.sxrow button{border:1px solid var(--line);border-radius:10px;background:var(--tint);color:var(--out)}
+.vh-spec.none b{color:var(--muted);font-weight:400}
+.vsg{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-ink);margin:14px 0 8px;padding-left:9px;border-left:3px solid var(--accent)}
 .vh-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
 .vh-card h3{font-family:var(--f-display);font-weight:600;font-size:18px;margin:0 0 6px}
 .vh-card p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;font-size:15.5px}
@@ -4014,7 +4017,19 @@ const safeUrl=u=>/^https?:\/\/[^\s]+$/i.test((u||"").trim())?u.trim():"";
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return""}};
 
 /* ================= BASE DE DONNÉES VÉHICULES ================= */
-const VH_SPECS=[["type","Type de clé"],["btn","Boutons"],["freq","Fréquence"],["chip","Puce / transpondeur"],["blade","Lame / profil"],["batt","Pile"],["obd","Prise OBD"],["start","Démarrage"]];
+const VH_SPECS=[["chip","Transpondeur"],["blade","Lame"],["ml","Mains libre"],["clone","Puce clonable ?"],["immo","Système immo"],["vin","VIN"],
+  ["pinRead","Lecture code PIN"],["pinLen","Nombre de chiffres du code PIN"],["akl","Programmation en perte totale ?"],["add","Ajout de clé ?"],["immoProg","Programmation antidémarrage"],["rcProg","Programmation télécommande"],["precode","Précodage puce nécessaire ?"],["immoRead","Lecture données immo ?"],
+  ["lishi","Lishi"],["tool","Matériel utilisé"],
+  ["type","Type de clé"],["btn","Boutons"],["freq","Fréquence"],["batt","Batterie"],["start","Démarrage"],["gw","Présence gateway"],["obd","Prise OBD"]];
+const VH_SPEC_GROUPS=[["Clé",["chip","blade","ml","clone","immo","vin"]],["Programmation",["pinRead","pinLen","akl","add","immoProg","rcProg","precode","immoRead"]],["Outils & accès",["lishi","tool"]],["Autres spécifications",["type","btn","freq","batt","start","gw"]]];
+const VH_SUGG={ml:"yn",clone:"yn",precode:"yn",gw:"yn",immoRead:"yn",pinRead:"obd",akl:"obd",immoProg:"obd",rcProg:"obd",add:"add",tool:"tool",pinLen:"pin"};
+{const L={yn:["OUI","NON"],obd:["OUI PAR OBD","OUI SUR TABLE (BANC)","OUI","NON"],add:["OUI PAR OBD","NON, TOUTES LES CLÉS DOIVENT ÊTRE REPROGRAMMÉES","NON"],tool:["AUTEL","ZED-FULL","AUTEL + ZED-FULL"],pin:["4","5","6"]};
+  for(const k in L){const d=document.createElement("datalist");d.id="dl_"+k;L[k].forEach(v=>{const o=document.createElement("option");o.value=v;d.append(o)});document.body.append(d)}}
+/* valeur affichée : saisie, sinon déduite (mains libre d'après le type de clé, Lishi d'après le crochetage) */
+function vSpecVal(g,f){const s=g.s||{},t=g.t||{};if(s[f])return s[f];
+  if(f==="ml"&&s.type)return /mains-libres|keyless/i.test(s.type)?"OUI":"NON";
+  if(f==="lishi"){const m=String(t.lock||"").match(/Lishi\s+([A-Z0-9-]+)/i);if(m)return m[1].toUpperCase()}
+  return ""}
 const VH_TXT=[["proc1","Ajout d'une clé (une clé fonctionne déjà)"],["proc2","Toutes clés perdues"],["tools","Outils et logiciels compatibles"],["lock","Crochetage / ouverture"],["notes","À savoir, pièges"]];
 const VH_BRANDS=["Alfa Romeo","Audi","BMW","Citroën","Dacia","DS","Fiat","Ford","Honda","Hyundai","Jeep","Kia","Land Rover","Mazda","Mercedes","Mini","Mitsubishi","Nissan","Opel","Peugeot","Renault","Seat","Skoda","Smart","Suzuki","Toyota","Volkswagen","Volvo"];
 let vBrand=load("als-vb")||"",vModel=load("als-vm")||"",vGen=load("als-vg")||"",vEditing=null,vDiffs=[],vDelArmed=false,vQ="",vFromQ="",vAll=false;
@@ -4101,7 +4116,7 @@ function vdOpen(title,blocks){
 }
 /* rubriques de la fiche : champs (s = courts, t = textes) + photos (g.ph[clé] = ids) ; modifiables à tout moment */
 const VSECT={
-  specs:{t:"Spécifications",s:["type","btn","freq","chip","batt","start"],x:[]},
+  specs:{t:"Spécifications",s:VH_SPEC_GROUPS.flatMap(x=>x[1]),x:[]},
   obd:{t:"Emplacement de la prise OBD",s:["obd"],x:[["obdNote","Précisions (démontage, cache…)"]]},
   lame:{t:"Lame",s:["blade"],x:[["lameNote","Taillage, code, profil, remarques"]]},
   prog:{t:"Programmation",s:[],x:[["proc1"],["proc2"],["tools"]]},
@@ -4113,7 +4128,7 @@ const VSECT={
 /* texte avec liens cliquables (http/https seulement) */
 function linkText(txt){return String(txt||"").split(/(https?:\/\/[^\s]+)/g).map((p,i)=>i%2&&safeUrl(p)?h("a",{href:safeUrl(p),target:"_blank",rel:"noopener noreferrer"},hostOf(p)||p):p)}
 const vQuery=g=>[g.brand,g.model,g.gen&&vNorm(g.gen)!==vNorm(g.model)?g.gen:"",g.yFrom||""].filter(Boolean).join(" ");
-for(const k in VSECT)VSECT[k].has=g=>VSECT[k].s.some(f=>(g.s||{})[f])||VSECT[k].x.some(([f])=>(g.t||{})[f])||!!((g.pc||{})[k]||[]).length;
+for(const k in VSECT)VSECT[k].has=g=>(k==="specs"&&!!(g.sx||[]).length)||VSECT[k].s.some(f=>(g.s||{})[f])||VSECT[k].x.some(([f])=>(g.t||{})[f])||!!((g.pc||{})[k]||[]).length;
 const vxLabel=(f,l)=>l||((VH_TXT.find(x=>x[0]===f)||[])[1])||f;
 function vsOpen(id,sk,edit){
   document.querySelectorAll(".scrim.vs").forEach(x=>x.remove());
@@ -4126,7 +4141,13 @@ function vsOpen(id,sk,edit){
   if(edit){
     if(cs){body.push(h("div",{class:"f"},h("label",{for:"ve___title"},"Nom de la rubrique"),h("input",{id:"ve___title",maxlength:"60",value:cs.title||""})),
       h("div",{class:"f"},h("span",{class:"lab"},"Dans"),h("div",{class:"seg",id:"ve___grp"},...[["spec","Spécifications"],["cle","Clé"],["autre","Autres"]].map(([v,l])=>h("button",{type:"button","data-v":v,"aria-pressed":String((cs.grp||"cle")===v),onclick:e=>{[...e.target.parentNode.children].forEach(b=>b.setAttribute("aria-pressed",String(b===e.target)))}},l)))))}
-    S.s.forEach(f=>{const l=(VH_SPECS.find(x=>x[0]===f)||[])[1]||f;body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},l),h("input",{id:"ve_"+f,maxlength:"80",value:s[f]||""})))});
+    S.s.forEach(f=>{const l=(VH_SPECS.find(x=>x[0]===f)||[])[1]||f;if(sk==="specs"){const gr=VH_SPEC_GROUPS.find(x=>x[1][0]===f);if(gr)body.push(h("h3",{class:"vsg"},gr[0]))}
+      body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},l),h("input",{id:"ve_"+f,maxlength:"120",value:s[f]||"",...(VH_SUGG[f]?{list:"dl_"+VH_SUGG[f],autocomplete:"off"}:{})})))});
+    if(sk==="specs"){const box=h("div",{id:"sxBox"});
+      const row=c=>h("div",{class:"sxrow","data-id":c.id},h("input",{class:"sxl",maxlength:"60",placeholder:"Titre (ex. Code usine)",value:c.l||""}),h("input",{class:"sxv",maxlength:"200",placeholder:"Valeur",value:c.v||""}),
+        h("button",{type:"button","aria-label":"Retirer cet encadré",onclick:e=>e.target.closest(".sxrow").remove()},"✕"));
+      (g.sx||[]).forEach(c=>box.append(row(c)));
+      body.push(h("h3",{class:"vsg"},"Mes encadrés"),box,h("button",{type:"button",class:"btn",style:"width:100%;margin:4px 0 10px",onclick:()=>{const r=row({id:"x"+Date.now().toString(36),l:"",v:""});box.append(r);r.querySelector(".sxl").focus()}},"＋ Ajouter un encadré"))}
     S.x.forEach(([f,l])=>{const ta=h("textarea",{id:"ve_"+f,rows:"4",maxlength:"2000"});ta.value=t[f]||"";body.push(h("div",{class:"f"},h("label",{for:"ve_"+f},f==="__cs"?"Texte":vxLabel(f,l)),ta))});
     if(cs&&canWrite){let armed=false;const del=h("button",{type:"button",class:"btn del",style:"width:100%;margin-top:4px",onclick:async()=>{
       if(!armed){armed=true;del.textContent="Confirmer la suppression de la rubrique";return}
@@ -4134,7 +4155,10 @@ function vsOpen(id,sk,edit){
       try{await db.doc("vehicles/"+g.id).update({cs:(g.cs||[]).filter(c=>c.id!==sk),ph:nph});toast("Rubrique supprimée")}catch(e){toast("Modification refusée");return}close()}},"Supprimer la rubrique");body.push(del)}
   }else{
     const sp=S.s.filter(f=>s[f]);
-    if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
+    if(sk==="specs")VH_SPEC_GROUPS.forEach(([gl,fs])=>{body.push(h("h3",{class:"vsg"},gl),h("div",{class:"vh-specs"},fs.map(f=>{const v=vSpecVal(g,f);
+      return h("div",{class:"vh-spec"+(v?"":" none")},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,v||"—"))})))});
+    if(sk==="specs"&&(g.sx||[]).length)body.push(h("h3",{class:"vsg"},"Mes encadrés"),h("div",{class:"vh-specs"},g.sx.map(c=>h("div",{class:"vh-spec"},h("small",null,c.l||"—"),h("b",null,...linkText(c.v||"—"))))));
+    else if(sp.length)body.push(h("div",{class:"vh-specs"},sp.map(f=>h("div",{class:"vh-spec"},h("small",null,(VH_SPECS.find(x=>x[0]===f)||[])[1]||f),h("b",null,s[f])))));
     S.x.forEach(([f,l])=>{if(!t[f])return;
       const ttl=f!=="__cs"&&f!=="forum"&&(S.x.length>1||l)?h("h3",null,f==="ecuRefs"?"Références calculateur":f==="ecuLoc"?"Emplacement":vxLabel(f,l)):null;
       if(f==="boxes"){body.push(h("div",{class:"vh-card"},h("h3",null,"Boîtiers"),...t[f].split(/\n+/).map(x=>x.trim()).filter(Boolean).map(r=>{const m=r.match(/^([^:–-]{1,40})\s*[:–-]\s*(.+)$/);
@@ -4146,7 +4170,7 @@ function vsOpen(id,sk,edit){
       const sl=sk==="ecu"?[["Chercher les références",`https://www.google.com/search?q=${enc(q+" calculateur moteur référence emplacement")}`]]
         :[["Forums (Google)",`https://www.google.com/search?q=${enc(q+" programmation clé forum")}`],["Groupes Facebook",`https://www.facebook.com/search/groups/?q=${enc(g.brand+" "+g.model+" clé programmation")}`],["Publications Facebook",`https://www.facebook.com/search/posts/?q=${enc(q+" clé")}`]];
       body.push(h("div",{class:"vx-search"},sl.map(([l,u])=>h("a",{href:u,target:"_blank",rel:"noopener noreferrer"},"🔎 "+l))))}
-    if(!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length&&!((g.pc||{})[sk]||[]).length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="boxes"?"Rien de noté pour l'instant. Ajoute les boîtiers utiles (HFM, BCM, gateway, UCH…) avec leur emplacement et une photo.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
+    if(sk!=="specs"&&!sp.length&&!S.x.some(([f])=>t[f])&&!ids.length&&!((g.pc||{})[sk]||[]).length)body.push(h("p",{class:"vf-none"},sk==="ecu"?"Rien de noté pour l'instant. Ajoute une photo de l'emplacement et les références que tu croises.":sk==="boxes"?"Rien de noté pour l'instant. Ajoute les boîtiers utiles (HFM, BCM, gateway, UCH…) avec leur emplacement et une photo.":sk==="forum"?"Rien de noté pour l'instant. Colle ici les infos et liens utiles trouvés sur les forums ou groupes Facebook.":"Rien de noté pour l'instant."));
   }
   const grid=h("div",{class:"vs-ph"},ids.map(pid=>{const im=photoImg({photoId:pid});im.onclick=async()=>{const d=await getPhoto(pid);if(d)openLb(d)};
     return h("div",{class:"vs-t"},im,edit&&canWrite?h("button",{type:"button",class:"vs-x","aria-label":"Retirer la photo",onclick:async()=>{
@@ -4184,6 +4208,7 @@ function vsOpen(id,sk,edit){
           S.s.forEach(f=>{const v=$("ve_"+f).value.trim();if(v)ns[f]=v;else delete ns[f]});
           S.x.forEach(([f])=>{const v=$("ve_"+f).value.trim();if(v)nt[f]=v;else delete nt[f]});upd={s:ns,t:nt}}
         pcRead();upd.pc={...(g.pc||{}),[sk]:pcs};
+        if(sk==="specs"&&$("sxBox"))upd.sx=[...$("sxBox").querySelectorAll(".sxrow")].map(r=>({id:r.dataset.id,l:r.querySelector(".sxl").value.trim(),v:r.querySelector(".sxv").value.trim()})).filter(c=>c.l||c.v);
         try{await db.doc("vehicles/"+g.id).update({...upd,by:uid,at:Date.now()});toast("Enregistré")}catch(e){toast("Modification refusée");return}
         vsLater(g.id,sk,false)}},"Enregistrer")]
     :[h("button",{type:"button",class:"btn",onclick:close},"Fermer"),canWrite?h("button",{type:"button",class:"btn pri",onclick:()=>vsOpen(g.id,sk,true)},"✏️ Ajouter / modifier"):null];
@@ -4638,7 +4663,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261105-1213";
+const ALS_BUILD="20261105-1222";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
