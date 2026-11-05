@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c-ford-transit-2021-2023-obdstar-g3",
+    "title": "Ford Transit 2021-2023 (clé à lame) : clés par OBDSTAR G3, avec ou sans code PIN",
+    "url": "http://blog.obdii365.com/2026/11/03/tips-to-program-2021-2023-ford-transit-key-with-obdstar-g3/",
+    "source": "OBDII365 (blog)",
+    "kind": "web",
+    "summary": "Les Transit 2022-2023 demandaient jusqu'ici le logiciel Ford FDRS avec jetons ; Autel et OBDSTAR échouaient en toutes clés perdues par l'OBD, et Xhorse s'arrête à 2019. L'OBDSTAR G3 a maintenant un menu Transit 2021-2023 (IMMO > Ford > Europe > Transit > clé à lame) avec deux choix : avec PIN par l'OBD (ajout de clé et toutes clés perdues, alarme active ou non), ou sans PIN. Le chemin sans PIN impose de déposer le BCM et de lire sa flash RH850 avec l'adaptateur C4-06 pour récupérer le PIN.",
+    "date": "2026-11-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-launch-xprog3-nov-2026-fiat-vw",
+    "title": "Launch X-Prog3, mise à jour de novembre 2026 : BCM Fiat, antivol de colonne VW MQB et clés 5C/5D",
+    "url": "http://www.key-programmer.org/2026/11/04/launch-x-prog3-update-vag-mqb49-5c-5d-key-programming/",
+    "source": "Car Key Programmer (blog)",
+    "kind": "web",
+    "summary": "Le programmateur Launch X-Prog3 reçoit un nouveau logiciel antidémarrage en novembre 2026. Il ajoute la lecture/écriture des BCM Fiat à puce MB91F526 ou MC9S12XEG384, la programmation des clés VW et Audi MQB 5C/5D, et la lecture et le décodage des données antivol de l'antivol de colonne VW MQB D70F3624 sur table. Côté Mercedes, il ajoute notamment le calcul du mot de passe en toutes clés perdues sur W463 (CAN) et la détection de fréquence des clés.",
+    "date": "2026-11-04",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-vw-polo-pq26-j519-multiprog",
+    "title": "VW Polo (PQ26) : brochage du BCM J519 MPC5646B pour Xhorse Multi Prog",
+    "url": "http://blog.vvdishop.com/vw-j519-bcm-pq26-pinout-to-xhorse-multi-prog/",
+    "source": "VVDIshop (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur du Multi Prog a publié le schéma de branchement du BCM J519 (CENTRAL09) des VW de plateforme PQ26, comme la Polo, équipé du processeur MPC5646B, pour le lire sur table. Conseil donné pour une lecture stable : souder le fil de masse (GND) au plus près du plan de masse du processeur. Un fil de masse court évite les coupures de communication, les erreurs de somme de contrôle et les échecs de lecture ou d'écriture.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-vag-telecommande-pile-faible-canal-00",
+    "title": "VW, Skoda, Seat, Audi : la télécommande ne marche plus après une pile faible, la réapprendre au diag",
+    "url": "https://www.youtube.com/watch?v=i2tXWa_poRQ",
+    "source": "Iamcarhacker (YouTube)",
+    "kind": "video",
+    "summary": "Pour le cas où la clé démarre encore mais où la télécommande ne verrouille plus (montré sur une Octavia et une Golf 5). Avec un outil de diag type VCDS ou OBD11, aller dans le module 46 (confort) ou, s'il ne répond pas, dans le module 09 (électronique centrale), en adaptation. Mettre d'abord le canal 00 pour effacer les valeurs apprises, puis le canal 1 avec le nombre de clés, et appuyer sur un bouton de chaque télécommande. Piège : toutes les clés doivent être présentes et faites dans les 15 secondes, sinon celles oubliées ne marchent plus.",
+    "date": "2026-10-22",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-megane4-carte-autel-im608-astuces",
+    "title": "Mégane 4 : ajouter une carte compatible avec Autel IM508/IM608, les astuces",
+    "url": "https://www.youtube.com/watch?v=UjviPwGEE54",
+    "source": "Keyfirst (YouTube)",
+    "kind": "video",
+    "summary": "Sur une Mégane 4 de 2018, le PIN est lu par l'OBD (lecture de la flash, connexion internet et XP400 Pro nécessaires) avec une batterie au-dessus de 12 V, sinon mettre un maintien de charge. Astuces : pour couper le contact en mains libres, s'enfermer dans la voiture avec la carte du client ; noter ou photographier le PIN et renommer le fichier sauvegardé. Une carte adaptable (REN-CIR32) doit être pré-codée sur l'XP400, alors qu'une carte d'origine non. L'opération efface toutes les cartes : reprogrammer aussi celles du client, en posant chaque carte sur le bouton Start/Stop ; les voyants de défaut qui s'allument pendant la lecture disparaissent après quelques minutes de route.",
+    "date": "2024-01-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-xhorse-multiprog-ffff55aa",
+    "title": "Xhorse Multi Prog : erreur « Failed to load so! » code ffff55aa au démarrage",
+    "url": "http://blog.xhorsetool.com/how-to-solve-xhorse-multi-prog-error-code-ffff55aa/",
+    "source": "Xhorsetool (blog)",
+    "kind": "web",
+    "summary": "Un client a eu le message « Failed to load so! Error code: ffff55aa » à l'initialisation du Multi Prog. La solution donnée : aller dans l'onglet de mise à jour en ligne, ouvrir la gestion des autorisations et cliquer sur Synchroniser. Attendre la fin de la synchronisation puis relancer l'opération.",
+    "date": "2026-10-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-autel-im508s-sauvegardes-immo",
+    "title": "Autel IM508S : où retrouver les sauvegardes immo et fichiers ROM depuis un ordinateur",
+    "url": "http://blog.autelshop.de/autel-im508s-where-to-find-backup-data-rom-files-on-a-computer/",
+    "source": "AutelShop.de (blog)",
+    "kind": "web",
+    "summary": "Quand on branche l'IM508S à un ordinateur, les sauvegardes de données véhicule et les fichiers ROM se trouvent dans la mémoire interne, au chemin indiqué par le revendeur : SDcard/Scan/UserData/Programmer/sdcard/Scan/UserData/VehicleImmo/. Pratique pour garder une copie des données lues avant une programmation.",
+    "date": "2026-10-21",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  },
+  {
+    "id": "c-autel-km100-bmw-tiris-dst-at100",
+    "title": "Autel KM100 : copie de puce BMW TIRIS DST 4D en échec « Query failed », utiliser une puce AT100",
+    "url": "http://blog.autelshop.de/solved-autel-km100-bmw-tiris-dst-4d-cloning-query-failed-error/",
+    "source": "AutelShop.de (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un client n'arrivait pas à copier une puce BMW TIRIS DST 4D avec le KM100E : message « Query failed ». La fonction est bien prise en charge ; le problème venait de puces adaptables instables. Après analyse du journal de l'appareil par les ingénieurs Autel, la copie a réussi, et Autel conseille d'utiliser ses puces AT100 pour une copie fiable.",
+    "date": "2026-10-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1793858841356
+  }
+]
