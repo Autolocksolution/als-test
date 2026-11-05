@@ -3986,11 +3986,11 @@ const safeUrl=u=>/^https?:\/\/[^\s]+$/i.test((u||"").trim())?u.trim():"";
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return""}};
 
 /* ================= BASE DE DONNÉES VÉHICULES ================= */
-const VH_SPECS=[["chip","Transpondeur"],["blade","Lame"],["ml","Mains libre"],["clone","Puce clonable ?"],["immo","Système immo"],["vin","VIN"],
+const VH_SPECS=[["chip","Transpondeur"],["blade","Lame"],["ml","Mains libre"],["clone","Puce clonable ?"],["immo","Système immo"],
   ["pinRead","Lecture code PIN"],["pinLen","Nombre de chiffres du code PIN"],["akl","Programmation en perte totale ?"],["add","Ajout de clé ?"],["immoProg","Programmation antidémarrage"],["rcProg","Programmation télécommande"],["precode","Précodage puce nécessaire ?"],["immoRead","Lecture données immo ?"],
   ["lishi","Lishi"],["tool","Matériel utilisé"],
-  ["type","Type de clé"],["btn","Boutons"],["freq","Fréquence"],["batt","Batterie"],["start","Démarrage"],["gw","Présence gateway"],["obd","Prise OBD"]];
-const VH_SPEC_GROUPS=[["Clé",["chip","blade","ml","clone","immo","vin"]],["Programmation",["pinRead","pinLen","akl","add","immoProg","rcProg","precode","immoRead"]],["Outils & accès",["lishi","tool"]],["Autres spécifications",["type","btn","freq","batt","start","gw"]]];
+  ["type","Type de clé"],["freq","Fréquence"],["batt","Batterie"],["gw","Présence gateway"],["obd","Prise OBD"]];
+const VH_SPEC_GROUPS=[["Clé",["chip","blade","ml","clone","immo"]],["Programmation",["pinRead","pinLen","akl","add","immoProg","rcProg","precode","immoRead"]],["Outils & accès",["lishi","tool"]],["Autres spécifications",["type","freq","batt","gw"]]];
 const VH_SUGG={ml:"yn",clone:"yn",precode:"yn",gw:"yn",immoRead:"yn",pinRead:"obd",akl:"obd",immoProg:"obd",rcProg:"obd",add:"add",tool:"tool",pinLen:"pin"};
 {const L={yn:["OUI","NON"],obd:["OUI PAR OBD","OUI SUR TABLE (BANC)","OUI","NON"],add:["OUI PAR OBD","NON, TOUTES LES CLÉS DOIVENT ÊTRE REPROGRAMMÉES","NON"],tool:["AUTEL","ZED-FULL","AUTEL + ZED-FULL"],pin:["4","5","6"]};
   for(const k in L){const d=document.createElement("datalist");d.id="dl_"+k;L[k].forEach(v=>{const o=document.createElement("option");o.value=v;d.append(o)});document.body.append(d)}}
@@ -4245,7 +4245,7 @@ function vFiche(g){
     try{await db.doc("vehicles/"+g.id).update({cs:[...(g.cs||[]),{id,title:"Nouvelle rubrique",text:"",grp:"cle"}]})}catch(e){toast("Modification refusée");return}
     vsLater(g.id,id,true)};
   out.push(...grp("Véhicule",[
-    tile("specs","directions_car","Spécifications",[s.type,s.btn&&s.btn+" boutons",s.freq].filter(Boolean).join(" · "),has("specs"),"a"),
+    tile("specs","directions_car","Spécifications",[s.type,s.freq].filter(Boolean).join(" · "),has("specs"),"a"),
     tile("obd","plug","Prise OBD",s.obd||"",has("obd"),"a"),
     tile("ecu","chip","Calculateur",[(t.ecuRefs||"").split("\n").filter(Boolean).length?(t.ecuRefs||"").split("\n").filter(Boolean).length+" réf.":"",(t.ecuLoc||"").split("\n")[0].slice(0,50)].filter(Boolean).join(" · "),has("ecu"),"a"),
     tile("boxes","box","Autres boîtiers",(()=>{const L=(t.boxes||"").split("\n").map(x=>x.trim()).filter(Boolean);return L.length?L.map(x=>x.split(/\s*[:–-]\s*/)[0]).join(" · ").slice(0,60):""})(),has("boxes"),"a"),...cg("spec")]));
