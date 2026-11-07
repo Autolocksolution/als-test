@@ -1,0 +1,74 @@
+[
+  {
+    "id": "c-corsa-f-4a-akl-attente-warnings",
+    "title": "Opel Corsa F 2022 (4A) toutes clés perdues : attendre la fin des warnings avant de programmer",
+    "url": "https://obdii365.blogspot.com/2024/06/tips-to-program-opel-corsa-mokka-4a-key.html",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur une Corsa F 2022 à puce 4A sans aucune clé, une clé adaptable et une télécommande Xhorse ont d'abord échoué. La solution : mettre le contact et le laisser environ 30 minutes jusqu'à ce que les feux de détresse arrêtent de clignoter, puis programmer la clé Xhorse. Des utilisateurs confirment la réussite avec les clés Xhorse MQB ou PSA 4A sur Crossland 2020 et Grandland X. Piège : ne pas choisir une clé mains libres si la voiture n'a pas le système mains libres.",
+    "date": "2024-06-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  },
+  {
+    "id": "c-juke-f16-autel-bcm-40-pins",
+    "title": "Nissan Juke F16 (2019+) : clé mains libres avec Autel et le câble BCM 40 broches",
+    "url": "https://auro-otosys.blogspot.com/2025/02/what-tool-to-program-2021-nissan-juke.html",
+    "source": "Auro OtoSys",
+    "kind": "web",
+    "summary": "Sur le Juke F16 (exemple d'un modèle 2023), l'ajout de clé mains libres passe par l'Autel IM508/IM608 branché directement sur le BCM avec le câble 40 broches, pas par l'OBD. Si l'outil demande le PIN, on le calcule en lisant le dump du HFM avec l'adaptateur APB131. Par contre, les versions à clé à lame n'ont pas abouti : l'outil réclame un PIN puis un code tournant même avec le câble 40 broches.",
+    "date": "2025-02-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  },
+  {
+    "id": "c-yaris-2024-akl-xhorse-xd8askgl",
+    "title": "Toyota Yaris 2024 toutes clés mains libres perdues : Key Tool Plus et adaptateur XD8ASKGL",
+    "url": "https://vvdikeytoolpluspad.blogspot.com/2026/01/vvdi-key-tool-plus-program-toyota-yaris.html",
+    "source": "VVDI Key Tool Plus Pad (blog)",
+    "kind": "web",
+    "summary": "Sur une Yaris 2024 sans clé, le boîtier smart est lu avec l'adaptateur Toyota XD8ASKGL branché selon le schéma affiché par le Key Tool Plus. L'outil fait un calcul en ligne (connexion Internet obligatoire), sauvegarde l'EEPROM, puis écrit une clé Xhorse XM38. Le menu indiqué est « Type 5 (4A 2019-2022) » malgré l'année 2024 : vérifier le type proposé. La méthode ne concerne que les versions mains libres.",
+    "date": "2026-01-28",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  },
+  {
+    "id": "c-3008-2016-ktp-4a-smart",
+    "title": "Peugeot 3008 2016+ mains libres (4A) : mot de passe et ajout de clé avec Xhorse Key Tool Plus",
+    "url": "https://vvdikeytoolpluspad.blogspot.com/2024/05/xhorse-vvdi-key-tool-plus-add-2019.html",
+    "source": "VVDI Key Tool Plus Pad (blog)",
+    "kind": "web",
+    "summary": "Sur un 3008 2019, la télécommande XM38 ou XZPG00EN est générée en « 3008 (2016+) Remote FSK ID4A », puis le mot de passe immo est lu par l'OBD (Type 3 CAN), en coupant et remettant le contact jusqu'à obtenir le code. Ensuite : warnings allumés, saisie du mot de passe, et chaque clé posée sur la zone de lecture (boîte à gants ou repère près du volant), une clé qui marche en premier s'il y en a une. Si la télécommande ne répond pas, faire la séquence contact 3 s + LOCK 5 s, voire laisser la clé 30 minutes près de la bobine portes fermées. Brancher un maintien de batterie.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  },
+  {
+    "id": "c-mqb49-akl-bloque-1-1-batterie",
+    "title": "VW MQB49 5C toutes clés perdues : bloqué sur « 1-1 », débrancher la batterie 10 minutes",
+    "url": "https://obdexpresscouk.blogspot.com/2026/05/solved-keydiy-kd-x4-vw-mqb49-5c-stuck.html",
+    "source": "OBDexpress · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur une VW Jetta 2021 (MQB49 5C) en toutes clés perdues avec une clé concession précodée, le KeyDiy KD-X4 ou le Yanhua ACDP2 passe en apprentissage mais reste figé sur « 1-1 » et la voiture ne démarre pas, malgré un booster et sans SFD. L'utilisateur a réglé le problème en débranchant la borne négative de la batterie 10 minutes, puis en refaisant la programmation. C'est un seul retour, non vérifié ailleurs.",
+    "date": "2026-05-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  },
+  {
+    "id": "c-home-jacking-nantes-2026",
+    "title": "Home-jacking : un réseau démantelé en Loire-Atlantique (60 voitures volées en prenant les clés)",
+    "url": "https://www.gendarmerie.interieur.gouv.fr/gendinfo/criminalite-organisee-et-enquetes/2026/demantelement-d-une-structure-criminelle-alimentant-la-criminalite-organisee-en-vehicules-voles",
+    "source": "Gendinfo (Gendarmerie nationale)",
+    "kind": "web",
+    "summary": "Le 16 juin 2026, la section de recherches de Nantes a arrêté le commanditaire présumé d'un réseau de vols par home-jacking : les voleurs entraient la nuit dans les maisons pour prendre les clés. 18 personnes sont mises en cause pour une soixantaine de voitures volées, environ 2 millions d'euros de préjudice. La gendarmerie note une forte hausse de ces vols dans la région depuis l'été 2025 ; les voitures étaient remises en circulation pour d'autres délits.",
+    "date": "2026-06-25",
+    "state": "new",
+    "by": "claude",
+    "at": 1794031829575
+  }
+]
