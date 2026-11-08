@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-n6zxzXJkWmMlX5atHr85dKJdPPd1gjtPZ1rKPiF1qyQ=' 'sha256-Kv0V0/g95yUQwRvQw2fD07hsS04WJGMwObmEd0w1mcU=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-eftNUsYbYDYwLtdB+rkGUlowDU0Lh17AZCcEjSAWQNY=' 'sha256-ZiyhAT539HCM5iNwUA5Blr6t7nUMhTQFSdCqDTvFSpM=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -397,6 +397,7 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .tkbtn:active{background:var(--today)}
 .chk{border-color:var(--warn)!important;background:var(--warn-bg)!important}
 .tkwarn{font-size:13px;color:var(--warn);background:var(--warn-bg);border-radius:10px;padding:8px 10px;margin:0 0 12px}
+.dupw{display:flex;flex-direction:column;gap:4px;background:var(--out-bg);color:var(--ink);border:1px solid var(--out);border-radius:12px;padding:10px 12px;margin:4px 0 10px;font-size:15px}.dupw b{color:var(--out)}.dupw .dupl{font-weight:600}
 .tkrow{display:flex;align-items:center;gap:10px;margin:0 0 12px}
 .phgrid{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}.phgrid:empty{display:none}.pht{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--tint)}.pht img{width:100%;height:100%;object-fit:cover;display:block}.pht button.x{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:12px;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.phhint{font-size:13px;color:var(--muted);margin:4px 0 0}
 .hph{display:flex;gap:6px;margin-top:6px;overflow-x:auto}.hph span{flex:0 0 auto;width:52px;height:52px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--tint)}.hph img{width:100%;height:100%;object-fit:cover;display:block}
@@ -947,6 +948,7 @@ main{padding-top:10px}
     <div class="f" id="cgV" hidden><label for="cVat">dont TVA (€, facultatif)</label><input id="cVat" inputmode="decimal" placeholder="0,00"></div>
     <div class="f"><span class="lab">Moyen de paiement</span><div class="seg seg4" id="cPaySeg"><button type="button" data-v="carte" aria-pressed="true">Carte</button><button type="button" data-v="especes" aria-pressed="false">Espèces</button><button type="button" data-v="virement" aria-pressed="false">Virement</button><button type="button" data-v="mixte" aria-pressed="false">Mixte</button></div></div>
     <div class="f" id="cCashW" hidden><label for="cCash">Dont espèces (€) — le reste en carte</label><input id="cCash" inputmode="decimal" placeholder="0,00"><span class="hint" id="cCashH" style="margin:2px 0 0"></span></div>
+    <div class="dupw" id="cDupW" role="alert" hidden></div>
     <div class="acts">
       <button type="button" class="btn del" id="cDel" hidden>Supprimer</button>
       <button type="button" class="btn" id="cCancel">Annuler</button>
@@ -1862,7 +1864,7 @@ function cPayUi(){
   if(show){const t=parseNum($("cAmt").value),c=parseNum($("cCash").value);$("cCashH").textContent=t>0&&c>=0&&c<=t?"Carte : "+money(Math.round((t-c)*100))+" · espèces : "+money(Math.round(c*100)):"Indiquez la part payée en espèces."}
 }
 function cMulUi(){const b=parseNum($("cAmt").value);$("cMulHint").textContent=cMul>1?(b>0?"Total enregistré : "+money(Math.round(b*cMul*100))+" ("+cMul+" × "+money(Math.round(b*100))+")":"Le montant saisi sera compté "+cMul+" fois."):"Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois."}
-let cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
+let cDupKey="",cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
 function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
 const sum=list=>list.reduce((a,e)=>a+cents(e),0)
@@ -2171,7 +2173,7 @@ function cPrefill(p){
 function cOpen(e,date,prefill){
   if(!canWrite&&!e)return;
   if(refreshToday())render();
-  cEditing=e||null;cDelArmed=false;
+  cEditing=e||null;cDelArmed=false;cDupKey="";{const w=$("cDupW");if(w)w.hidden=true;$("cSave").textContent="Enregistrer"}
   const rec=(e?e.kind:cTab)==="recette";
   $("cTitle").textContent=(e?"Modifier — ":"")+(rec?"Véhicule":"Dépense");
   $("cgR").hidden=!rec;$("cgD").hidden=rec;$("cgM").hidden=rec;
@@ -2284,6 +2286,19 @@ $("cForm").addEventListener("submit",async ev=>{
   if(!(amount>=0)||!$("cDate").value){toast("Vérifiez la date et le montant");return}
   if(cPay==="mixte"&&kind==="recette"){const c=parseNum($("cCash").value);if(!(c>=0&&c<=amount)){toast("Indiquez la part en espèces (entre 0 et le tarif)");return}}
   const data={kind,date:$("cDate").value,amount,pay:kind!=="recette"&&cPay==="mixte"?"carte":cPay,by:uid,at:Date.now()};
+  /* dépense déjà saisie ? même jour et même montant (à l'euro près) : on prévient, 2e appui = enregistrer quand même */
+  if(!cEditing&&kind==="depense"){
+    const k=data.date+"|"+amount;
+    const dup=entries.filter(e=>e.kind==="depense"&&e.date===data.date&&Math.abs((Number(e.amount)||0)-amount)<=1);
+    const PEAGE=/p[ée]age|autoroute|vinci|aprr|sanef|asf\b|escota|cofiroute/i;
+    const peage=PEAGE.test(data.label||"")||dup.some(e=>PEAGE.test(e.label||""));
+    if(dup.length&&cDupKey!==k){cDupKey=k;
+      const w=$("cDupW");w.replaceChildren(h("b",null,"⚠ Déjà saisie ?"),h("span",null," Il y a déjà "+(dup.length>1?dup.length+" dépenses":"une dépense")+" le "+data.date.split("-").reverse().join("/")+" pour ce montant : "),
+        ...dup.slice(0,3).map(e=>h("span",{class:"dupl"},(e.label||(e.cat==="essence"?"Essence":"Dépense"))+" · "+eur.format(Number(e.amount)||0))),
+        h("span",null,peage?"Aller-retour ? Deux péages du même montant le même jour, c'est normal : appuie sur « C'est le retour, enregistrer ». Si c'est le même ticket pris deux fois, annule.":"Si c'est bien un autre achat, appuie encore sur « Enregistrer quand même ». Sinon, annule."));
+      w.hidden=false;$("cSave").textContent=peage?"C'est le retour, enregistrer":"Enregistrer quand même";w.scrollIntoView({block:"nearest",behavior:"smooth"});
+      return}
+  }
   if(kind==="recette"){data.cash=cPay==="mixte"?Math.round(parseNum($("cCash").value)*100)/100:null;data.type=cType||"";
     {const ids=await rcPics.save();data.photoIds=ids;data.photoId=ids[0]||null}}
   if(kind==="recette"){data.model=$("cModel").value.trim();data.year=$("cYear").value.trim();data.city=$("cCity").value.trim();data.brand=$("cBrand").value||inferBrand($("cModel").value)||"";data.note=$("cNote").value.trim();data.fay=$("cFay").checked||FAYRE.test(data.note);data.saveAll=$("cSaveAll").checked;if(data.saveAll){data.aside=true;data.asideAt=(cEditing&&cEditing.asideAt)||Date.now()}else if(cEditing&&cEditing.saveAll){data.aside=false;data.asideAt=null}data.status=cSt;data.addr=$("cAddr").value.trim();{const k=parseNum($("cKm").value);data.km1=k>0?Math.round(k*10)/10:null;data.rt=$("cRT").checked;if(data.km1){const c=tripCalc(data.km1,data.rt);data.tripKm=Math.round(c.km*10)/10;data.tripCost=c.cost}else{data.tripKm=null;data.tripCost=null}}data.time=$("cTime").value||"";data.plate=$("cPlate").value.trim().toUpperCase();data.pin=$("cPin").value.trim();data.keycode=$("cKeyCode").value.trim();data.idOk=$("cIdOk").checked;data.cgOk=$("cCgOk").checked;data.ctrlAt=(data.idOk||data.cgOk)?((cEditing&&cEditing.ctrlAt)||Date.now()):null;{const cid=$("cClient").value;data.clientId=cid&&cid!=="__new"?cid:"";const cc=clientById(data.clientId);data.clientName=cc?cc.name||"":"";const cv=$("cCost").value.trim(),cn=parseNum(cv);data.cost=cv===""||!(cn>=0)?null:Math.round(cn*100)/100}if(cSt!=="prevu")data.doneAt=(cEditing&&cEditing.doneAt)||Date.now()}
@@ -4663,7 +4678,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261105-2048";
+const ALS_BUILD="20261108-1605";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
