@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c-autel-vag-immo-v290",
+    "title": "Autel IM508S/IM608 II : VAG IMMO V2.90 (MQB48, MQB 5C, modification d'ID de clé)",
+    "url": "http://blog.obdii365.com/2026/10/27/autel-im608-update-vag-mqb48-mqb49-5c-key-id-modification-function/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "La mise à jour VAG IMMO V2.90 d'octobre 2026 pour Autel IM508S et IM608 II ajoute un mode toutes clés perdues pour les compteurs MQB et la modification de l'ID de clé pour les transpondeurs ID48 (IMMO IV), les compteurs MQB48 et les clés MQB 5C. Elle ajoute aussi la génération de clé universelle, le clonage de clé MQB48 avec la puce AT100 et le remplacement de boîte de vitesses sur MQB. La fonction « clé concession » est améliorée avec sauvegarde et rechargement des données de synchronisation.",
+    "date": "2026-10-27",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-berlingo-2023-ajout-cle-lonsdor",
+    "title": "Citroën Berlingo 2023 : ajout de clé en 5 minutes avec le Lonsdor K518 Pro",
+    "url": "https://www.youtube.com/watch?v=tTrMUcaHugI",
+    "source": "Autowave (YouTube)",
+    "kind": "video",
+    "summary": "Avec une clé qui marche, le K518 Pro lit le code PIN par l'OBD (menu Berlingo 2018-2023, clé mécanique) : couper le contact, attendre 5 secondes et remettre le contact, sans la séquence off/on répétée des anciennes Citroën. Il lit aussi le numéro de BSI, puis on programme la clé d'origine et la nouvelle (Autel AUTRK0202), en coupant et remettant le contact dans les 15 secondes demandées. Si la télécommande ne se synchronise pas, mettre le contact et rester appuyé sur un bouton. Les deux clés démarrent.",
+    "date": "2026-09-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-captur2-g3-passerelle-pieges",
+    "title": "Renault Captur II 2020 : ajout de carte mains libres avec l'OBDSTAR G3 par la passerelle",
+    "url": "https://obdstar.blogspot.com/2025/06/obdstar-g3-adds-2020-renault-captur-ii.html",
+    "source": "OBDSTAR (blog)",
+    "kind": "web",
+    "summary": "Sur ce Captur II, la passerelle était derrière l'écran multimédia et non sous la planche de bord comme l'indique la notice : il faut démonter la boîte à gants et desserrer l'écran pour brancher l'adaptateur Nissan/Renault 16+32 broches, avec une alimentation externe. Le G3 calcule le PIN de 28 chiffres (environ 6 minutes) puis crée la clé, posée dans la zone de détection près du porte-gobelet. Pièges : en cas d'échec, relancer « Add key (free pincode) » ; un mauvais PIN peut laisser le boîtier HFM vierge (récupérable seulement en concession) ; tester chaque clé une par une car le nombre affiché peut être faux.",
+    "date": "2025-06-23",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-abrites-renault-dacia-licences",
+    "title": "Abrites Renault et Dacia : quelle licence pour quel modèle (RR018 à RR027)",
+    "url": "https://abrites.com/blog/the-key-to-a-working-solution-abrites-diagnostics-for-renault-and-dacia-key-set",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Abrites récapitule ses licences clés Renault/Dacia : RR018 (toutes clés perdues et ajout, Clio IV, Mégane III/IV, Talisman, anciens Logan/Sandero/Duster), RR019 (Twingo III, Duster Ph3 UCH Johnson Controls, Spring), RR021 (Master III, Kangoo II 2016+), RR022 (ajout de clé par OBD sur Clio V, Captur II, Arkana), RR026 (toutes clés perdues Clio V/Captur II par lecture du RH850, programmateur ZN085 requis) et RR027 (Logan III, Sandero III, Jogger à clé mécanique). Sur Clio V, toutes clés perdues impose d'ouvrir le boîtier mains libres pour lire le processeur. Vérifier le calculateur exact avant de choisir la licence, car plusieurs modèles apparaissent dans plusieurs licences.",
+    "date": "2025-02-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-vw-j519-akl-1776-livres",
+    "title": "VW, Seat, Skoda, Cupra récents : toutes clés perdues facturé près de 2 000 £ en concession",
+    "url": "https://www.youtube.com/watch?v=qSatxeuq964",
+    "source": "Scottish Car Clan (YouTube)",
+    "kind": "video",
+    "summary": "L'auteur a demandé un devis à VW pour un cas toutes clés perdues, voiture fermée et alarme active : 480 £ pour le jeu de serrures et clés, 200 £ de main-d'œuvre et environ 800 £ pour un boîtier BCM J519 neuf, soit environ 1 776 £. Selon la concession et un bulletin VW cité, la clé ne peut pas toujours être appairée à l'électronique existante et le J519 doit être remplacé sur certains modèles. Un serrurier auto de ses connaissances dit être très sollicité pour ces clés.",
+    "date": "2026-10-22",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-fiesta-mk8-keyless-batterie-faible",
+    "title": "Ford Fiesta Mk8 : clés mains libres qui n'ouvrent plus après une batterie à plat",
+    "url": "https://www.fordownersclub.com/forums/topic/141429-mk8-keyless-entry-fobs-dont-lockunlock-car-after-main-battery-went-flat-yet-key-presence-is-acknowledged-and-car-starts/",
+    "source": "Ford Owners Club · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Sur une Fiesta Mk8 2017 Titanium, après une batterie à plat, les deux télécommandes n'ouvraient ni ne fermaient plus la voiture, alors qu'elle démarrait. Un membre explique que la voiture coupe les fonctions mains libres quand la batterie est chargée à 70 % ou moins : recharger à 80-95 % puis rouler 15 minutes. Le propriétaire a roulé puis refait la procédure de réinitialisation avec les clés dans le vide-poche devant le levier de vitesses, et tout a refonctionné. Ne pas réinitialiser le capteur de batterie sauf après pose d'une batterie neuve.",
+    "date": "2023-01-01",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-yaris-d4d-id70-433",
+    "title": "Toyota Yaris 1.4 D-4D : vérifier puce ID70 et fréquence 433 MHz avant de commander la clé",
+    "url": "https://www.youtube.com/watch?v=9y0R7QoVEeM",
+    "source": "Sk Automobile Performance (YouTube)",
+    "kind": "video",
+    "summary": "Avec l'Autel IM608 et le XP400 Pro, le technicien lit la clé d'une Yaris 1.4 D-4D : transpondeur ID70 (DST 4D), clonable. Il détecte aussi la fréquence de la télécommande (433 MHz, environ 433,81) pour commander la bonne clé. La fréquence doit être identique, sinon le verrouillage et le déverrouillage ne fonctionneront pas.",
+    "date": "2026-10-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  },
+  {
+    "id": "c-adac-keyless-85-pourcent",
+    "title": "Vol keyless : 85 % de plus de 800 voitures testées par l'ADAC ouvertes par relais",
+    "url": "https://www.helpnetsecurity.com/2026/06/05/keyless-car-theft-protection/",
+    "source": "Help Net Security",
+    "kind": "web",
+    "summary": "Les tests de l'ADAC sur plus de 800 modèles keyless montrent qu'environ 15 % seulement sont bien protégés ; les autres peuvent être ouverts et démarrés avec un matériel d'extension de signal bon marché. Aux Pays-Bas, le keyless a servi pour 59 % des voitures volées en 2025. L'article rappelle aussi les vols par programmation de clé via la prise OBD et par clonage, et conseille pochette anti-ondes, verrou de prise OBD, antidémarrage logiciel et canne antivol.",
+    "date": "2026-06-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1794118289751
+  }
+]
