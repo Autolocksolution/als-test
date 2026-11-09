@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-clio4-2018-akl-hfm-vierge",
+    "title": "Clio 4 2018 toutes cartes perdues avec HFM vidé : la solution par clonage d'un autre HFM",
+    "url": "http://www.key-programmer.org/2026/06/11/renault-clio-4-2018-all-keys-lost-hfm-blank-solution/",
+    "source": "Car Key Programmer Blog · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur une Clio 4 de 2018 toutes cartes perdues, une tentative d'ajout de carte a laissé le HFM vierge, sans code PIN récupérable. L'utilisateur a lu sur table le HFM (Dflash et Pflash) d'une autre Clio 4 (Autel IM608 avec XP400 Pro ou OBDSTAR G3), écrit ces fichiers dans son HFM, puis virginisé le calculateur moteur et la direction assistée, posé un émulateur de verrou de colonne (ESCL) et réappairé tous les éléments au diag : la voiture redémarre. Autre piste citée : en concession, dire que la panne vient d'une batterie vide permet parfois de faire reflasher le module au lieu d'acheter un HFM neuf.",
+    "date": "2026-06-11",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-abrites-fn024-fiat-500x-panda",
+    "title": "Abrites FN024 : clés Fiat 500X, 500e et Panda 2025 par lecture du RH850",
+    "url": "https://abrites.com/partial/fn024",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "La licence FN024 permet de lire le code PIN et de programmer clés et télécommandes de type Atmel sur les véhicules FCA, à partir d'un dump du RH850. Modèles cités : Fiat 500X, 500e, Panda 2025 (clés mécaniques Megamos AES), Alfa Romeo Tonale, Giulia, Stelvio et Jeep Renegade. Méthode : lire le dump avec le programmateur ZN085, préparer la clé TA70 avec le Protag, puis l'apprendre via Abrites Diagnostics for FCA. Il faut aussi le câble CB012 et un AVDI avec abonnement annuel actif ; la licence coûte 500 € HT.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-berlingo-2009-cles-perdues-immobilisation",
+    "title": "Citroën Berlingo 2009 qui ne démarre plus après un an à l'arrêt : clés reprogrammées avec Lonsdor K518",
+    "url": "https://www.youtube.com/watch?v=GFJK1pC9HTk",
+    "source": "Dr Lock (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Un Berlingo 2 de 2009 (1.6 essence, clés ID46 sans télécommande) resté un an à l'arrêt tournait sans démarrer et sans pression d'essence. Avec le Lonsdor K518, le code PIN a été lu par l'OBD avec le « type 4 », mais la programmation n'a marché qu'avec le « type 1 » ; il faut couper puis remettre le contact dans les 15 secondes à chaque étape. Après programmation des deux clés, la pompe a redonné de la pression et le moteur est reparti : l'antidémarrage bloquait la pompe à essence.",
+    "date": "2019-01-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-transit-custom-2016-akl-abrites",
+    "title": "Ford Transit Custom 2016 toutes clés perdues : 5 minutes par l'OBD avec Abrites FR008",
+    "url": "https://www.youtube.com/watch?v=Vj1OIUdS6Cw",
+    "source": "AVDI FAN (YouTube) · retour d'utilisateur",
+    "kind": "video",
+    "summary": "Un Transit Custom 2016 à clés mécaniques arrive sans aucune clé. Avec l'AVDI et la fonction FR008 (Ford/Mazda), la procédure prend moins de 5 minutes avec deux clés vierges. La programmation Ford demande une connexion internet, donc un abonnement AMS actif, et l'immobiliseur exige au moins deux clés en mémoire. L'auteur conseille d'effacer toutes les anciennes clés quand elles sont perdues.",
+    "date": "2020-10-01",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-vito-w639-akl-eis-vvdi-mb",
+    "title": "Mercedes Vito W639 2008 toutes clés perdues : EIS lu sur table avec VVDI Prog et VVDI MB",
+    "url": "https://xhorse-vvdi.blogspot.com/2026/01/program-mercedes-vito-w639-all-keys.html",
+    "source": "Xhorse VVDI blog",
+    "kind": "web",
+    "summary": "Sur un Vito W639 de 2008 sans clé, la porte a été ouverte au crochet, la serrure décodée (positions 1, 2, 3 et 5) et une lame taillée. L'EIS (Neiman électronique) a été déposé par le vide-poche, puis lu sur table avec le VVDI Prog et l'adaptateur HC08. Le fichier a été chargé dans la fonction « Prepare Key File » du VVDI MB, qui a écrit la position 8 sur une clé vierge. Après remontage de l'EIS, le Vito a démarré tout de suite, sans passer par le diagnostic.",
+    "date": "2026-01-15",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-silca-ads2287-renault-dacia",
+    "title": "Silca ADS2287 (Smart Pro) : la liste Renault et Dacia, toutes clés perdues sans PIN",
+    "url": "https://www.lsc.com.au/Documents/Update_ADS2287_Renault_11_2025_EN.pdf",
+    "source": "Silca / Advanced Diagnostics (fiche ADS2287)",
+    "kind": "web",
+    "summary": "Le logiciel ADS2287 de novembre 2025 pour Smart Pro programme télécommande et transpondeur en même temps, sans code PIN, souvent même toutes clés perdues, en 3 à 4 minutes. Il peut aussi récupérer un UCH dont les données sont corrompues. La liste couvre notamment Clio 2015-2020 et Captur 2015-2019 (cartes), Mégane et Scénic 2016+, Kadjar, Trafic 2014-2024, Twingo 2014-2019, Logan 2014-2020, Sandero 2017-2019 et Duster 2018-2022, avec le câble ADC2000 (ADC2000+ et ADC2020 ou ADC2017 sur certains Trafic). Toutes les clés et télécommandes doivent être effacées avant d'en programmer de nouvelles.",
+    "date": "2025-11-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-206-ph1-synchro-telecommande-id45",
+    "title": "Peugeot 206 phase 1 (1998-2002) et 406 : synchroniser la télécommande et faire un double ID45",
+    "url": "https://www.youtube.com/watch?v=Q0nf8jEGcDA",
+    "source": "A2CLEPLIP2000 (YouTube)",
+    "kind": "video",
+    "summary": "La vidéo montre la séquence de resynchronisation après un changement de pile : contact coupé, maintenir le bouton jusqu'à ce que le voyant arrête de clignoter, appuyer deux fois sur le bouton près de la voiture, puis mettre le contact au moins 3 secondes et le couper. Pour faire un double, il faut le code PIN, lisible directement sur la clé d'origine avec un lecteur (ici un mini Zed-Bull qui la reconnaît comme une crypto 45), et un transpondeur PCF7935 (ID45). La programmation se fait ensuite avec un SBB ou un OBDSTAR.",
+    "date": "2020-09-30",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-keydiy-kdx4-bmw-fem-licence",
+    "title": "KeyDiy KD-X4 : clés BMW FEM, BDC et série G soumises à une licence payante et une vérification d'identité",
+    "url": "https://obdexpresscouk.blogspot.com/2025/11/keydiy-kd-x4-bypass-bmw-fem-bdc.html",
+    "source": "OBDexpress blog",
+    "kind": "web",
+    "summary": "Sur le KD-X4, l'ajout de clé BMW série G et FEM/BDC/BDC2/BDC3 affiche le message « BMW G/BMW FEM match function need user authentication ». Pour débloquer, il faut acheter la licence BMW G/FEM dans l'appli KD (5 000 KD coins, environ 100 dollars) puis faire la vérification sous Me > Verification. Elle demande les coordonnées, le nom et l'adresse de l'entreprise, une pièce d'identité et les documents de l'entreprise. Une fois validée, la programmation se lance normalement.",
+    "date": "2025-11-04",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  },
+  {
+    "id": "c-micra-k14-akl-abrites-nn007",
+    "title": "Nissan Micra K14 : clés mains libres et à lame, même toutes clés perdues, par l'OBD (Abrites NN007)",
+    "url": "https://abrites.com/news/abrites-key-programming-for-nissan-micra-k14-and-nissan-kicks",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Abrites programme les clés mains libres et mécaniques de la Micra K14 et du Kicks entièrement par l'OBD, pour un ajout de clé comme pour toutes clés perdues. Il n'y a pas besoin de code PIN : la fonction calcule le PIN à 20 chiffres à partir du pré-PIN à 22 chiffres. Il faut la fonction spéciale NN007 et un abonnement annuel (AMS) actif.",
+    "date": "2020-12-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1794204615209
+  }
+]
