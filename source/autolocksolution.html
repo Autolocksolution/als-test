@@ -79,6 +79,9 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .list{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
 .it{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;align-items:stretch;gap:2px}
+.lw-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 4px 4px;list-style:none}
+.lw-h b{font-size:15px;font-weight:700}.lw-h span{font-size:12.5px;color:var(--muted)}
+.it.lw .it-main{padding:8px 4px 8px 14px}.it.lw .it-name{font-size:16px}.it.lw .left{padding:4px 14px 4px 4px;min-width:60px}.it.lw .left output{font-size:24px}.it.lw .left small{font-size:10px}
 .thumb{flex:0 0 72px;margin:10px 0 10px 10px;width:72px;height:72px;border-radius:8px;border:1px solid var(--line);background:var(--tint);padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted)}
 .thumb{position:relative}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
@@ -1519,7 +1522,9 @@ function sUrgent(){
   const list=$("list");
   if(!loaded){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Chargement du stock…"),"Synchronisation avec votre associé."));return}
   if(!low.length){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Rien d'urgent"),"Toutes les pièces sont au-dessus de leur seuil d'alerte."));return}
-  list.replaceChildren(...low.map(i=>{
+  const fam=i=>{const c=CATS.find(x=>x.id===i.section)||{label:"",groups:[]},g=c.groups.find(x=>x.id===i.group);return [c.label,c.groups.length>1&&g&&g.label].filter(Boolean).join(" · ")||"Autres"};
+  const fams=[];low.forEach(i=>{const f=fam(i);let F=fams.find(x=>x.f===f);if(!F)fams.push(F={f,l:[]});F.l.push(i)});
+  list.replaceChildren(...fams.flatMap(F=>[h("li",{class:"lw-h"},h("b",null,F.f),h("span",null,F.l.length+" réf. · "+F.l.filter(i=>i.qty===0).length+" en rupture")),...F.l.map(i=>{
     const cat=CATS.find(c=>c.id===i.section)||{label:"",groups:[]};
     const g=cat.groups.find(x=>x.id===i.group);
     const solo=cat.groups.length===1;
@@ -1527,12 +1532,12 @@ function sUrgent(){
     const nm=cat.fixed&&i.series?((!solo&&g)?g.label+" ":"")+i.series:(i.name||"Sans nom");
     const thumb=h("button",{class:"thumb",type:"button","aria-label":hasPhoto(i)?"Agrandir la photo":"Modifier",onclick:()=>pickPhoto(i)});
     if(hasPhoto(i))thumb.append(photoImg(i));else thumb.innerHTML=KEY_SVG+(canWrite?'<span class="plusbadge">+</span>':'');
-    return h("li",{class:"it"},thumb,
-      h("button",{class:"it-main",onclick:()=>i.virtual?gotoGroup(i):sOpen(i),"aria-label":"Ouvrir "+nm},
+    const thr=thrOf(i),ord=onOrder(i.id);
+    return h("li",{class:"it lw"},
+      h("button",{class:"it-main",onclick:()=>i.virtual?gotoGroup(i):sOpen(i),"aria-label":"Ouvrir "+nm+" ("+path+")"},
         h("div",{class:"it-name"},nm),
-        i.ref?h("div",{class:"it-meta"},h("span",{class:"ref"},i.ref)):null,
-        h("div",{class:"it-foot"},h("span",{class:"badge path"},path),Array.isArray(i.also)&&i.also.length?h("span",{class:"badge link"},"Aussi : "+[i.group,...i.also].filter(x=>x!==sGroup||needle).map(grpLabel).join(", ")):null,onOrder(i.id)?h("span",{class:"badge low"},"Commandé ×"+onOrder(i.id)):null)),
-      h("div",{class:"left"},h("small",null,i.qty===0?"Rupture":"Reste"),h("output",{class:i.qty===0?"z":""},String(i.qty))))}));
+        (i.ref||thr!==LOW||ord)?h("div",{class:"it-meta"},i.ref?h("span",{class:"ref"},i.ref):null,thr!==LOW?h("span",null,"seuil "+thr):null,ord?h("span",{class:"badge low"},"Commandé ×"+ord):null):null),
+      h("div",{class:"left"},h("small",null,i.qty===0?"Rupture":"Reste"),h("output",{class:i.qty===0?"z":""},String(i.qty))))})]));
 }
 $("q").addEventListener("input",e=>{q=e.target.value;sRender()});
 $("lowBtn").addEventListener("click",()=>{lowOnly=!lowOnly;sRender()});
@@ -1763,6 +1768,10 @@ let cWho=(()=>{try{return localStorage.getItem("als-cwho")||"tous"}catch(x){retu
 const whoOk=e=>cWho==="tous"||(cWho==="fayss"?isFay(e):!isFay(e));
 const whoChips=()=>h("div",{class:"chips",role:"group","aria-label":"Qui a encaissé"},...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss (sa boîte)"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)));
 /* filtre mode de paiement des recettes : tout, espèces seulement, carte/virement seulement */
+/* Comptes : qui + paiement sur une seule ligne (Espèces / Carte se désactivent en touchant à nouveau) */
+const cFilRow=()=>h("div",{class:"chips",style:"gap:5px",role:"group","aria-label":"Filtres"},
+  ...[["tous","Tout"],["moi","Sans Fayss"],["fayss","Fayss"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px;padding:0 10px","aria-pressed":String(cWho===v),onclick:()=>{cWho=v;try{localStorage.setItem("als-cwho",v)}catch(x){}cScroll=true;render()}},l)),
+  ...[["especes","Espèces"],["carte","Carte"]].map(([v,l])=>h("button",{class:"chip",type:"button",style:"min-height:34px;padding:0 10px","aria-pressed":String(cPayF===v),onclick:()=>{cPayF=cPayF===v?"tout":v;try{localStorage.setItem("als-cpay",cPayF)}catch(x){}cScroll=true;render()}},l)));
 let cPayF=(()=>{try{return localStorage.getItem("als-cpay")||"tout"}catch(x){return "tout"}})();
 const payOk=e=>cPayF==="tout"||(cPayF==="especes"?cashC(e)>0:bankC(e)>0);
 const payAmt=e=>cPayF==="especes"?cashC(e):cPayF==="carte"?bankC(e):cents(e);
@@ -1924,10 +1933,12 @@ function cJournal(inYear){
   const valid=mine.filter(counts);
   const out=[],tot=cTab==="recette"&&cPayF!=="tout"?valid.reduce((x,e)=>x+payAmt(e),0):sum(valid);
   const card=(l,v,c)=>h("div",null,h("small",null,l),h("strong",{class:c},v));
-  if(cTab==="recette"){out.push(whoChips(),payChips());
-    const yr=inYear.filter(e=>e.kind==="recette"&&counts(e)&&whoOk(e)),lbl=cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":"";
-    out.push(h("div",{class:"sum yr"},card("Espèces "+Y+lbl,money(sumCash(yr))),card("Carte / virement "+Y+lbl,money(sumBank(yr))),card("Total "+Y+lbl,money(sum(yr)))));}
-  if(cTab==="recette")out.push(h("div",{class:"sum"},card("Recettes "+MONTHS[M].toLowerCase()+(cPayF==="especes"?" en espèces":cPayF==="carte"?" par carte":"")+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":""),money(tot)),card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(resTot(valid.filter(e=>!e.aside))),resTot(valid.filter(e=>!e.aside))>0?"neg":""),card("Espèces pour nous",money(sumCash(valid)-resTot(valid.filter(e=>cashC(e)>0)))),card("Réussis",String(valid.length)),card("À faire",String(mine.filter(e=>stat(e)==="prevu").length))));
+  if(cTab==="recette"){out.push(cFilRow());
+    const nTodo=mine.filter(e=>stat(e)==="prevu").length,ep=resTot(valid.filter(e=>!e.aside));
+    out.push(h("div",{class:"sum"},
+      h("div",null,h("small",null,"Recettes "+MONTHS[M].toLowerCase()+(cPayF==="especes"?" en espèces":cPayF==="carte"?" par carte":"")+(cWho==="moi"?" (sans Fayss)":cWho==="fayss"?" (Fayss)":"")),h("strong",null,money(tot)),
+        h("span",{class:"sub"},valid.length+" réussie"+(valid.length>1?"s":"")+(nTodo?" · "+nTodo+" à faire":""))),
+      card("Carte / virement",money(sumBank(valid))),card("Espèces",money(sumCash(valid))),card("Épargne à mettre de côté",money(ep),ep>0?"neg":"")));}
   else out.push(h("div",{class:"sum"},card("Dépenses "+MONTHS[M].toLowerCase(),money(tot)),card("Essence",money(sum(mine.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(mine.filter(e=>e.cat==="achat")))),card("Divers",money(sum(mine.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))),card("Lignes",String(mine.length)),(()=>{const rc=realConso();return rc?card("Conso réelle",frN(rc.v,1)+" L/100","pos"):null})()));
   if(cTab==="depense"&&canWrite&&window.ALS_OCR)out.push(h("button",{class:"tkbtn",type:"button",onclick:()=>$("tkFile").click()},"📷 Scanner un ticket ou une facture"));
   const byDay={};mine.forEach(e=>(byDay[+e.date.slice(8,10)]||(byDay[+e.date.slice(8,10)]=[])).push(e));
@@ -3986,8 +3997,7 @@ function plusOpen(){
   $("plusList").replaceChildren(
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("devis")}},h("span",null,"Devis & factures")),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("base")}},h("span",null,"Base véhicules")),
-    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null),
-    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("historique")}},h("span",null,"Historique")));
+    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null));
   $("plusScrim").hidden=false;
 }
 $("plusClose").addEventListener("click",()=>$("plusScrim").hidden=true);
