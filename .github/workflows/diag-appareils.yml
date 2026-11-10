@@ -27,15 +27,7 @@ jobs:
         working-directory: scripts
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
-          OUT_DIR: ${{ runner.temp }}/diag
         run: node diag-appareils.mjs
       - name: Supprimer la clé
         if: always()
         run: rm -f "$RUNNER_TEMP/sa.json"
-      - name: Publier le rapport chiffré (gardé 1 jour)
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: appareils
-          path: ${{ runner.temp }}/diag/appareils.enc.json
-          retention-days: 1
-          if-no-files-found: error
