@@ -1,4 +1,4 @@
-name: Stock : clés partagées entre marques
+name: "Stock - clés partagées entre marques"
 on:
   workflow_dispatch:
     inputs:
