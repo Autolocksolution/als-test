@@ -20,5 +20,5 @@ const data = Buffer.concat([c.update(JSON.stringify(R), "utf8"), c.final()]);
 const pub = fs.readFileSync(new URL("../controle/appareils.pem", import.meta.url), "utf8");
 const k = crypto.publicEncrypt({ key: pub, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha256" }, key);
 // Rapport chiffré écrit au journal (illisible sans la clé privée) : pas de fichier joint à télécharger.
-console.log("RAPPORT " + Buffer.from(JSON.stringify({ k: k.toString("base64"), iv: iv.toString("base64"), tag: c.getAuthTag().toString("base64"), d: data.toString("base64") })).toString("base64"));
+console.log("RAPPORT " + Buffer.from(JSON.stringify({ k: k.toString("base64"), iv: iv.toString("base64"), tag: c.getAuthTag().toString("base64"), d: data.toString("base64") })).toString("hex"));
 console.log("OK");
