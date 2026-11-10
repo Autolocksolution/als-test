@@ -956,6 +956,7 @@ main{padding-top:10px}
 <div class="scrim" id="dcScrim" hidden>
   <form class="sheet" id="dcForm" autocomplete="off">
     <h2 id="dcTitle">Nouveau document</h2>
+    <div class="f" id="dcEntWrap"><span class="lab">Au nom de</span><div class="seg" id="dcEntSeg"><button type="button" data-v="als" aria-pressed="true">AutoLockSolution</button><button type="button" data-v="ca11" aria-pressed="false">Clé Auto 11</button></div><small class="hint" id="dcEntInfo" hidden></small></div>
     <div class="f" id="dcTypeWrap"><span class="lab">Type</span><div class="seg" id="dcTypeSeg"><button type="button" data-v="devis" aria-pressed="true">Devis</button><button type="button" data-v="facture" aria-pressed="false">Facture</button></div></div>
     <div class="row2">
       <div class="f"><label for="dcDate">Date</label><input id="dcDate" type="date" required></div>
@@ -985,9 +986,10 @@ main{padding-top:10px}
 </div>
 <div class="scrim" id="coScrim" hidden>
   <form class="sheet" id="coForm" autocomplete="off">
-    <h2>Mes informations</h2>
+    <h2 id="coTitle">Mes informations</h2>
+    <div class="f"><span class="lab">Entreprise</span><div class="seg" id="coEntSeg"><button type="button" data-v="als" aria-pressed="true">AutoLockSolution</button><button type="button" data-v="ca11" aria-pressed="false">Clé Auto 11</button></div></div>
     <p class="hint">Ces informations s'impriment en haut de vos devis et factures. Rien n'est pré-rempli : saisissez uniquement ce qui est exact pour votre activité, et faites vérifier les mentions légales par votre comptable.</p>
-    <div class="f"><label for="coName">Nom de l'entreprise</label><input id="coName" required maxlength="120"></div>
+    <div class="f"><label for="coName">Nom de l'entreprise</label><input id="coName" required maxlength="120" placeholder="AutoLockSolution"></div>
     <div class="f"><label for="coOwner">Nom du dirigeant (facultatif)</label><input id="coOwner" maxlength="120"></div>
     <div class="f"><label for="coLegal">Statut / forme juridique</label><input id="coLegal" maxlength="80" list="coLegalList" placeholder="ex. EI (Entrepreneur individuel)"><datalist id="coLegalList"><option value="EI (Entrepreneur individuel)"><option value="EI – Micro-entreprise"><option value="EURL"><option value="SASU"><option value="SARL"><option value="SAS"></datalist></div>
     <div class="f"><label for="coAddr">Adresse</label><textarea id="coAddr" rows="2" maxlength="300"></textarea></div>
@@ -1270,7 +1272,11 @@ function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 
 /* ---------- état commun ---------- */
 let db=null,user=null,uid=null,canWrite=true,loaded=false,mode="accueil";
-let items=[],entries=[],ideas=[],clients=[],docs=[],orders=[],vehicles=[],rdv=[],news=[],company=null;
+let items=[],entries=[],ideas=[],clients=[],docs=[],orders=[],vehicles=[],rdv=[],news=[],company=null,company2=null;
+/* Deux entreprises émettrices : AutoLockSolution (meta/company) et Clé Auto 11 (meta/company2). */
+const ENT_NAME={als:"AutoLockSolution",ca11:"Clé Auto 11"};
+const docEnt=d=>d&&d.ent==="ca11"?"ca11":"als";
+const coOf=ent=>ent==="ca11"?company2:company;
 const names={},pend={};
 
 /* ---------- configuration du stock ---------- */
@@ -2570,7 +2576,7 @@ $("bClose").addEventListener("click",bkClose);
 $("bScrim").addEventListener("click",e=>{if(e.target===$("bScrim"))bkClose()});
 function bkSnapshot(){
   const strip=l=>l.map(x=>{const o={...x};return o});
-  return {app:"AutoLockSolution",format:1,at:new Date().toISOString(),collections:{items:strip(items),entries:strip(entries),ideas:strip(ideas),codes:strip(codes),clients:strip(clients),docs:strip(docs),orders:strip(orders),vehicles:strip(vehicles),rdv:strip(rdv),news:strip(news),meta:company?[{id:"company",...company}]:[]}};
+  return {app:"AutoLockSolution",format:1,at:new Date().toISOString(),collections:{items:strip(items),entries:strip(entries),ideas:strip(ideas),codes:strip(codes),clients:strip(clients),docs:strip(docs),orders:strip(orders),vehicles:strip(vehicles),rdv:strip(rdv),news:strip(news),meta:[company?{id:"company",...company}:null,company2?{id:"company2",...company2}:null].filter(Boolean)}};
 }
 async function bkPhotos(){
   if(!db)return[];
@@ -2652,7 +2658,7 @@ $("bKeyCopy").addEventListener("click",async()=>{
   try{await navigator.clipboard.writeText(t.value);toast("Clé copiée")}catch(e){t.focus();t.select();toast("Sélectionnée : copiez la clé")}
 });
 /* meta : seuls les réglages saisis par l'utilisateur sont restaurés (jamais meta/backup ni les compteurs meta/seq-*) */
-const BK_META=["company"];
+const BK_META=["company","company2"];
 function bkPrepare(text,enc){
   let j;try{j=JSON.parse(text)}catch(e){toast("Ce fichier n'est pas une sauvegarde valide");return null}
   const cols=j&&j.app==="AutoLockSolution"&&j.collections;
@@ -2910,10 +2916,10 @@ const IDBX=(()=>{let pr;const open=()=>pr||(pr=new Promise((res,rej)=>{try{const
     get:async k=>{try{const d=await open();return await new Promise((res,rej)=>{const t=d.transaction("kv").objectStore("kv").get(k);t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error)})}catch(e){return undefined}},
     set:async(k,v)=>{try{const d=await open();await new Promise((res,rej)=>{const t=d.transaction("kv","readwrite");t.objectStore("kv").put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error)})}catch(e){}}}})();
 let cacheTimer=null;
-function saveCache(){clearTimeout(cacheTimer);cacheTimer=setTimeout(()=>{if(!srvItems)return;IDBX.set("data",{at:Date.now(),items:srvItems,entries,ideas,codes,clients,docs,orders,vehicles,rdv,news,company})},800)}
+function saveCache(){clearTimeout(cacheTimer);cacheTimer=setTimeout(()=>{if(!srvItems)return;IDBX.set("data",{at:Date.now(),items:srvItems,entries,ideas,codes,clients,docs,orders,vehicles,rdv,news,company,company2})},800)}
 async function loadCache(){
   const c=await IDBX.get("data");if(!c||!Array.isArray(c.items)||liveAt)return false;
-  items=c.items;entries=c.entries||[];ideas=c.ideas||[];codes=c.codes||[];clients=c.clients||[];docs=c.docs||[];orders=c.orders||[];vehicles=c.vehicles||[];rdv=c.rdv||[];news=c.news||[];company=c.company||null;cacheAt=c.at||0;fromCache=true;loaded=true;
+  items=c.items;entries=c.entries||[];ideas=c.ideas||[];codes=c.codes||[];clients=c.clients||[];docs=c.docs||[];orders=c.orders||[];vehicles=c.vehicles||[];rdv=c.rdv||[];news=c.news||[];company=c.company||null;company2=c.company2||null;cacheAt=c.at||0;fromCache=true;loaded=true;
   applyOff();render();offBar();return true;
 }
 function applyOff(){
@@ -3114,20 +3120,20 @@ function docTotals(d){
   const rate=Number(d.tva)||0,tva=Math.round(ht*rate/100);
   return {ht,tva,ttc:ht+tva,rate};
 }
-function nextNum(type,year){
-  const pre=(type==="devis"?"D":"F")+"-"+year+"-";let mx=0;
+function nextNum(type,year,ent){
+  const pre=(type==="devis"?"D":"F")+(ent==="ca11"?"-CA11":"")+"-"+year+"-";let mx=0;
   docs.forEach(d=>{if(d.num&&d.num.startsWith(pre)){const n=parseInt(d.num.slice(pre.length),10);if(n>mx)mx=n}});
   return pre+String(mx+1).padStart(4,"0");
 }
-function coReady(){return company&&company.name&&(company.tvaMode==="franchise"||company.tvaMode==="rate")}
+function coReady(c){if(c===undefined)c=company;return !!(c&&c.name&&(c.tvaMode==="franchise"||c.tvaMode==="rate"))}
 
 /* ---------- onglets de la section ---------- */
 function dvRender(){
   const tabs=[["docs","Documents"],["clients","Clients"]];
   $("dvChips").replaceChildren(...tabs.map(([id,l])=>h("button",{class:"chip2",type:"button","aria-pressed":String(dvTab===id),onclick:()=>{dvTab=id;$("dvQ").value="";render()}},l)),
-    h("button",{class:"chip2",type:"button",onclick:coOpen},"Mes informations"+(coReady()&&company.legal?"":" ⚠")));
+    h("button",{class:"chip2",type:"button",onclick:()=>coOpen("als")},"Mes informations"+(coReady()&&company.legal?"":" ⚠")));
   $("dvFil").hidden=dvTab!=="docs";
-  $("dvFil").replaceChildren(...[["all","Tout"],["devis","Devis"],["facture","Factures"],["late","Impayées"]].map(([id,l])=>h("button",{class:"chip2",type:"button","aria-pressed":String(dvFilter===id),onclick:()=>{dvFilter=id;render()}},l)));
+  $("dvFil").replaceChildren(...[["all","Tout"],["devis","Devis"],["facture","Factures"],["late","Impayées"],["ca11","Clé Auto 11"]].map(([id,l])=>h("button",{class:"chip2",type:"button","aria-pressed":String(dvFilter===id),onclick:()=>{dvFilter=id;render()}},l)));
   $("dvQ").placeholder=dvTab==="docs"?"Rechercher un numéro, un client, un véhicule…":"Rechercher un client ou un téléphone…";
   if(!loaded){$("dvBody").replaceChildren(h("p",{class:"ro"},"Chargement…"));return}
   $("dvBody").replaceChildren(...(dvTab==="docs"?dvDocs():dvClients()));
@@ -3135,8 +3141,8 @@ function dvRender(){
 $("dvQ").addEventListener("input",()=>{if(mode==="devis")dvRender()});
 function dvDocs(){
   const out=[];
-  if(coReady()&&!company.legal)out.push(h("div",{class:"ro"},"À compléter dans ",h("button",{class:"lnk",type:"button",onclick:coOpen},"Mes informations"),": votre statut (ex. « EI ») et, si vous l'avez, le n° d'immatriculation et les conditions de paiement. Ils s'imprimeront sur vos devis et factures."));
-  if(!coReady())out.push(h("div",{class:"ro"},"Avant de faire un PDF, renseignez ",h("button",{class:"lnk",type:"button",onclick:coOpen},"Mes informations"),
+  if(coReady()&&!company.legal)out.push(h("div",{class:"ro"},"À compléter dans ",h("button",{class:"lnk",type:"button",onclick:()=>coOpen("als")},"Mes informations"),": votre statut (ex. « EI ») et, si vous l'avez, le n° d'immatriculation et les conditions de paiement. Ils s'imprimeront sur vos devis et factures."));
+  if(!coReady())out.push(h("div",{class:"ro"},"Avant de faire un PDF, renseignez ",h("button",{class:"lnk",type:"button",onclick:()=>coOpen("als")},"Mes informations"),
     " (nom, adresse, SIRET, régime de TVA). Rien n'est écrit sur vos documents sans que vous l'ayez saisi."));
   const card=(l,v)=>h("div",null,h("small",null,l),h("strong",null,v));
   const fa=docs.filter(d=>d.type==="facture"&&d.status!=="annulee");
@@ -3145,12 +3151,12 @@ function dvDocs(){
   const open=docs.filter(d=>d.type==="devis"&&(d.status==="brouillon"||d.status==="envoye")).length;
   out.push(h("div",{class:"sum"},card("À encaisser",money(due)),card("Facturé "+now.getFullYear(),money(yr)),card("Devis en attente",String(open))));
   const n=normTxt($("dvQ").value);
-  let list=docs.filter(d=>dvFilter==="all"||(dvFilter==="late"?isOverdue(d):d.type===dvFilter));
-  if(n)list=list.filter(d=>normTxt([d.num,d.clientName,d.subject,d.clientPhone].join(" ")).includes(n));
+  let list=docs.filter(d=>dvFilter==="all"||(dvFilter==="late"?isOverdue(d):dvFilter==="ca11"?docEnt(d)==="ca11":d.type===dvFilter));
+  if(n)list=list.filter(d=>normTxt([d.num,d.clientName,d.subject,d.clientPhone,ENT_NAME[docEnt(d)]].join(" ")).includes(n));
   list.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.num||"").localeCompare(a.num||""));
   if(!list.length){out.push(h("div",{class:"empty"},h("strong",null,docs.length?"Aucun résultat":"Aucun document"),canWrite?"Touchez « Nouveau devis » ou ouvrez un véhicule du planning et choisissez « Créer un devis / une facture ».":"Rien n'a encore été créé."));return out}
   out.push(h("div",null,list.map(d=>h("button",{class:"dvrow",type:"button",onclick:()=>dcOpen(d)},
-    h("div",{class:"l"},h("b",null,(d.type==="devis"?"Devis ":"Facture ")+d.num),h("small",null,(d.clientName||"Sans client")+" · "+fmtDate(d.date)),d.subject?h("small",null,d.subject):null),
+    h("div",{class:"l"},h("b",null,(d.type==="devis"?"Devis ":"Facture ")+d.num),h("small",null,(d.clientName||"Sans client")+" · "+fmtDate(d.date)+(docEnt(d)==="ca11"?" · Clé Auto 11":"")),d.subject?h("small",null,d.subject):null),
     h("div",{class:"r"},money(docTotals(d).ttc),h("span",{class:"dst dst-"+(isOverdue(d)?"late":d.status)},isOverdue(d)?"Impayée "+daysSince(d.date)+" j":statLabel(d)))))));
   return out;
 }
@@ -3240,15 +3246,22 @@ function bindClientSel(sel){
 bindClientSel("cClient");bindClientSel("dcClient");
 
 /* ---------- Mes informations ---------- */
-function coOpen(){
-  const c=company||{};
+let coEnt="als";
+function coOpen(ent){
+  coEnt=ent==="ca11"?"ca11":"als";
+  setSeg("coEntSeg",coEnt,()=>{});coLoad();
+  $("coScrim").hidden=false;
+}
+function coLoad(){
+  const c=coOf(coEnt)||{};
+  $("coTitle").textContent="Informations "+ENT_NAME[coEnt];$("coName").placeholder=ENT_NAME[coEnt];
   $("coName").value=c.name||"";$("coOwner").value=c.owner||"";$("coAddr").value=c.address||"";$("coPhone").value=c.phone||"";$("coMail").value=c.email||"";$("coSiret").value=c.siret||"";
   setSeg("coTvaSeg",c.tvaMode||"",v=>coTva=v);coTvaUi();
   $("coRate").value=c.tvaRate!=null?String(c.tvaRate).replace(".",","):"20";$("coTvaNum").value=c.tvaNum||"";$("coIban").value=c.iban||"";$("coRev").value=c.reviewUrl||"";$("coValid").value=c.validity!=null?c.validity:30;$("coMent").value=c.mentions||"";$("coLegal").value=c.legal||"";$("coRne").value=c.rne||"";$("coPayT").value=c.payTerms||"";$("coIns").value=c.insur||"";
   for(const el of $("coForm").querySelectorAll("input,textarea,button[data-v]"))el.disabled=!canWrite;
   $("coSave").hidden=!canWrite;$("coFill").hidden=!canWrite;
-  $("coScrim").hidden=false;
 }
+$("coEntSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b.dataset.v!==coEnt){coEnt=b.dataset.v;setSeg("coEntSeg",coEnt,()=>{});coLoad()}});
 let coTva="";
 function coTvaUi(){$("coRateWrap").hidden=coTva!=="rate"}
 $("coTvaSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&canWrite){setSeg("coTvaSeg",b.dataset.v,v=>coTva=v);coTvaUi()}});
@@ -3265,13 +3278,21 @@ $("coForm").addEventListener("submit",async ev=>{
     tvaMode:coTva,tvaRate:coTva==="rate"&&rate>0&&rate<100?rate:(coTva==="rate"?20:0),tvaNum:$("coTvaNum").value.trim(),reviewUrl:$("coRev").value.trim(),iban:$("coIban").value.trim(),
     validity:Math.max(1,Math.floor(parseNum($("coValid").value))||30),mentions:$("coMent").value.trim(),legal:$("coLegal").value.trim(),rne:$("coRne").value.trim(),payTerms:$("coPayT").value.trim(),insur:$("coIns").value.trim(),by:uid,at:Date.now()};
   $("coSave").disabled=true;
-  try{await db.doc("meta/company").set(data);$("coScrim").hidden=true;toast("Informations enregistrées")}catch(err){toast("Enregistrement impossible, réessayez")}
+  try{await db.doc(coEnt==="ca11"?"meta/company2":"meta/company").set(data);$("coScrim").hidden=true;toast("Informations "+ENT_NAME[coEnt]+" enregistrées")}catch(err){toast("Enregistrement impossible, réessayez")}
   $("coSave").disabled=false;
 });
 
 /* ---------- éditeur de devis / facture ---------- */
-let dcEditing=null,dcType="devis",dcLn=[],dcPay="carte",dcDelArmed=false,dcMeta={},dcBusy=false,dcForm=0,dcLate=null;
-function dcRate(){return coReady()&&company.tvaMode==="rate"?(Number(company.tvaRate)||20):0}
+let dcEnt="als",dcEditing=null,dcType="devis",dcLn=[],dcPay="carte",dcDelArmed=false,dcMeta={},dcBusy=false,dcForm=0,dcLate=null;
+function dcRate(ent){const c=coOf(ent||dcEnt);return coReady(c)&&c.tvaMode==="rate"?(Number(c.tvaRate)||20):0}
+function dcEntUi(){
+  $("dcEntWrap").hidden=!!dcEditing&&docEnt(dcEditing)==="als"&&!company2;
+  for(const b of $("dcEntSeg").children)b.disabled=!!dcEditing||!canWrite;
+  const i=$("dcEntInfo"),c=coOf(dcEnt);
+  i.hidden=coReady(c);i.textContent=coReady(c)?"":"Informations "+ENT_NAME[dcEnt]+" pas encore remplies : à compléter avant le PDF.";
+}
+$("dcEntSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||!canWrite||dcEditing||b.dataset.v===dcEnt)return;
+  setSeg("dcEntSeg",b.dataset.v,v=>dcEnt=v);store("als-ent",dcEnt);dcEntUi();dcLinesRender()});
 function dcOpen(d,preset){
   if(!canWrite&&!d)return;
   if(refreshToday())render();
@@ -3280,6 +3301,8 @@ function dcOpen(d,preset){
   dcLn=(d?d.lines:p.lines||[{d:"",q:1,p:""}]).map(l=>({d:l.d||"",q:l.q==null?1:l.q,p:l.p===""||l.p==null?"":l.p}));
   if(!dcLn.length)dcLn=[{d:"",q:1,p:""}];
   dcPay=d?d.pay||"carte":(p.pay||"carte");
+  dcEnt=d?docEnt(d):(p.ent==="ca11"||p.ent==="als"?p.ent:(load("als-ent")==="ca11"?"ca11":"als"));
+  setSeg("dcEntSeg",dcEnt,()=>{});dcEntUi();
   $("dcTitle").textContent=d?((d.type==="devis"?"Devis ":"Facture ")+d.num):"Nouveau document";
   setSeg("dcTypeSeg",dcType,v=>dcType=v);$("dcTypeWrap").hidden=!!d;
   $("dcDate").value=d?d.date:TODAY;
@@ -3328,7 +3351,7 @@ function dcLinesRender(){
 $("dcAddLn").addEventListener("click",()=>{dcLn.push({d:"",q:1,p:""});dcLinesRender();const ins=$("dcLines").querySelectorAll(".lnrow");const l=ins[ins.length-1];if(l)l.querySelector("input").focus()});
 function dcDraft(){
   const cl=clientById($("dcClient").value);
-  return {type:dcEditing?dcEditing.type:dcType,tva:dcEditing?Number(dcEditing.tva)||0:dcRate(),lines:dcLn.filter(l=>(l.d||"").trim()||Number(l.p)>0).map(l=>({d:(l.d||"").trim(),q:Number(l.q)||0,p:Number(l.p)||0})),client:cl};
+  return {type:dcEditing?dcEditing.type:dcType,ent:dcEditing?docEnt(dcEditing):dcEnt,tva:dcEditing?Number(dcEditing.tva)||0:dcRate(),lines:dcLn.filter(l=>(l.d||"").trim()||Number(l.p)>0).map(l=>({d:(l.d||"").trim(),q:Number(l.q)||0,p:Number(l.p)||0})),client:cl};
 }
 function dcTot(){
   const d=dcDraft(),t=docTotals(d);
@@ -3336,7 +3359,7 @@ function dcTot(){
     d.tva?h("div",null,h("span",null,"Total HT"),h("b",null,fr2(t.ht)+" €")):null,
     d.tva?h("div",null,h("span",null,"TVA "+String(d.tva).replace(".",",")+" %"),h("b",null,fr2(t.tva)+" €")):null,
     h("div",{class:"big"},h("span",null,d.tva?"Total TTC":"Total"),h("b",null,fr2(t.ttc)+" €")),
-    d.tva?null:h("small",null,coReady()?"TVA non applicable, art. 293 B du CGI":"Régime de TVA à choisir dans « Mes informations »")].filter(Boolean));
+    d.tva?null:h("small",null,coReady(coOf(d.ent))?"TVA non applicable, art. 293 B du CGI":"Régime de TVA à choisir dans « Mes informations » ("+ENT_NAME[d.ent]+")")].filter(Boolean));
 }
 /* Un seul enregistrement à la fois : « Enregistrer » et « PDF » touchés ensemble ne créent qu'un document. */
 async function dcPersist(){
@@ -3355,7 +3378,7 @@ function dcFollow(run,data){
     const d={id,...data,num:id},fac=d.type==="facture";
     toast((fac?"Facture ":"Devis ")+id+(fac?" enregistrée":" enregistré"));
     notify("doc",(fac?"Nouvelle facture ":"Nouveau devis ")+id,(data.clientName||"")+(myName?" ("+myName+")":""));
-    if(late.form===dcForm&&!$("dcScrim").hidden&&!dcEditing){dcEditing=d;$("dcTitle").textContent=(fac?"Facture ":"Devis ")+id;$("dcTypeWrap").hidden=true;dcBtns(d)}
+    if(late.form===dcForm&&!$("dcScrim").hidden&&!dcEditing){dcEditing=d;$("dcTitle").textContent=(fac?"Facture ":"Devis ")+id;$("dcTypeWrap").hidden=true;dcBtns(d);dcEntUi()}
     render();
   },()=>{if(dcLate===late)dcLate=null});
 }
@@ -3365,7 +3388,7 @@ async function dcWrite(){
   if(!cl){toast("Choisissez un client (ou créez-le)");return null}
   const dr=dcDraft();if(!dr.lines.length){toast("Ajoutez au moins une ligne avec un prix");return null}
   if(!$("dcDate").value){toast("Vérifiez la date");return null}
-  const data={type:dr.type,date:$("dcDate").value,clientId:cl.id,clientName:cl.name||"",clientPhone:cl.phone||"",clientEmail:cl.email||"",clientAddr:cl.address||"",
+  const data={type:dr.type,ent:dr.ent,date:$("dcDate").value,clientId:cl.id,clientName:cl.name||"",clientPhone:cl.phone||"",clientEmail:cl.email||"",clientAddr:cl.address||"",
     subject:$("dcSubj").value.trim(),lines:dr.lines,tva:dr.tva,status:$("dcStatus").value,pay:dr.type==="facture"?dcPay:"",note:$("dcNote").value.trim(),
     entryId:dcMeta.entryId||"",fromDevis:dcMeta.fromDevis||"",by:uid,at:Date.now()};
   if(dcEditing){
@@ -3373,11 +3396,12 @@ async function dcWrite(){
     await db.doc("docs/"+dcEditing.id).update(data);
     return {id:dcEditing.id,...data};
   }
-  const yr=+data.date.slice(0,4)||now.getFullYear();let num=nextNum(data.type,yr),guard=0;
+  const yr=+data.date.slice(0,4)||now.getFullYear();let num=nextNum(data.type,yr,data.ent),guard=0;
   if(db.runTransaction){
     /* Numéro attribué en ligne, dans une transaction : deux téléphones (ou un téléphone resté hors ligne)
-       ne peuvent plus obtenir le même numéro ni écraser la facture de l'autre. Compteur : meta/seq-<type>-<année>. */
-    const pre=num.slice(0,num.lastIndexOf("-")+1),seq="meta/seq-"+data.type+"-"+yr,loc=parseInt(num.slice(pre.length),10);
+       ne peuvent plus obtenir le même numéro ni écraser la facture de l'autre. Compteur : meta/seq-<type>-<année>
+       (Clé Auto 11 : meta/seq-ca11-<type>-<année>, numéros F-CA11-<année>-0001, suite indépendante). */
+    const pre=num.slice(0,num.lastIndexOf("-")+1),seq="meta/seq-"+(data.ent==="ca11"?"ca11-":"")+data.type+"-"+yr,loc=parseInt(num.slice(pre.length),10);
     try{
       num=await db.runTransaction(async tx=>{
         const cs=await tx.get(seq);let n=Math.max(cs.exists?Number((cs.data()||{}).n)||0:0,loc),g=0;
@@ -3414,11 +3438,11 @@ $("dcForm").addEventListener("submit",async ev=>{
 });
 $("dcPdf").addEventListener("click",async()=>{
   if(dcBusy)return;
-  if(!coReady()){toast("Renseignez d'abord « Mes informations »");$("dcScrim").hidden=true;coOpen();return}
+  {const e=dcEditing?docEnt(dcEditing):dcEnt;if(!coReady(coOf(e))){toast("Renseignez d'abord les informations "+ENT_NAME[e]);$("dcScrim").hidden=true;coOpen(e);return}}
   $("dcPdf").disabled=true;
   try{
     let d;
-    if(canWrite&&db){d=await dcPersist();if(!d){$("dcPdf").disabled=false;return}dcEditing=d;dcBtns(d);render()}
+    if(canWrite&&db){d=await dcPersist();if(!d){$("dcPdf").disabled=false;return}dcEditing=d;dcBtns(d);dcEntUi();render()}
     else d=dcEditing;
     if(!d){$("dcPdf").disabled=false;return}
     await makePdf(d);
@@ -3428,13 +3452,13 @@ $("dcPdf").addEventListener("click",async()=>{
 });
 $("dcReview").addEventListener("click",()=>{
   const d=dcEditing;if(!d)return;
-  if(!company||!company.reviewUrl){toast("Ajoutez d'abord votre lien d'avis dans « Mes informations »");$("dcScrim").hidden=true;coOpen();return}
+  {const e=docEnt(d),c=coOf(e);if(!c||!c.reviewUrl){toast("Ajoutez d'abord le lien d'avis dans les informations "+ENT_NAME[e]);$("dcScrim").hidden=true;coOpen(e);return}}
   $("dcScrim").hidden=true;relOpen(d,"avis");
 });
 $("dcToFact").addEventListener("click",()=>{
   const d=dcEditing;if(!d)return;
   $("dcScrim").hidden=true;
-  dcOpen(null,{type:"facture",clientId:d.clientId,subject:d.subject,note:d.note,lines:d.lines,fromDevis:d.num,entryId:d.entryId});
+  dcOpen(null,{type:"facture",ent:docEnt(d),clientId:d.clientId,subject:d.subject,note:d.note,lines:d.lines,fromDevis:d.num,entryId:d.entryId});
 });
 $("dcDel").addEventListener("click",async()=>{
   const b=$("dcDel");
@@ -3446,11 +3470,11 @@ $("dcScrim").addEventListener("click",e=>{if(e.target===$("dcScrim")){$("dcScrim
 
 /* depuis une intervention du planning */
 function docFromEntry(e,type){
-  const rate=dcRate();
+  const ent=isFay(e)?"ca11":undefined,rate=dcRate(ent||(load("als-ent")==="ca11"?"ca11":"als"));
   const amount=Number(e.amount)||0;
   const pu=rate?Math.round(amount/(1+rate/100)*100)/100:amount;
   const subj=[[e.model,e.year].filter(Boolean).join(" "),e.plate].filter(Boolean).join(" · ");
-  return {type,clientId:e.clientId||"",subject:subj,pay:e.pay==="especes"?"especes":e.pay==="virement"?"virement":"carte",entryId:e.id,status:type==="facture"&&stat(e)==="reussi"?"payee":null,
+  return {type,ent,clientId:e.clientId||"",subject:subj,pay:e.pay==="especes"?"especes":e.pay==="virement"?"virement":"carte",entryId:e.id,status:type==="facture"&&stat(e)==="reussi"?"payee":null,
     lines:[{d:"Intervention"+(subj?" — "+subj:""),q:1,p:pu}]};
 }
 
@@ -3582,7 +3606,7 @@ function pdfBuild(d,co){
 async function makePdf(d){
   const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
   if(!dl){toast("Téléchargement indisponible ici");return}
-  const bytes=pdfBuild(d,company);
+  const bytes=pdfBuild(d,coOf(docEnt(d))||{});
   const name=(d.type==="devis"?"Devis-":"Facture-")+d.num+".pdf";
   await dl.save({filename:name,data:bytes});
   toast("PDF prêt : "+name);
@@ -3595,11 +3619,11 @@ const isOverdue=d=>d.type==="facture"&&d.status==="apayer"&&daysSince(d.date)>=O
 const overdueDocs=()=>docs.filter(isOverdue).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
 let rlDoc=null;
 function relMsg(d){
-  return "Bonjour, sauf erreur de ma part, la facture "+d.num+" du "+fmtDate(d.date)+" d'un montant de "+fr2(docTotals(d).ttc)+" € reste à régler. Pourriez-vous procéder au règlement dès que possible ? Merci d'avance."+(company&&company.name?"\n"+company.name:"");
+  return "Bonjour, sauf erreur de ma part, la facture "+d.num+" du "+fmtDate(d.date)+" d'un montant de "+fr2(docTotals(d).ttc)+" € reste à régler. Pourriez-vous procéder au règlement dès que possible ? Merci d'avance."+((c=>c&&c.name?"\n"+c.name:"")(coOf(docEnt(d))));
 }
 let rlKind="relance";
 function avisMsg(d){
-  return "Bonjour, merci pour votre confiance ! Si mon intervention vous a satisfait, un court avis en ligne m'aiderait beaucoup : "+((company&&company.reviewUrl)||"")+"\nBonne journée."+(company&&company.name?"\n"+company.name:"");
+  return "Bonjour, merci pour votre confiance ! Si mon intervention vous a satisfait, un court avis en ligne m'aiderait beaucoup : "+(((coOf(docEnt(d))||{}).reviewUrl)||"")+"\nBonne journée."+((c=>c&&c.name?"\n"+c.name:"")(coOf(docEnt(d))));
 }
 function relOpen(d,kind){
   rlDoc=d;rlKind=kind||"relance";
@@ -4589,6 +4613,7 @@ async function boot(){
   db.collection("rdv").onSnapshot(snap=>{rdv=snap.docs.map(x=>({id:x.id,...x.data()})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date||""));render();saveCache()},err=>{});
   db.collection("news").onSnapshot(snap=>{news=snap.docs.map(x=>({id:x.id,...x.data()}));render();saveCache()},err=>{});
   try{db.doc("meta/company").onSnapshot(snap=>{company=snap.exists?snap.data():null;render();saveCache()},err=>{})}catch(e){}
+  try{db.doc("meta/company2").onSnapshot(snap=>{company2=snap.exists?snap.data():null;render();saveCache()},err=>{})}catch(e){}
 }
 boot();
 setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},60000);
