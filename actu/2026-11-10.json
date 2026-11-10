@@ -1,0 +1,122 @@
+[
+  {
+    "id": "c-renault-austral-silca-adc2017",
+    "title": "Renault Austral et autres Renault récentes : clés par la prise BCM avec Smart Pro (câble ADC2017)",
+    "url": "https://www.silca.biz/en/global/events-and-news/news-about-us/2025-23-software-update-renault",
+    "source": "Silca",
+    "kind": "web",
+    "summary": "La mise à jour ADS2325 du Smart Pro ajoute de nombreux modèles Renault et Nissan, avec une première solution annoncée pour le Renault Austral. Le câble ADC2017 se branche directement sur le BCM, sans autre intervention, et évite le code PIN. Clés mains libres et à lame sont gérées, souvent même en toutes clés perdues. Attention : toutes les clés et télécommandes existantes sont effacées avant d'en programmer de nouvelles.",
+    "date": "2025-10-31",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-nissan-qashqai-juke-silca-ads2326",
+    "title": "Nissan Qashqai, Juke, X-Trail : toutes clés perdues par le BCM avec Smart Pro (ADS2326)",
+    "url": "https://www.silca.biz/en/global/events-and-news/news-about-us/2025-19-software-update-nissan",
+    "source": "Silca",
+    "kind": "web",
+    "summary": "La mise à jour ADS2326 du Smart Pro couvre des Nissan récentes, dont les Qashqai, Juke et X-Trail, y compris en toutes clés perdues sur certains modèles. Il faut le nouveau câble ADC2017, branché directement sur le BCM. Toutes les clés existantes sont effacées avant la programmation des nouvelles.",
+    "date": "2025-09-05",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-kadjar-2019-lame-obdstar-g3",
+    "title": "Renault Kadjar 2018-2019 clé à lame : 2 méthodes avec l'OBDSTAR G3 (sûre ou risquée)",
+    "url": "http://blog.obdii365.com/2025/02/09/2-ways-to-add-renault-kadjar-2019-uch-blade-key-with-obdstar-g3/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Méthode sûre : lecture des infos immo par l'OBD, warnings allumés et contact coupé, puis lecture du PIN (1 à 10 minutes), fabrication d'une clé concession et programmation. Méthode risquée : lecture de la Dflash de l'UCH pour en extraire le PIN, mais les clés sont effacées pendant l'opération et il faut ensuite faire une toutes clés perdues. Pour cette méthode, connexion internet stable et alimentation externe obligatoires ; sur quelques UCH le PIN n'est pas présent et la lecture peut échouer.",
+    "date": "2025-02-09",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-toyota-yaris-2020-abrites-tn014",
+    "title": "Toyota Yaris 2020+, Yaris Cross, Corolla 2022+ : clés AES toutes clés perdues avec Abrites (TN014/TN015)",
+    "url": "https://abrites.com/news/new-abrites-key-programming-functionalities-for-toyota-modelia-with-ba-type-ht-aes-dst-aes-keys",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "La licence TN014 (système Tokai Rika, clés HT-AES type BA) couvre notamment la Yaris 2020+, la Yaris Cross 2021+ et la Corolla restylée 2022+. La TN015 (Denso, DST-AES) couvre entre autres le RAV4 restylé 2022+ et, via l'ancienne TN012, C-HR et RAV4 2018+. Les deux permettent l'ajout de clé et la toutes clés perdues. Mise à niveau possible depuis TN011/TN012 pour 200 € chacune.",
+    "date": "2023-05-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-hyundai-kona-2025-akl-autel",
+    "title": "Hyundai Kona 2025 (SX2) toutes clés mains libres perdues avec Autel IM608 II",
+    "url": "https://autelstore.blogspot.com/2025/11/autel-im608-ii-program-2025-hyundai.html",
+    "source": "AutelStore",
+    "kind": "web",
+    "summary": "Menu Hyundai > Europe > KONA (SX2) > clé mains libres, puis apprentissage de la clé. Warnings allumés, contact coupé jusqu'à l'écran noir, ouvrir et fermer la porte conducteur, puis saisir le code de sécurité à 6 chiffres. Poser chaque clé 5 secondes sur la zone de détection (près du bouton Start ou dans le porte-gobelet) dans les 5 secondes. Toutes les anciennes clés sont effacées ; l'IM508S suit la même procédure.",
+    "date": "2025-11-24",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-vag-5c-jci-visteon-abrites-vn024",
+    "title": "VW, Skoda, Seat, Audi immo 5C avec compteur JCI/Visteon : ajout de clé par lecture RH850 (Abrites VN024)",
+    "url": "https://www.kapdiagnostics.com/blog/post/just-in-jci-visteon-dashboards-now-added-for-key-learning-by-dump-of-rh850-vn024-license",
+    "source": "KAP Diagnostics",
+    "kind": "web",
+    "summary": "La licence Abrites VN024 gère maintenant l'ajout de clé sur les VAG immo 5C équipées d'un compteur JCI ou Visteon. On collecte les données par l'OBD, on démonte le compteur, on le lit et l'écrit avec le programmateur RH850 d'Abrites, on le remonte puis on apprend les clés. Pas besoin des octets de synchro ni d'un accès concession.",
+    "date": "2025-10-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-seat-ibiza-2019-5c-cle-occasion-kdx4",
+    "title": "Seat Ibiza 2019 (MQB 5C) : clé d'origine d'occasion ajoutée avec KeyDiy KD-X4",
+    "url": "https://obdexpresscouk.blogspot.com/2026/01/keydiy-kd-x4-add-5c-ibiza-2019-oem-used.html",
+    "source": "OBDexpress · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur a ajouté sur une Ibiza 2019 (5C) une clé d'origine récupérée sur une autre voiture, avec le KD-X4 : démarrage et télécommande fonctionnent sur les deux clés. Mais l'identifiant d'une clé d'origine d'occasion ne peut pas être changé, elle ne pourra donc pas être reprise en concession. Pour une clé neuve, il faut souder pour écrire les données puis faire l'apprentissage, ou générer une clé concession sans fil avec le KD.",
+    "date": "2026-01-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-bmw-x3-2025-uwb-lonsdor",
+    "title": "BMW X3 2025 (série U, clé UWB) : ajout de clé avec Lonsdor K518 Pro, clé d'origine obligatoire",
+    "url": "https://obdexpresscouk.blogspot.com/2026/01/lonsdor-k518-pro-add-2025-bmw-x3-uwb.html",
+    "source": "OBDexpress",
+    "kind": "web",
+    "summary": "Menu BMW > série U > fabrication de clé concession : lire la clé qui fonctionne avec le câble de programmation et sauvegarder le fichier. Après lecture du VIN, choisir « clé d'origine » pour les modèles UWB, puis présenter la nouvelle clé. Il faut une clé d'origine et une clé neuve, la licence Lonsdor BMW BDC2/BDC3/BCP, et le K518 Pro connecté au Wi-Fi ; la pince BDC3 sans soudure est facultative.",
+    "date": "2026-01-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-fiat-500e-fiorino-bcm-alarme-abrites",
+    "title": "Fiat 500e, Fiorino… BCM en alarme : préparer une clé qui coupe l'alarme avec Abrites",
+    "url": "https://abrites.com/news/new-for-fca-vehicles-hitag2-and-atmel-key-programming-for-cars-with-armed-bcm",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Pour les FCA dont le BCM est en alarme, Abrites prépare une clé qui désactive l'alarme. En HiTag2 (500e, Fiorino…), on lit le dump du BCM (RH850/V850 si Data Flash interne, ABPROG si EEPROM externe) et on fabrique un émulateur TA31 ; aucune licence en plus, seulement l'abonnement AMS et la version 9.9. En Atmel AES, il faut la licence FN024, le programmateur RH850 et une clé Atmel vierge dans le PROTAG.",
+    "date": "2025-12-09",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  },
+  {
+    "id": "c-vag-immo-5a-5b-config-abrites-vn002",
+    "title": "VW, Skoda, Seat, Audi immo 5A/5B : changer VIN, CS et configuration de l'immo avec Abrites (VN002)",
+    "url": "https://abrites.com/news/new-for-vag-vehicles-change-immo-configuration-for-5a-and-5b-vehicles",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Une fonction « Change Immo configuration » pour les immo 5A et 5B (BCM2 et compteurs MQB sans crypto core) permet de modifier la classe de puissance, le VIN, le CS et la liste des modules liés : un ou deux calculateurs moteur, boîte, antivol de colonne, mains libres. Elle est incluse dans la licence VN002 (adaptation de pièces) et demande de connaître le CS actuel de l'immo.",
+    "date": "2025-06-06",
+    "state": "new",
+    "by": "claude",
+    "at": 1794291511474
+  }
+]
