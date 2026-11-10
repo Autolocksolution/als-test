@@ -356,7 +356,8 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .idea.done .it-name{text-decoration:line-through;color:var(--muted)}
 .iprice{align-self:center;padding:0 14px 0 4px;font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dblock{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-top:10px;overflow:hidden}
-.dhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px}
+.dhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;width:100%;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.dhead:disabled{cursor:default}
 .dhead b{display:block;font-family:var(--f-display);font-size:21px;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
 .dhead small{color:var(--muted);font-size:13px}
 .dhead strong{font-family:var(--f-display);font-weight:700;font-size:28px;color:var(--out);font-variant-numeric:tabular-nums}
@@ -1998,31 +1999,31 @@ function cBilan(inYear){
     h("div",{class:"sum"},
       card2("Reste à mettre de côté",money(todo),todo>0?"warn":"","espèces pas encore cochées « mis de côté »"),
       card2("Déjà mis de côté",money(done),"","")),
-    h("p",{class:"hint",style:"margin:-6px 0 14px"},"30 % des espèces encaissées depuis le 15 octobre 2026, plus les interventions cochées « Tout mis dans l'épargne ». Pour l'enlever : cochez « mis de côté » sur l'intervention dans Recettes."),
-    h("h2",{class:"h2"},"Dépenses par type"),
-    h("div",{class:"sum"},card("Essence",money(sum(d.filter(e=>e.cat==="essence")))),card("Achats stock/matériel",money(sum(d.filter(e=>e.cat==="achat")))),card("Divers",money(sum(d.filter(e=>e.cat!=="essence"&&e.cat!=="achat")))))];
+    h("p",{class:"hint",style:"margin:-6px 0 14px"},"30 % des espèces encaissées depuis le 15 octobre 2026, plus les interventions cochées « Tout mis dans l'épargne ». Pour l'enlever : cochez « mis de côté » sur l'intervention dans Recettes.")];
   out.push(h("h2",{class:"h2"},"Mois par mois"));
   const rows=MS.map((n,i)=>{
     const mm=p2(i+1),rm=r.filter(e=>e.date.slice(5,7)===mm),dm=d.filter(e=>e.date.slice(5,7)===mm),a=sum(rm),b=sum(dm),ce=sumCash(rm)-sumCash(dm),cb=sumBank(rm)-sumBank(dm),ep=resTot(rm);
     const cur=Y===now.getFullYear()&&i===now.getMonth();
     const rcm=rc.filter(e=>e.date.slice(5,7)===mm),mg=sum(rcm)-rcm.reduce((x,e)=>x+eurosC(e.cost),0);
-    return h("tr",{class:(cur?"cur ":"")+"tap",onclick:()=>moneyDetail(MONTHS[i]+" "+Y,rm,dm)},h("td",null,MONTHS[i]+" ›"),h("td",null,money(a)),h("td",null,money(b)),h("td",{style:"color:var(--"+(a-b>=0?"in":"out")+")"},money(a-b)),h("td",{style:"color:var(--"+(ce>=0?"in":"out")+")"},money(ce)),h("td",null,ep?money(ep):"–"),h("td",{style:"color:var(--"+(cb>=0?"in":"out")+")"},money(cb)),h("td",null,rcm.length?money(mg):"–"))});
-  out.push(h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Mois"),h("th",null,"Recettes"),h("th",null,"Dépenses"),h("th",null,"Résultat total"),h("th",null,"Reste espèces"),h("th",null,"Épargne"),h("th",null,"Reste carte"),h("th",null,"Marge"))),h("tbody",null,rows),
-    h("tfoot",null,h("tr",{class:"tap",onclick:()=>moneyDetail("Année "+Y,r,d)},h("td",null,"Total "+Y+" ›"),h("td",null,money(R)),h("td",null,money(D)),h("td",{style:"color:var(--"+(res>=0?"in":"out")+")"},money(res)),h("td",{style:"color:var(--"+(cash>=0?"in":"out")+")"},money(cash)),h("td",null,money(resTot(r))),h("td",{style:"color:var(--"+(res-cash>=0?"in":"out")+")"},money(res-cash)),h("td",null,rc.length?money(Rc-Cc):"–"))))));
-  out.push(h("p",{class:"hint",style:"margin-top:8px"},"Touche un mois pour voir le détail espèces et carte. « Reste espèces » = espèces encaissées moins dépenses payées en espèces (l'épargne n'est pas enlevée). « Épargne » = ce qui est à mettre (ou déjà mis) de côté sur les espèces du mois. « Reste carte » = carte/virement encaissés moins dépenses payées par carte. "+"« Marge » = prix de l'intervention moins prix d'achat de la pièce, carte et espèces confondues. Elle n'est calculée que si le « prix d'achat de la pièce » est rempli dans l'intervention ("+rc.length+" sur "+r.length+" cette année) ; sinon « – ». Le vrai gain reste le Bénéfice ci-dessus."));
+    return h("tr",{class:(cur?"cur ":"")+"tap",onclick:()=>moneyDetail(MONTHS[i]+" "+Y,rm,dm)},h("td",null,MONTHS[i]+" ›"),h("td",null,money(a)),h("td",null,money(b)),h("td",{style:"color:var(--"+(a-b>=0?"in":"out")+")"},money(a-b)),h("td",{style:"color:var(--"+(ce>=0?"in":"out")+")"},money(ce)),h("td",null,ep?money(ep):"–"),h("td",{style:"color:var(--"+(cb>=0?"in":"out")+")"},money(cb)),rc.length?h("td",null,rcm.length?money(mg):"–"):null)});
+  out.push(h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Mois"),h("th",null,"Recettes"),h("th",null,"Dépenses"),h("th",null,"Résultat total"),h("th",null,"Reste espèces"),h("th",null,"Épargne"),h("th",null,"Reste carte"),rc.length?h("th",null,"Marge"):null)),h("tbody",null,rows),
+    h("tfoot",null,h("tr",{class:"tap",onclick:()=>moneyDetail("Année "+Y,r,d)},h("td",null,"Total "+Y+" ›"),h("td",null,money(R)),h("td",null,money(D)),h("td",{style:"color:var(--"+(res>=0?"in":"out")+")"},money(res)),h("td",{style:"color:var(--"+(cash>=0?"in":"out")+")"},money(cash)),h("td",null,money(resTot(r))),h("td",{style:"color:var(--"+(res-cash>=0?"in":"out")+")"},money(res-cash)),rc.length?h("td",null,money(Rc-Cc)):null)))));
+  out.push(h("p",{class:"hint",style:"margin-top:8px"},"Touche un mois pour voir le détail espèces et carte. « Reste espèces » = espèces encaissées moins dépenses payées en espèces (l'épargne n'est pas enlevée). « Épargne » = ce qui est à mettre (ou déjà mis) de côté sur les espèces du mois. « Reste carte » = carte/virement encaissés moins dépenses payées par carte."+(rc.length?" « Marge » = prix de l'intervention moins prix d'achat de la pièce (seulement si ce prix est rempli : "+rc.length+" sur "+r.length+").":"")));
   out.push(...cDetail(d));
   out.push(...cExport());
   return out;
 }
+const dExp=new Set();
 function cDetail(d){
   const blocks=[h("h2",{class:"h2"},"Détail des dépenses "+Y)];
   [["essence","Dépenses essence",e=>e.cat==="essence"],["achat","Achats stock / matériel",e=>e.cat==="achat"],["divers","Dépenses diverses",e=>e.cat!=="essence"&&e.cat!=="achat"]].forEach(([id,title,fn])=>{
     const l=d.filter(fn).sort((a,b)=>b.date.localeCompare(a.date)||(b.at||0)-(a.at||0));
     const lit=l.reduce((a,e)=>a+(Number(e.litres)||0),0);
     const sub=l.length?l.length+(l.length>1?" lignes":" ligne")+(id==="essence"&&lit?" · "+lit.toFixed(1).replace(".",",")+" L":""):"Aucune dépense";
+    const op=dExp.has(id)&&l.length;
     blocks.push(h("div",{class:"dblock"},
-      h("div",{class:"dhead"},h("div",null,h("b",null,title),h("small",null,sub)),h("strong",null,money(sum(l)))),
-      l.length?h("div",{class:"dscroll"},h("table",null,h("tbody",null,l.map(e=>h("tr",null,
+      h("button",{type:"button",class:"dhead","aria-expanded":String(!!op),disabled:!l.length||null,onclick:()=>{dExp.has(id)?dExp.delete(id):dExp.add(id);render()}},h("div",null,h("b",null,title),h("small",null,sub+(l.length?(op?" · masquer":" · voir le détail"):""))),h("strong",null,money(sum(l)))),
+      op?h("div",{class:"dscroll"},h("table",null,h("tbody",null,l.map(e=>h("tr",null,
         h("td",null,e.date.slice(8,10)+"/"+e.date.slice(5,7)),
         h("td",{class:"lbl"},e.label||(id==="essence"?"Essence":id==="achat"?"Achat":"Divers")),
         h("td",{style:"color:var(--out)"},money(cents(e)))))))):null));
