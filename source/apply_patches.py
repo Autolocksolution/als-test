@@ -66,13 +66,13 @@ sub('$("stLock").addEventListener("click"','''let pushApi=null;
 async function pushPaint(){
   if(!pushApi)return;
   const st=await pushApi.status().catch(()=>({state:"unsupported"}));
-  const T={on:"Activées sur cet appareil : rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
+  const T={on:"Activées sur cet appareil : rappel 1 h avant chaque rendez-vous, récapitulatif chaque matin, et alerte dès que votre associé ajoute ou modifie un rendez-vous.",
     off:"Rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
     blocked:"Notifications refusées. Réglages de l'iPhone > Notifications > AutoLock pour les autoriser.",
     install:"Pour recevoir les notifications sur iPhone : ouvrir l'appli depuis son icône sur l'écran d'accueil (pas depuis Safari).",
     unsupported:"Ce navigateur ne gère pas les notifications.",
     nokey:"Notifications pas encore configurées côté serveur."};
-  $("stPushT").textContent=T[st.state]||"";
+  $("stPushT").textContent=(T[st.state]||"")+(st.info?" "+st.info:"");
   const b=$("stPush");b.disabled=!(st.state==="on"||st.state==="off");
   b.textContent=st.state==="on"?"Désactiver les notifications":"Activer les notifications";
   $("stPushTest").hidden=st.state!=="on";
@@ -85,7 +85,7 @@ $("stPush").addEventListener("click",async()=>{
   catch(e){toast(e&&e.message?e.message:"Activation impossible")}
   pushPaint();
 });
-$("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Notification envoyée")}catch(e){toast("Test impossible")}});
+$("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Test envoyé : la notification arrive dans quelques secondes")}catch(e){toast("Test impossible")}});
 $("stLock").addEventListener("click"''',name="pushJS")
 sub('$("bkBtn").addEventListener("click",()=>{stPaint();','$("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();',name="bkBtn")
 

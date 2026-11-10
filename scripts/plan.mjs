@@ -62,7 +62,8 @@ export function planOutbox(events, devices, nowMs) {
   for (const e of [...events].sort((a, b) => (a.at || 0) - (b.at || 0))) {
     if (!e.title || nowMs - (e.at || 0) > STALE_MS) skip.push(e.id); else fresh.push(e);
   }
-  const target = e => devices.filter(d => e.to === "all" || d.uid !== e.by).map(d => d.id);
+  // to : "all" = tout le monde, "self" = seulement les appareils de l'auteur (bouton Tester), sinon l'associé
+  const target = e => devices.filter(d => e.to === "all" || (e.to === "self" ? d.uid === e.by : d.uid !== e.by)).map(d => d.id);
   const sends = fresh.slice(0, OUTBOX_MAX).map(e => ({ id: e.id, title: e.title, body: e.body || "", tag: "ob_" + e.id, deviceIds: target(e) }));
   const rest = fresh.slice(OUTBOX_MAX);
   if (rest.length) {

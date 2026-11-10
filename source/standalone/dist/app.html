@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-eftNUsYbYDYwLtdB+rkGUlowDU0Lh17AZCcEjSAWQNY=' 'sha256-ZiyhAT539HCM5iNwUA5Blr6t7nUMhTQFSdCqDTvFSpM=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-gOeGadd2jlcT6Uq796ZDye4kuP7yr70gsQW+fA4l5KI=' 'sha256-KFPKnllw2YPxk8lHonywPTeEun92NvcqelWDW4azopc=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3837,13 +3837,13 @@ let pushApi=null;
 async function pushPaint(){
   if(!pushApi)return;
   const st=await pushApi.status().catch(()=>({state:"unsupported"}));
-  const T={on:"Activées sur cet appareil : rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
+  const T={on:"Activées sur cet appareil : rappel 1 h avant chaque rendez-vous, récapitulatif chaque matin, et alerte dès que votre associé ajoute ou modifie un rendez-vous.",
     off:"Rappel 1 h avant chaque rendez-vous et récapitulatif du planning chaque matin.",
     blocked:"Notifications refusées. Réglages de l'iPhone > Notifications > AutoLock pour les autoriser.",
     install:"Pour recevoir les notifications sur iPhone : ouvrir l'appli depuis son icône sur l'écran d'accueil (pas depuis Safari).",
     unsupported:"Ce navigateur ne gère pas les notifications.",
     nokey:"Notifications pas encore configurées côté serveur."};
-  $("stPushT").textContent=T[st.state]||"";
+  $("stPushT").textContent=(T[st.state]||"")+(st.info?" "+st.info:"");
   const b=$("stPush");b.disabled=!(st.state==="on"||st.state==="off");
   b.textContent=st.state==="on"?"Désactiver les notifications":"Activer les notifications";
   $("stPushTest").hidden=st.state!=="on";
@@ -3856,7 +3856,7 @@ $("stPush").addEventListener("click",async()=>{
   catch(e){toast(e&&e.message?e.message:"Activation impossible")}
   pushPaint();
 });
-$("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Notification envoyée")}catch(e){toast("Test impossible")}});
+$("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Test envoyé : la notification arrive dans quelques secondes")}catch(e){toast("Test impossible")}});
 $("stLock").addEventListener("click",()=>{$("stScrim").hidden=true;$("lkBtn").click()});
 /* ================= SUIVI DES COMMANDES FOURNISSEUR ================= */
 const ORD_ST={passee:"Commandée",recue:"Reçue",annulee:"Annulée"};
@@ -4678,7 +4678,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261108-1605";
+const ALS_BUILD="20261110-1508";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -4824,7 +4824,39 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         if(!("PushManager" in window))return{state:/iPhone|iPad|iPod/.test(navigator.userAgent)?"install":"unsupported"};
         if(!VAPID||VAPID.startsWith("__"))return{state:"nokey"};
         if(Notification.permission==="denied")return{state:"blocked"};
-        return{state:Notification.permission==="granted"&&lsGet(PUSH_KEY)?"on":"off"};
+        const t=lsGet(PUSH_KEY);
+        if(Notification.permission!=="granted"||!t)return{state:"off"};
+        /* état réel côté serveur : cet appareil est-il toujours enregistré, le dernier envoi est-il passé, le robot tourne-t-il */
+        let info="";
+        try{
+          const when=ms=>new Date(ms).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(","," à");
+          const [d,rb]=await Promise.all([soon(F.getDoc(F.doc(fs,"devices/"+t))),soon(F.getDoc(F.doc(fs,"meta/robot")))]);
+          if(d&&!d.exists())info="Attention : cet appareil n'est plus enregistré. Désactivez puis réactivez les notifications.";
+          else if(d){const x=d.data();
+            if(x.errAt&&x.errAt>(x.okAt||0))info="Attention : le dernier envoi vers cet appareil a été refusé ("+(x.errCode||"erreur")+"). Désactivez puis réactivez les notifications.";
+            else if(x.okAt)info="Dernier envoi vers cet appareil : "+when(x.okAt)+".";}
+          if(rb&&rb.exists()&&Date.now()-(rb.data().at||0)>20*60000)info+=(info?" ":"")+"Le robot d'envoi est en pause depuis "+when(rb.data().at)+" : les notifications peuvent arriver en retard.";
+        }catch(e){}
+        return{state:"on",info};
+      },
+      /* À chaque ouverture : vérifie que l'abonnement de cet appareil est toujours valable et le répare sans rien demander.
+         iOS peut renouveler ou perdre l'abonnement en silence, et le robot supprime un jeton périmé : sans ça, l'appli
+         affichait « activées » alors que plus rien n'arrivait. */
+      heal:async()=>{
+        if(!("Notification" in window)||!("PushManager" in window)||Notification.permission!=="granted"||navigator.onLine===false)return;
+        const old=lsGet(PUSH_KEY);if(!old)return;
+        const [M,r]=await Promise.all([msgLib(),reg()]);
+        const get=()=>M.getToken(M.getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:r});
+        let token=await get();
+        if(token===old){
+          /* jeton inchangé mais fiche disparue : le robot l'a supprimé car refusé -> on en demande un neuf */
+          let gone=false;
+          try{const d=await (F.getDocFromServer||F.getDoc)(F.doc(fs,"devices/"+old));gone=!d.exists()}catch(e){return}
+          if(gone){try{await M.deleteToken(M.getMessaging(app))}catch(e){}token=await get()}
+        }
+        if(!token)return;
+        await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)},{merge:true}));
+        if(token!==old){lsSet(PUSH_KEY,token);try{await soon(F.deleteDoc(F.doc(fs,"devices/"+old)))}catch(e){}}
       },
       enable:async()=>{
         const perm=await Notification.requestPermission();
@@ -4843,7 +4875,11 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         if(t){try{await soon(F.deleteDoc(F.doc(fs,"devices/"+t)))}catch(e){}}
         lsSet(PUSH_KEY,null);
       },
-      test:async()=>{const r=await reg();await r.showNotification("AutoLockSolution",{body:"Les notifications fonctionnent sur cet appareil.",icon:"als-192.png",badge:"als-192.png",tag:"als-test"})}
+      /* vrai test de bout en bout : le message passe par le robot puis revient sur les appareils de ce compte (comme un vrai rappel) */
+      test:async()=>{
+        const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+        await F.setDoc(F.doc(fs,"outbox/"+id),{kind:"test",title:"Test AutoLockSolution",body:"Les notifications arrivent bien sur cet appareil.",to:"self",by:u.uid,sent:false,at:Date.now()});
+      }
     };
   }
 
@@ -4921,6 +4957,8 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     if(who)who.textContent="Connecté : "+(u.email||"")+" · version "+ALS_BUILD;
     if(box)box.hidden=false;
     window.__alsResolve&&window.__alsResolve(window.claude);
+    /* notifications : contrôle et réparation de l'abonnement, en arrière-plan (ne retarde jamais l'ouverture) */
+    setTimeout(()=>{try{pushApi(u).heal().catch(()=>{})}catch(e){}},6000);
     if("serviceWorker" in navigator&&!window.__ALS_SDK){navigator.serviceWorker.register("app-sw.js").catch(()=>{})}
   }
   let outArmed=false;

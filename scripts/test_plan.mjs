@@ -43,6 +43,8 @@ import { planOutbox } from "./plan.mjs";
   assert.deepEqual(r.sends[0].deviceIds, ["d2", "d3"]);            // l'auteur n'est pas prévenu
   r = planOutbox([{ id: "e2", title: "Stock bas", to: "all", by: "A", at: t }], dev, t + 1000);
   assert.deepEqual(r.sends[0].deviceIds, ["d1", "d2", "d3"]);      // stock bas : tout le monde
+  r = planOutbox([{ id: "e4", title: "Test", to: "self", by: "B", at: t }], dev, t + 1000);
+  assert.deepEqual(r.sends[0].deviceIds, ["d2", "d3"]);            // bouton Tester : seulement ses propres appareils
   r = planOutbox([{ id: "e3", title: "Vieux", to: "all", by: "A", at: t - 13 * 3600e3 }], dev, t);
   assert.equal(r.sends.length, 0); assert.deepEqual(r.skip, ["e3"]); // trop ancien : ignoré
   const many = Array.from({ length: 8 }, (_, i) => ({ id: "m" + i, title: "T" + i, to: "others", by: "A", at: t + i }));

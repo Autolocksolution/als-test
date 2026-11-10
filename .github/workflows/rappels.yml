@@ -1,8 +1,12 @@
 name: Rappels du planning
 
+# Le robot reste à l'écoute de la base pendant RUN_MIN minutes : un message de l'appli part en quelques secondes
+# et le rappel « 1 h avant » à la minute près. À la fin, il relance lui-même l'exécution suivante (étape « Relancer »).
+# Le déclenchement horaire ci-dessous n'est qu'un filet de sécurité : GitHub le retarde souvent d'une heure ou plus,
+# il ne faut donc pas compter dessus pour l'heure d'envoi. Une seule exécution à la fois (concurrency).
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -17,11 +21,12 @@ concurrency:
 
 permissions:
   contents: read
+  actions: write   # uniquement pour relancer ce même workflow à la fin
 
 jobs:
   envoi:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 200
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -29,6 +34,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
+      - name: Heure de départ
+        run: echo "T0=$(date +%s)" >> "$GITHUB_ENV"
       - name: Installer firebase-admin
         working-directory: scripts
         run: npm install --ignore-scripts --no-audit --no-fund
@@ -43,7 +50,20 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
           MODE: ${{ github.event.inputs.mode || 'normal' }}
+          RUN_MIN: "170"
         run: node send-reminders.mjs
       - name: Supprimer la clé
         if: always()
         run: rm -f "$RUNNER_TEMP/sa.json"
+      # Enchaînement : l'exécution suivante est mise en file avant la fin de celle-ci, elle démarre dès qu'elle s'arrête.
+      # Pas de relance si le robot s'est arrêté en moins de 10 min (panne) : le déclenchement horaire reprendra la main.
+      - name: Relancer
+        if: always() && (github.event.inputs.mode || 'normal') == 'normal'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ $(( $(date +%s) - ${T0:-0} )) -ge 600 ]; then
+            gh workflow run rappels.yml --repo "$GITHUB_REPOSITORY" --ref main || true
+          else
+            echo "Arrêt rapide : pas de relance automatique"
+          fi

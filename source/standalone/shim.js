@@ -147,7 +147,39 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         if(!("PushManager" in window))return{state:/iPhone|iPad|iPod/.test(navigator.userAgent)?"install":"unsupported"};
         if(!VAPID||VAPID.startsWith("__"))return{state:"nokey"};
         if(Notification.permission==="denied")return{state:"blocked"};
-        return{state:Notification.permission==="granted"&&lsGet(PUSH_KEY)?"on":"off"};
+        const t=lsGet(PUSH_KEY);
+        if(Notification.permission!=="granted"||!t)return{state:"off"};
+        /* état réel côté serveur : cet appareil est-il toujours enregistré, le dernier envoi est-il passé, le robot tourne-t-il */
+        let info="";
+        try{
+          const when=ms=>new Date(ms).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(","," à");
+          const [d,rb]=await Promise.all([soon(F.getDoc(F.doc(fs,"devices/"+t))),soon(F.getDoc(F.doc(fs,"meta/robot")))]);
+          if(d&&!d.exists())info="Attention : cet appareil n'est plus enregistré. Désactivez puis réactivez les notifications.";
+          else if(d){const x=d.data();
+            if(x.errAt&&x.errAt>(x.okAt||0))info="Attention : le dernier envoi vers cet appareil a été refusé ("+(x.errCode||"erreur")+"). Désactivez puis réactivez les notifications.";
+            else if(x.okAt)info="Dernier envoi vers cet appareil : "+when(x.okAt)+".";}
+          if(rb&&rb.exists()&&Date.now()-(rb.data().at||0)>20*60000)info+=(info?" ":"")+"Le robot d'envoi est en pause depuis "+when(rb.data().at)+" : les notifications peuvent arriver en retard.";
+        }catch(e){}
+        return{state:"on",info};
+      },
+      /* À chaque ouverture : vérifie que l'abonnement de cet appareil est toujours valable et le répare sans rien demander.
+         iOS peut renouveler ou perdre l'abonnement en silence, et le robot supprime un jeton périmé : sans ça, l'appli
+         affichait « activées » alors que plus rien n'arrivait. */
+      heal:async()=>{
+        if(!("Notification" in window)||!("PushManager" in window)||Notification.permission!=="granted"||navigator.onLine===false)return;
+        const old=lsGet(PUSH_KEY);if(!old)return;
+        const [M,r]=await Promise.all([msgLib(),reg()]);
+        const get=()=>M.getToken(M.getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:r});
+        let token=await get();
+        if(token===old){
+          /* jeton inchangé mais fiche disparue : le robot l'a supprimé car refusé -> on en demande un neuf */
+          let gone=false;
+          try{const d=await (F.getDocFromServer||F.getDoc)(F.doc(fs,"devices/"+old));gone=!d.exists()}catch(e){return}
+          if(gone){try{await M.deleteToken(M.getMessaging(app))}catch(e){}token=await get()}
+        }
+        if(!token)return;
+        await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)},{merge:true}));
+        if(token!==old){lsSet(PUSH_KEY,token);try{await soon(F.deleteDoc(F.doc(fs,"devices/"+old)))}catch(e){}}
       },
       enable:async()=>{
         const perm=await Notification.requestPermission();
@@ -166,7 +198,11 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         if(t){try{await soon(F.deleteDoc(F.doc(fs,"devices/"+t)))}catch(e){}}
         lsSet(PUSH_KEY,null);
       },
-      test:async()=>{const r=await reg();await r.showNotification("AutoLockSolution",{body:"Les notifications fonctionnent sur cet appareil.",icon:"als-192.png",badge:"als-192.png",tag:"als-test"})}
+      /* vrai test de bout en bout : le message passe par le robot puis revient sur les appareils de ce compte (comme un vrai rappel) */
+      test:async()=>{
+        const id="t"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+        await F.setDoc(F.doc(fs,"outbox/"+id),{kind:"test",title:"Test AutoLockSolution",body:"Les notifications arrivent bien sur cet appareil.",to:"self",by:u.uid,sent:false,at:Date.now()});
+      }
     };
   }
 
@@ -244,6 +280,8 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     if(who)who.textContent="Connecté : "+(u.email||"")+" · version "+ALS_BUILD;
     if(box)box.hidden=false;
     window.__alsResolve&&window.__alsResolve(window.claude);
+    /* notifications : contrôle et réparation de l'abonnement, en arrière-plan (ne retarde jamais l'ouverture) */
+    setTimeout(()=>{try{pushApi(u).heal().catch(()=>{})}catch(e){}},6000);
     if("serviceWorker" in navigator&&!window.__ALS_SDK){navigator.serviceWorker.register("app-sw.js").catch(()=>{})}
   }
   let outArmed=false;
