@@ -1321,7 +1321,12 @@ let sGroup=firstGroup(CATS.find(c=>c.id===sCat));
 {const g=load("als-group");const c=CATS.find(c=>c.id===sCat);if(g&&c.groups.some(x=>x.id===g))sGroup=g}
 let sSeries="",q="",lowOnly=false,sEditing=null,sDelArmed=false,sPhoto=null,sPhotoDirty=false;
 const curCat=()=>CATS.find(c=>c.id===sCat);
-const inGroup=(i,gid)=>i.group===gid||(Array.isArray(i.also)&&i.also.includes(gid));
+/* Clés aftermarket : marques qui ont les mêmes clés. Une clé rangée dans l'une apparaît dans les autres
+   (c'est la même fiche, donc la même quantité : en retirer une dans Dacia la retire aussi dans Renault). */
+const AM_LINKS=[["renault","dacia"],["psa","peugeot","citroen"],["vag","volkswagen","seat","skoda"],["chevrolet","daewoo"],["chrysler","dodge","jeep"]];
+const amLinked=gid=>AM_LINKS.find(f=>f.includes(gid))||[gid];
+const inGroup=(i,gid)=>{const own=[i.group,...(Array.isArray(i.also)?i.also:[])];
+  return own.includes(gid)||(i.section==="aftermarket"&&amLinked(gid).some(g=>own.includes(g)))};
 const grpLabel=gid=>{const g=amGroups.find(x=>x.id===gid);return g?g.label:gid};
 const curGroup=()=>curCat().groups.find(g=>g.id===sGroup)||null;
 const thrOf=i=>(i.thr!==undefined&&i.thr!==null&&i.thr!=="")?num(i.thr):LOW;
@@ -1403,7 +1408,8 @@ function sRender(){
   const view=base.map(i=>({...i,qty:qtyOf(i)}));
   const acdp=sCat==="acdp",lows=view.filter(acdp?isMiss:isLow).length;
   $("lowBtn").textContent=acdp?"À acheter":"5 ou moins";
-  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," "+plr(view.length,"référence","références")),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," "+plr(view.length,"référence","références")),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"),
+    ...(sCat==="aftermarket"&&!needle&&amLinked(sGroup).length>1?[h("span",null,"Stock commun avec "+amLinked(sGroup).filter(g=>g!==sGroup).map(grpLabel).join(", "))]:[]));
   $("lowBtn").setAttribute("aria-pressed",String(lowOnly));
   let shown=view.filter(i=>(!lowOnly||(acdp?isMiss(i):isLow(i)))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
   const lame=sCat.startsWith("lame_")&&cat.groups.length>0;
@@ -1624,7 +1630,8 @@ function sClose(){$("sScrim").hidden=true;sEditing=null}
 let sAlso=new Set();
 function drawAlso(){
   const main=$("sBrand").value;sAlso.delete(main);
-  $("sAlso").replaceChildren(...amGroups.filter(g=>g.id!==main&&g.id!=="autres").map(g=>h("button",{type:"button",class:"also-chip","aria-pressed":String(sAlso.has(g.id)),disabled:canWrite?null:"disabled",onclick:()=>{sAlso.has(g.id)?sAlso.delete(g.id):sAlso.add(g.id);drawAlso()}},g.label)));
+  amLinked(main).forEach(g=>sAlso.delete(g));
+  $("sAlso").replaceChildren(...amGroups.filter(g=>g.id!=="autres"&&!amLinked(main).includes(g.id)).map(g=>h("button",{type:"button",class:"also-chip","aria-pressed":String(sAlso.has(g.id)),disabled:canWrite?null:"disabled",onclick:()=>{sAlso.has(g.id)?sAlso.delete(g.id):sAlso.add(g.id);drawAlso()}},g.label)));
 }
 $("sBrand").addEventListener("change",e=>{fillSeries(e.target.value,"");drawAlso()});
 function shrink(file,max=520){return new Promise((res,rej)=>{

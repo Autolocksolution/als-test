@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-7r+rZrLAXPuLtAfhpJb9h/h7IA1Sgqt5pMyA7eASzVQ=' 'sha256-244XWQ8wz+6SYecJu6NAQt7AEEEZD+DRh7xQP5kHc+Y=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-IxU9hk0Lewer9O9o8l9jjOBs6xAEJ2kvYB50TuJ6DQY=' 'sha256-4DgKQHf9ah87PyOirM3cW+oINsFencX9FIZk7WtHZhk=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1352,7 +1352,12 @@ let sGroup=firstGroup(CATS.find(c=>c.id===sCat));
 {const g=load("als-group");const c=CATS.find(c=>c.id===sCat);if(g&&c.groups.some(x=>x.id===g))sGroup=g}
 let sSeries="",q="",lowOnly=false,sEditing=null,sDelArmed=false,sPhoto=null,sPhotoDirty=false;
 const curCat=()=>CATS.find(c=>c.id===sCat);
-const inGroup=(i,gid)=>i.group===gid||(Array.isArray(i.also)&&i.also.includes(gid));
+/* Clés aftermarket : marques qui ont les mêmes clés. Une clé rangée dans l'une apparaît dans les autres
+   (c'est la même fiche, donc la même quantité : en retirer une dans Dacia la retire aussi dans Renault). */
+const AM_LINKS=[["renault","dacia"],["psa","peugeot","citroen"],["vag","volkswagen","seat","skoda"],["chevrolet","daewoo"],["chrysler","dodge","jeep"]];
+const amLinked=gid=>AM_LINKS.find(f=>f.includes(gid))||[gid];
+const inGroup=(i,gid)=>{const own=[i.group,...(Array.isArray(i.also)?i.also:[])];
+  return own.includes(gid)||(i.section==="aftermarket"&&amLinked(gid).some(g=>own.includes(g)))};
 const grpLabel=gid=>{const g=amGroups.find(x=>x.id===gid);return g?g.label:gid};
 const curGroup=()=>curCat().groups.find(g=>g.id===sGroup)||null;
 const thrOf=i=>(i.thr!==undefined&&i.thr!==null&&i.thr!=="")?num(i.thr):LOW;
@@ -1434,7 +1439,8 @@ function sRender(){
   const view=base.map(i=>({...i,qty:qtyOf(i)}));
   const acdp=sCat==="acdp",lows=view.filter(acdp?isMiss:isLow).length;
   $("lowBtn").textContent=acdp?"À acheter":"5 ou moins";
-  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," "+plr(view.length,"référence","références")),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," "+plr(view.length,"référence","références")),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"),
+    ...(sCat==="aftermarket"&&!needle&&amLinked(sGroup).length>1?[h("span",null,"Stock commun avec "+amLinked(sGroup).filter(g=>g!==sGroup).map(grpLabel).join(", "))]:[]));
   $("lowBtn").setAttribute("aria-pressed",String(lowOnly));
   let shown=view.filter(i=>(!lowOnly||(acdp?isMiss(i):isLow(i)))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
   const lame=sCat.startsWith("lame_")&&cat.groups.length>0;
@@ -1655,7 +1661,8 @@ function sClose(){$("sScrim").hidden=true;sEditing=null}
 let sAlso=new Set();
 function drawAlso(){
   const main=$("sBrand").value;sAlso.delete(main);
-  $("sAlso").replaceChildren(...amGroups.filter(g=>g.id!==main&&g.id!=="autres").map(g=>h("button",{type:"button",class:"also-chip","aria-pressed":String(sAlso.has(g.id)),disabled:canWrite?null:"disabled",onclick:()=>{sAlso.has(g.id)?sAlso.delete(g.id):sAlso.add(g.id);drawAlso()}},g.label)));
+  amLinked(main).forEach(g=>sAlso.delete(g));
+  $("sAlso").replaceChildren(...amGroups.filter(g=>g.id!=="autres"&&!amLinked(main).includes(g.id)).map(g=>h("button",{type:"button",class:"also-chip","aria-pressed":String(sAlso.has(g.id)),disabled:canWrite?null:"disabled",onclick:()=>{sAlso.has(g.id)?sAlso.delete(g.id):sAlso.add(g.id);drawAlso()}},g.label)));
 }
 $("sBrand").addEventListener("change",e=>{fillSeries(e.target.value,"");drawAlso()});
 function shrink(file,max=520){return new Promise((res,rej)=>{
@@ -4685,7 +4692,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261110-2019";
+const ALS_BUILD="20261110-2031";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
