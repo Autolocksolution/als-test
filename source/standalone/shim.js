@@ -12,6 +12,16 @@ const CFG={
   appId:"1:180980896952:web:fab35ad253cf69fd2f504d"
 };
 const G=id=>document.getElementById(id);
+/* ---------- relevé technique (vitesse d'ouverture, notifications) ----------
+   Quelques durées et l'état de l'appareil, déposés dans la fiche personnelle (team/{uid}.diag) une fois par ouverture.
+   Sert à comprendre pourquoi l'appli est lente ou pourquoi les notifications coincent sur UN téléphone qu'on n'a pas en main.
+   Aucune donnée métier (ni client, ni montant, ni plaque). */
+const DG={b:ALS_BUILD,t:{},lag:{max:0,sum:0},push:[]};
+const mark=k=>{try{if(!(k in DG.t))DG.t[k]=Math.round(performance.now())}catch(e){}};
+mark("module");
+try{let last=performance.now(),n=0;const iv=setInterval(()=>{const now=performance.now(),d=now-last-200;last=now;if(d>50){DG.lag.sum+=Math.round(d);if(d>DG.lag.max)DG.lag.max=Math.round(d)}if(++n>=100)clearInterval(iv)},200)}catch(e){}
+try{const st=G("syncT");if(st){const mo=new MutationObserver(()=>{const t=st.textContent||"";if(t==="Synchronisé"){mark("sync");mo.disconnect()}else if(t.startsWith("Hors ligne"))mark("horsligne")});mo.observe(st,{childList:true,characterData:true,subtree:true})}}catch(e){}
+let dgSend=null;
 const wait=G("lgWait"),form=G("lgForm"),scrim=G("lgScrim"),msg=G("lgMsg");
 function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false;G("lgWaitT").textContent=t;G("lgRetry").hidden=!retry}
 function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
@@ -21,10 +31,10 @@ G("lgRetry").addEventListener("click",()=>location.reload());
    Elle s'ouvre tout de suite sur la copie locale ; si la connexion ne répond pas en 4 s (réseau faible : Firebase
    vérifie le compte auprès du serveur), elle démarre hors ligne puis passe en synchro toute seule dès que la connexion répond. */
 const signed=(()=>{try{return localStorage.getItem("als-signed")==="1"||!!localStorage.getItem("als-last-mail")}catch(e){return false}})();
-let started=false,fellBack=false;
+let started=false,fellBack=false,fellBackOnce=false;
 function fallBack(){
   if(started||fellBack||!signed)return false;
-  fellBack=true;window.claude={use:async()=>null};
+  fellBack=true;fellBackOnce=true;mark("secours");window.claude={use:async()=>null};
   window.__alsResolve&&window.__alsResolve(window.claude);
   return true;
 }
@@ -36,6 +46,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
   try{
     if(window.__ALS_SDK){({A,Au,F}=window.__ALS_SDK)}
     else{[A,Au,F]=await Promise.all([import(SDK_BASE+"firebase-app.js"),import(SDK_BASE+"firebase-auth.js"),import(SDK_BASE+"firebase-firestore.js")])}
+    mark("sdk");
   }catch(e){if(fallBack())return;showWait("Impossible de charger la synchronisation. Vérifiez votre connexion internet, puis réessayez.",true);return}
 
   const app=A.initializeApp(CFG);
@@ -149,18 +160,20 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         if(Notification.permission==="denied")return{state:"blocked"};
         const t=lsGet(PUSH_KEY);
         if(Notification.permission!=="granted"||!t)return{state:"off"};
-        /* état réel côté serveur : cet appareil est-il toujours enregistré, le dernier envoi est-il passé, le robot tourne-t-il */
-        let info="";
-        try{
-          const when=ms=>new Date(ms).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(","," à");
-          const [d,rb]=await Promise.all([soon(F.getDoc(F.doc(fs,"devices/"+t))),soon(F.getDoc(F.doc(fs,"meta/robot")))]);
-          if(d&&!d.exists())info="Attention : cet appareil n'est plus enregistré. Désactivez puis réactivez les notifications.";
-          else if(d){const x=d.data();
-            if(x.errAt&&x.errAt>(x.okAt||0))info="Attention : le dernier envoi vers cet appareil a été refusé ("+(x.errCode||"erreur")+"). Désactivez puis réactivez les notifications.";
-            else if(x.okAt)info="Dernier envoi vers cet appareil : "+when(x.okAt)+".";}
-          if(rb&&rb.exists()&&Date.now()-(rb.data().at||0)>20*60000)info+=(info?" ":"")+"Le robot d'envoi est en pause depuis "+when(rb.data().at)+" : les notifications peuvent arriver en retard.";
-        }catch(e){}
-        return{state:"on",info};
+        /* l'état s'affiche tout de suite ; le détail côté serveur (appareil toujours enregistré, dernier envoi passé,
+           robot en marche) arrive ensuite sans bloquer l'écran, même avec un réseau faible */
+        const more=(async()=>{let info="";
+          try{
+            const when=ms=>new Date(ms).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(","," à");
+            const [d,rb]=await Promise.all([soon(F.getDoc(F.doc(fs,"devices/"+t))),soon(F.getDoc(F.doc(fs,"meta/robot")))]);
+            if(d&&!d.exists())info="Attention : cet appareil n'est plus enregistré. Désactivez puis réactivez les notifications.";
+            else if(d){const x=d.data();
+              if(x.errAt&&x.errAt>(x.okAt||0))info="Attention : le dernier envoi vers cet appareil a été refusé ("+(x.errCode||"erreur")+"). Désactivez puis réactivez les notifications.";
+              else if(x.okAt)info="Dernier envoi vers cet appareil : "+when(x.okAt)+".";}
+            if(rb&&rb.exists()&&Date.now()-(rb.data().at||0)>20*60000)info+=(info?" ":"")+"Le robot d'envoi est en pause depuis "+when(rb.data().at)+" : les notifications peuvent arriver en retard.";
+          }catch(e){}
+          return info})();
+        return{state:"on",more};
       },
       /* À chaque ouverture : vérifie que l'abonnement de cet appareil est toujours valable et le répare sans rien demander.
          iOS peut renouveler ou perdre l'abonnement en silence, et le robot supprime un jeton périmé : sans ça, l'appli
@@ -181,16 +194,36 @@ if(signed)hideAll();else showWait("Connexion en cours…");
         await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)},{merge:true}));
         if(token!==old){lsSet(PUSH_KEY,token);try{await soon(F.deleteDoc(F.doc(fs,"devices/"+old)))}catch(e){}}
       },
-      enable:async()=>{
-        const perm=await Notification.requestPermission();
-        if(perm!=="granted")throw new Error("Autorisation refusée");
-        const [M,r]=await Promise.all([msgLib(),reg()]);
-        let token;
-        try{token=await M.getToken(M.getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:r})}
-        catch(e){throw new Error("Activation impossible ("+((e&&e.code)||"erreur")+")")}
-        if(!token)throw new Error("Aucun jeton reçu");
-        await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)}));
-        lsSet(PUSH_KEY,token);
+      /* say(texte) : affiche l'étape en cours sur le bouton. Chaque étape a un délai maximum et un message clair :
+         avec un réseau faible, l'ancien code restait muet (bouton grisé) sans jamais dire ce qui bloquait. */
+      enable:async say=>{
+        const tell=t=>{try{say&&say(t)}catch(e){}},t0=Date.now(),log=(k,e)=>DG.push.push(k+" "+(Date.now()-t0)+"ms"+(e?" "+String(e.code||e.message||e).slice(0,60):""));
+        const lim=(p,ms,txt)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j(new Error(txt)),ms))]);
+        try{
+          tell("Autorisation…");
+          const perm=await Notification.requestPermission();log("perm:"+perm);
+          if(perm!=="granted")throw new Error(perm==="denied"?"Notifications refusées : Réglages de l'iPhone > Notifications > AutoLock":"Autorisation non donnée, réessayez");
+          tell("Préparation…");
+          /* service worker absent (premier lancement, copie locale effacée) : on le (ré)installe au lieu d'attendre dans le vide */
+          try{if(!window.__ALS_SDK&&!(await navigator.serviceWorker.getRegistration()))await navigator.serviceWorker.register("app-sw.js")}catch(e){log("sw",e)}
+          const [M,r]=await Promise.all([
+            lim(msgLib(),25000,"Connexion trop lente pour activer : réessayez avec un meilleur réseau"),
+            lim(navigator.serviceWorker.ready,25000,"Appli pas encore prête : fermez-la, rouvrez-la, puis réessayez")]);
+          log("pret");tell("Inscription…");
+          const old=lsGet(PUSH_KEY);
+          let token,err;
+          for(let i=0;i<2&&!token;i++){
+            try{token=await lim(M.getToken(M.getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:r}),30000,"Connexion trop lente pour activer : réessayez avec un meilleur réseau")}
+            catch(e){err=e;log("jeton"+i,e);if(i===0)await new Promise(x=>setTimeout(x,1500))}
+          }
+          if(!token)throw new Error(err&&!err.code&&err.message?err.message:"Activation impossible ("+((err&&err.code)||"erreur")+")");
+          log("jeton");
+          await soon(F.setDoc(F.doc(fs,"devices/"+token),{token,uid:u.uid,email:u.email||"",at:Date.now(),ua:(navigator.userAgent||"").slice(0,160)},{merge:true}));
+          lsSet(PUSH_KEY,token);
+          if(old&&old!==token){try{await soon(F.deleteDoc(F.doc(fs,"devices/"+old)))}catch(e){}}
+          log("ok");
+        }catch(e){log("echec",e);throw e}
+        finally{dgSend&&dgSend(u)}
       },
       disable:async()=>{
         const t=lsGet(PUSH_KEY);
@@ -259,8 +292,22 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     catch(err){G("lgBad").textContent=FR[err&&err.code]||"Envoi impossible."}
   });
 
+  /* dépôt du relevé : 20 s après l'ouverture, puis après chaque tentative d'activation des notifications */
+  dgSend=async u=>{try{
+    const d={b:DG.b,at:Date.now(),ua:(navigator.userAgent||"").slice(0,160),t:DG.t,lag:DG.lag,push:DG.push.slice(-12),secours:fellBackOnce,
+      icone:!!(navigator.standalone||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)),
+      ref:(document.referrer||"").slice(-40),sw:!!(navigator.serviceWorker&&navigator.serviceWorker.controller),
+      ecran:screen.width+"x"+screen.height+"@"+(window.devicePixelRatio||1),coeurs:navigator.hardwareConcurrency||0,
+      enligne:navigator.onLine,reseau:(navigator.connection&&navigator.connection.effectiveType)||"",
+      perm:("Notification" in window)?Notification.permission:"absent",pm:"PushManager" in window,jeton:!!lsGet(PUSH_KEY)};
+    try{const e=await navigator.storage.estimate();d.stock=Math.round((e.usage||0)/1048576)+"/"+Math.round((e.quota||0)/1048576)+" Mo"}catch(e){}
+    try{d.lents=performance.getEntriesByType("resource").sort((a,b)=>b.duration-a.duration).slice(0,6).map(r=>(r.name.split("/").pop()||"").split("?")[0].slice(0,28)+" "+Math.round(r.duration)+"ms"+(r.transferSize?" "+Math.round(r.transferSize/1024)+"ko":""))}catch(e){}
+    try{const n=performance.getEntriesByType("navigation")[0];if(n)d.page={rep:Math.round(n.responseEnd),dom:Math.round(n.domContentLoadedEventEnd),type:n.type}}catch(e){}
+    await F.setDoc(F.doc(fs,"team/"+u.uid),{diag:d},{merge:true});
+  }catch(e){}};
   async function start(u){
-    started=true;clearTimeout(fbTimer);
+    started=true;clearTimeout(fbTimer);mark("depart");
+    setTimeout(()=>dgSend(u),20000);
     try{localStorage.setItem("als-signed","1")}catch(e){}
     window.claude={use:async name=>{
       if(name==="db")return dbApi;
@@ -294,6 +341,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     location.reload();
   });
   Au.onAuthStateChanged(auth,u=>{
+    mark("compte");
     if(u){hideAll();if(fellBack){fellBack=false;start(u);try{window.__alsUpgrade&&window.__alsUpgrade()}catch(e){}return}if(!started)start(u)}
     else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });

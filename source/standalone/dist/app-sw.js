@@ -1,7 +1,7 @@
 /* AutoLockSolution : service worker. Appli utilisable hors ligne + notifications.
    Ouverture instantanée : la page et les fichiers de l'appli sont servis depuis la copie locale,
    puis rafraîchis en arrière-plan ; une nouvelle version s'affiche donc à l'ouverture suivante. */
-const V="als-20261110-1508";
+const V="als-20261110-1845";
 /* cache durable, gardé d'une version à l'autre : Firebase et polices (adresses versionnées) + moteur OCR (4,7 Mo, revalidé).
    Son nom ne commence pas par « als- » : aucune activation ne le supprime, même celle d'une ancienne version.
    Changer ce nom (alslib-2…) le vide à la prochaine mise à jour. */
@@ -9,6 +9,7 @@ const LIB="alslib-1";
 const APP="app.html";
 const SHELL=[APP,"app.webmanifest","als-192.png","als-512.png","als-180.png","ticket.js"];
 const OCR=new URL("ocr/",location.href).href;
+const ROOT=new URL("./",location.href).pathname;
 self.addEventListener("install",e=>{
   /* app.html obligatoire : s'il ne se télécharge pas, l'installation échoue et l'ancienne version reste en place (avec sa copie).
      Le reste est facultatif. cache:"no-cache" : revalidé auprès du serveur (sinon cache HTTP de 10 min sur GitHub Pages). */
@@ -65,6 +66,9 @@ self.addEventListener("fetch",e=>{
   /* page et fichiers de l'appli : copie locale tout de suite (même réseau faible ou absent), mise à jour en arrière-plan ;
      sans copie locale : réseau comme avant (page : 4 s au plus, puis copie de l'appli). Fichiers OCR : cache durable. */
   const key=u.origin+u.pathname,nav=r.mode==="navigate";
+  /* Icône installée depuis l'ancienne page d'accueil (adresse du dossier, ou index.html) : cette page ne fait que renvoyer
+     vers l'appli. On y renvoie tout de suite, sans passer par le réseau (sinon jusqu'à 4 s d'attente à chaque ouverture). */
+  if(nav&&(u.pathname===ROOT||u.pathname===ROOT+"index.html")){e.respondWith(Promise.resolve(Response.redirect(new URL(APP,location.href).href,302)));return}
   let bg;e.waitUntil(new Promise(f=>bg=f));
   e.respondWith((async()=>{
     try{

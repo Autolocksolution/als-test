@@ -63,6 +63,7 @@ sub('    <h3 class="h3">Sécurité</h3>\n','''    <div id="stPushBox" hidden><h3
     <h3 class="h3">Sécurité</h3>
 ''',name="pushUI")
 sub('$("stLock").addEventListener("click"','''let pushApi=null;
+let pushSeq=0;
 async function pushPaint(){
   if(!pushApi)return;
   const st=await pushApi.status().catch(()=>({state:"unsupported"}));
@@ -72,7 +73,9 @@ async function pushPaint(){
     install:"Pour recevoir les notifications sur iPhone : ouvrir l'appli depuis son icône sur l'écran d'accueil (pas depuis Safari).",
     unsupported:"Ce navigateur ne gère pas les notifications.",
     nokey:"Notifications pas encore configurées côté serveur."};
-  $("stPushT").textContent=(T[st.state]||"")+(st.info?" "+st.info:"");
+  $("stPushT").textContent=T[st.state]||"";
+  /* détail côté serveur (dernier envoi, alerte) : ajouté dès qu'il arrive, sans retarder l'affichage */
+  const seq=++pushSeq;if(st.more)st.more.then(info=>{if(info&&seq===pushSeq)$("stPushT").textContent=(T[st.state]||"")+" "+info}).catch(()=>{});
   const b=$("stPush");b.disabled=!(st.state==="on"||st.state==="off");
   b.textContent=st.state==="on"?"Désactiver les notifications":"Activer les notifications";
   $("stPushTest").hidden=st.state!=="on";
@@ -81,7 +84,7 @@ $("stPush").addEventListener("click",async()=>{
   const b=$("stPush");b.disabled=true;
   try{const st=await pushApi.status();
     if(st.state==="on"){await pushApi.disable();toast("Notifications désactivées")}
-    else{await pushApi.enable();toast("Notifications activées")}}
+    else{b.textContent="Activation en cours…";await pushApi.enable(t=>{b.textContent=t});toast("Notifications activées")}}
   catch(e){toast(e&&e.message?e.message:"Activation impossible")}
   pushPaint();
 });
