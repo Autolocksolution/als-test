@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-qjTG906QJYOcpSpPyInCrh2hr94eoLRqxSXaMdv0U3c=' 'sha256-93LdPKSLkj70PAYlqxFVEHMgtWq7DfhHCrvWTug2u7Q=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-7r+rZrLAXPuLtAfhpJb9h/h7IA1Sgqt5pMyA7eASzVQ=' 'sha256-244XWQ8wz+6SYecJu6NAQt7AEEEZD+DRh7xQP5kHc+Y=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -794,7 +794,7 @@ main{padding-top:10px}
   <div id="remind" class="remind" hidden></div>
   <div id="offbar" class="offbar" role="status" hidden></div>
   <div id="ro" class="ro" hidden>Lecture seule : votre accès ne permet pas de modifier les données. Demandez à votre associé de vous donner l'accès Contributeur.</div>
-  <section id="home" hidden><div id="hmBody"></div>
+  <section id="home" hidden>
     <div class="hm-h"><h3>Décodage</h3><button type="button" id="dMore" hidden></button></div>
     <form id="dInline" class="dinline" autocomplete="off">
       <label for="dText" class="vh">Nouveau code de décodage</label>
@@ -802,6 +802,7 @@ main{padding-top:10px}
       <button type="submit" class="btn pri" id="dAdd">Enregistrer</button>
     </form>
     <ul class="list" id="dList"></ul>
+    <div id="hmBody" style="margin-top:16px"></div>
 </section>
   <section id="stk">
     <div class="catmenu" id="catMenu" hidden></div>
@@ -1302,6 +1303,7 @@ function notify(kind,title,body,to){
 function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,2600)}
 function ago(ms){if(!ms)return"";const s=(Date.now()-ms)/1000;if(s<60)return"à l'instant";if(s<3600)return"il y a "+Math.floor(s/60)+" min";if(s<86400)return"il y a "+Math.floor(s/3600)+" h";const d=Math.floor(s/86400);return d===1?"hier":"il y a "+d+" j"}
 const KEY_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3.5M15 12v2.5"/></svg>';
+const plr=(n,one,many)=>Number(n)>1?many:one;
 function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 
@@ -1372,7 +1374,7 @@ function render(){
   $("dec").hidden=!dc;$("his").hidden=!hs;
   $("navStock").setAttribute("aria-selected",String(st));$("navCpt").setAttribute("aria-selected",String(cp));
   $("fab").hidden=!canWrite||hm||dc||hs||(bs&&false)||(st&&sCat==="urgent")||(cp&&cTab==="bilan");
-  $("fab").textContent=bs?"+ Ajouter un véhicule":pl?"+ Rendez-vous":ac?"+ Garder un lien":dv?(dvTab==="clients"?"+ Nouveau client":"+ Nouveau devis"):st?(curCat().fixed?"+ Ajouter une ligne":sCat==="aftermarket"?"+ Ajouter une clé":"+ Ajouter"):cTab==="recette"?"+ Ajouter un véhicule":"+ Ajouter";
+  $("fab").textContent=bs?"+ Ajouter un véhicule":pl?"+ Rendez-vous":ac?"+ Garder un lien":dv?(dvTab==="clients"?"+ Nouveau client":"+ Nouveau devis"):st?(curCat().fixed?"+ Ajouter une ligne":sCat==="aftermarket"?"+ Ajouter une clé":"+ Ajouter"):cTab==="recette"?"+ Intervention":"+ Ajouter";
   hm?hmRender():st?sRender():cp?cRender():dv?dvRender():dc?dRender():bs?vRender():pl?pRender():ac?aRender():hRender();
   $("orderBtn").hidden=!(st&&sCat==="urgent"&&loaded&&lowList().length);
   $("ordListBtn").hidden=!(st&&sCat==="urgent"&&loaded&&orders.length);
@@ -1432,7 +1434,7 @@ function sRender(){
   const view=base.map(i=>({...i,qty:qtyOf(i)}));
   const acdp=sCat==="acdp",lows=view.filter(acdp?isMiss:isLow).length;
   $("lowBtn").textContent=acdp?"À acheter":"5 ou moins";
-  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," références"),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(view.length))," "+plr(view.length,"référence","références")),h("span",null,h("b",null,String(acdp?view.filter(i=>i.qty>0).length:view.reduce((a,i)=>a+i.qty,0))),acdp?" que j'ai":" en stock"),h("span",null,h("b",null,String(lows)),acdp?" à acheter":" à recommander"));
   $("lowBtn").setAttribute("aria-pressed",String(lowOnly));
   let shown=view.filter(i=>(!lowOnly||(acdp?isMiss(i):isLow(i)))&&(!needle||[i.name,i.ref,i.compat,i.note,i.series].some(v=>(v||"").toLowerCase().includes(needle))));
   const lame=sCat.startsWith("lame_")&&cat.groups.length>0;
@@ -1549,7 +1551,7 @@ function sUniversal(group,mineCat){
 }
 function sUrgent(){
   const low=items.concat(virtualSeries()).map(i=>({...i,qty:qtyOf(i)})).filter(isLow).sort((a,b)=>a.qty-b.qty||(a.name||"").localeCompare(b.name||"","fr",{numeric:true}));
-  $("stats").replaceChildren(h("span",null,h("b",null,String(low.length))," références à recommander"),h("span",null,"selon le seuil de chaque pièce"));
+  $("stats").replaceChildren(h("span",null,h("b",null,String(low.length))," "+plr(low.length,"référence","références")+" à recommander"),h("span",null,"selon le seuil de chaque pièce"));
   const list=$("list");
   if(!loaded){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Chargement du stock…"),"Synchronisation avec votre associé."));return}
   if(!low.length){list.replaceChildren(h("li",{class:"empty"},h("strong",null,"Rien d'urgent"),"Toutes les pièces sont au-dessus de leur seuil d'alerte."));return}
@@ -1568,7 +1570,7 @@ function sUrgent(){
       h("button",{class:"it-main",onclick:()=>i.virtual?gotoGroup(i):sOpen(i),"aria-label":"Ouvrir "+nm+" ("+path+")"},
         h("div",{class:"it-name"},nm),
         (i.ref||thr!==LOW||ord)?h("div",{class:"it-meta"},i.ref?h("span",{class:"ref"},i.ref):null,thr!==LOW?h("span",null,"seuil "+thr):null,ord?h("span",{class:"badge low"},"Commandé ×"+ord):null):null),
-      h("div",{class:"left"},h("small",null,i.qty===0?"Rupture":"Reste"),h("output",{class:i.qty===0?"z":""},String(i.qty))))})]));
+      h("div",{class:"left"},i.qty===0?null:h("small",null,"Reste"),h("output",{class:i.qty===0?"z":"","aria-label":i.qty===0?"Rupture":"Reste "+i.qty},String(i.qty))))})]));
 }
 $("q").addEventListener("input",e=>{q=e.target.value;sRender()});
 $("lowBtn").addEventListener("click",()=>{lowOnly=!lowOnly;sRender()});
@@ -2432,7 +2434,7 @@ function hRender(){
     mm.get(mk).items.push(e);
   });
   const nm=[...byBrand.values()].reduce((a,m)=>a+m.size,0);
-  $("hStats").replaceChildren(h("span",null,h("b",null,String(nm))," modèles"),h("span",null,h("b",null,String(pool.length))," interventions réussies"),...(needle?[]:[h("span",null,brandLabel(hBrand))]));
+  $("hStats").replaceChildren(h("span",null,h("b",null,String(nm)),nm>1?" modèles":" modèle"),h("span",null,h("b",null,String(pool.length)),pool.length>1?" interventions réussies":" intervention réussie"),...(needle?[]:[h("span",null,brandLabel(hBrand))]));
   if(!pool.length){
     list.replaceChildren(h("div",{class:"empty"},h("strong",null,needle?"Aucun résultat":"Rien chez "+brandLabel(hBrand)+" pour l'instant"),
       needle?"Essayez un autre modèle, une ville ou un mot des notes.":"Dans le planning, passez un véhicule en « Réussi » : il arrive ici avec ses notes."));return}
@@ -3989,9 +3991,8 @@ const ic=n=>{const e=h("span",{class:"msi"});e.innerHTML=icoSvg(n);return e};
 function hmRender(){
   const box=$("hmBody");
   if(!loaded){box.replaceChildren(h("p",{class:"ro"},"Chargement…"));return}
-  const n=new Date(),hr=n.getHours();
-  const me=uid&&names[uid]?" "+String(names[uid]).split(" ")[0]:"";
-  const out=[h("div",{class:"hm-hi"},h("p",null,n.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})),h("h2",null,(hr<18?"Bonjour":"Bonsoir")+me))];
+  const n=new Date();
+  const out=[];
   const pre=key(n.getFullYear(),n.getMonth(),1).slice(0,8),today=key(n.getFullYear(),n.getMonth(),n.getDate());
   const rec=entries.filter(e=>e.kind==="recette"&&counts(e)&&(e.date||"").startsWith(pre));
   const low=lowList();
@@ -4094,7 +4095,7 @@ function vRender(){
     const kids=[];
     if(vBrand&&vModel&&gens.length>1){
       if(vFromQ)kids.push(h("button",{type:"button",class:"vh-back",onclick:()=>{vQ=vFromQ;vFromQ="";$("vSearch").value=vQ;vRender()}},"‹ Résultats « "+vFromQ+" »"));
-      kids.push(h("div",{class:"vh-phases-h"},h("b",null,vBrand+" "+vModel),h("small",null,gens.length+" générations / phases"+(yr>1900?" · aucune ne couvre "+yr:""))),
+      kids.push(h("div",{class:"vh-phases-h"},h("b",null,vBrand+" "+vModel),h("small",null,gens.length+" "+plr(gens.length,"génération / phase","générations / phases")+(yr>1900?" · aucune ne couvre "+yr:""))),
         h("div",{class:"vh-res"},gens.map(g=>vResRow(g,g.gen||g.model,()=>{vAll=false;vGen=g.id;vSave();vRender();scrollTo(0,0)}))));}
     else if(!vehicles.length&&loaded)kids.push(h("div",{class:"vh-empty"},h("b",null,"Ta base est vide"),"Ajoute ton premier véhicule : tout ce que tu notes ici sera retrouvé en deux touches.",canWrite?h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn pri",style:"flex:none;padding:0 20px",onclick:()=>vhOpen(null)},"Ajouter un véhicule")):null));
     else kids.push(h("div",{class:"vh-empty"},h("b",null,vehicles.length+" fiche"+(vehicles.length>1?"s":"")),"Choisis une marque et un modèle, ou cherche par nom."));
@@ -4503,7 +4504,7 @@ function aRender(){
   });
   if(!kids.length&&aq)kids.push(h("div",{class:"vh-empty"},h("b",null,"Aucun résultat"),"Rien ne correspond à « "+$("aQ").value.trim()+" » dans "+(aTab==="lire"?"À lire":"Gardées")+"."));
   if(!kids.length)kids.push(aTab==="lire"
-    ?h("div",{class:"vh-empty"},h("b",null,"Rien de nouveau"),"Les actus sont ajoutées par Claude : demande-lui dans le chat « mets à jour l'actu » et il cherche sur le web. Pour une vidéo TikTok, Instagram ou un post de forum, touche « Garder un lien » et colle l'adresse.")
+    ?h("div",{class:"vh-empty"},h("b",null,"Rien de nouveau"),"Les actus arrivent toutes seules chaque matin. Pour garder une vidéo TikTok, Instagram ou un post de forum, touche « Garder un lien » et colle l'adresse.")
     :h("div",{class:"vh-empty"},h("b",null,"Rien de gardé"),"Garde une actu depuis « À lire » pour la retrouver ici."));
   $("aBody").replaceChildren(...kids);
 }
@@ -4684,7 +4685,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261110-2006";
+const ALS_BUILD="20261110-2019";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
