@@ -1,0 +1,110 @@
+[
+  {
+    "id": "c-abrites-tn024-toyota-cle-lame-2019-2026",
+    "title": "Abrites TN024 : clés à lame Toyota 2019-2026, même toutes clés perdues",
+    "url": "https://abrites.com/news/world-first-toyota-my-2019-2026-mechanical-key-programming-with-abrites",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Abrites sort la licence TN024 pour programmer les clés à lame (non mains libres) de toutes les Toyota à partir de 2019. Elle permet l'ajout de clé et le cas toutes clés perdues, sans accès concession ni logiciel tiers. Abrites la présente comme la première solution indépendante de ce type.",
+    "date": "2026-11-09",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-autel-km100-psa-fiat-sans-code-2025",
+    "title": "Autel KM100 : apprentissage de clés sans code sur Peugeot, Citroën et Fiat 2025",
+    "url": "http://www.key-programmer.org/2026/11/11/autel-km100-update-psa-password-free-key-learning-models-as-of-2025/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "La mise à jour du 9 novembre 2026 du KM100 (Peugeot Citroën DS V1.60) ajoute l'apprentissage de clés sans code PIN sur les modèles 2025 : 208, 308, 2008, 3008, 5008, Partner, Rifter, Expert, Boxer, Berlingo, C3, C4, C5 Aircross, Jumpy, Jumper et leurs versions électriques. Côté Fiat, elle ajoute la lecture des données immo, la création de clé concession et l'apprentissage sans code pour les modèles à clé à lame (500e, 500X, 600e, Tipo, Doblo, Ducato, Scudo 2025).",
+    "date": "2026-11-11",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-peugeot-308-t9-cles-mortes-contact-pile-tordu",
+    "title": "Peugeot 308 (T9) : les deux clés mains libres mortes après changement de pile, contact tordu",
+    "url": "https://www.forum-peugeot.com/Forum/threads/probl%C3%A8me-cl%C3%A9s.141374/",
+    "source": "Forum Peugeot · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Après un changement de pile, la clé puis le double ne répondaient plus : pas d'ouverture, démarrage possible seulement avec la clé posée dans l'emplacement de secours. La procédure de la notice et la réinitialisation sous Diagbox (BSI, pack réparation, initialisation/apprentissage, code PIN nécessaire) n'ont pas été utiles. La vraie cause, confirmée par le propriétaire : la languette métallique de contact à côté de la pile avait été tordue sur les deux télécommandes.",
+    "date": "2026-04-07",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-renault-carte-mains-libres-mise-en-veille",
+    "title": "Renault récentes : carte mains libres qui ne répond plus, les 4 mises en veille à connaître",
+    "url": "https://communaute-etech.renault.fr/article/QUAND-VOTRE-VOITRE-ET-VOUS-CARTE-MAIN-LIBRE-NE-SE-PARLENT-PLUS/467",
+    "source": "Communauté Renault E-Tech (Renault)",
+    "kind": "web",
+    "summary": "Renault explique que la voiture coupe volontairement la détection de la carte dans 4 cas : véhicule déverrouillé et inactif plus de 15 minutes, plus de 10 à 20 détections sans ouverture, carte laissée près de la voiture plus de 5 minutes, ou véhicule non utilisé plus de 8 jours. Dans tous ces cas, il suffit d'ouvrir une fois avec le bouton de la carte (ou d'ouvrir une porte ou le coffre) pour que le mains libres revienne. À vérifier avant de conclure à une carte ou un boîtier en panne.",
+    "date": "2025-11-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-toyota-mains-libres-akl-smart-pro-pieges",
+    "title": "Toyota C-HR, Yaris, RAV4, Corolla : toutes clés mains libres perdues au Smart Pro, les pièges",
+    "url": "https://lsc.com.au/smart-pro-toyota-proximity-all-keys-lost",
+    "source": "LSC (distributeur Silca)",
+    "kind": "web",
+    "summary": "Le Smart Pro fait les Toyota mains libres toutes clés perdues avec un émulateur (ADC2015 pour puce Texas, ADC2020 pour puce NXP) qui sert de clé temporaire, et le faisceau ADC2021 branché sur le boîtier smart pour les modèles « BA » de 2021 et plus. Piège majeur : lors de l'effacement sur les systèmes avec code TIS, toute clé non présentée est bloquée définitivement et ne pourra plus jamais être reprogrammée. Comptez 1 à 3 jetons selon le modèle ; des défauts au tableau de bord (ex. « Service Hybrid System ») après l'opération sont normaux et s'effacent en roulant.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-keydiy-kdx4-synchro-ncf29ax-zb71",
+    "title": "KeyDiy KD-X4 : copier une clé mains libres NCF29Ax sur une ZB71, sans programmer dans la voiture",
+    "url": "https://obdexpresscouk.blogspot.com/2026/04/how-to-synchronize-ncf29ax-smart-key-by.html",
+    "source": "OBDexpress.co.uk",
+    "kind": "web",
+    "summary": "Le KD-X4 (et le KD-MAX) lit la puce NCF29A1, A2, A3, A4, 2953 ou 2954 d'une clé mains libres d'origine, via l'adaptateur KD n°13, puis écrit les données et l'identifiant dans une télécommande KD ZB71 (menu Fonction télécommande, Clonage clé intelligente, Synchronisation universelle). Il faut souvent dessouder la puce, ou souder des fils sur la carte de la clé. La ZB71 obtenue n'a pas besoin d'être programmée dans le véhicule ; tester ensuite la copie et l'originale.",
+    "date": "2026-04-21",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-obdstar-g3-bmw-bdc3-bcp-c4-11",
+    "title": "OBDSTAR G3 V40.61 : ajout de clé BMW série G (BDC3) et série U (BCP)",
+    "url": "http://www.key-programmer.org/2026/11/10/obdstar-g3-update-bmw-bdc3-bcp-key-programming/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "La mise à jour BMW du 2 novembre 2026 de l'OBDSTAR X300 Classic G3 (V40.61) ajoute l'ajout de clé sur BMW série G avec BDC3 et série U avec BCP. La méthode consiste à lire la clé d'origine avec l'adaptateur C4-11 puis à copier une nouvelle clé. L'adaptateur C4-11 n'est pas encore disponible (annoncé prochainement).",
+    "date": "2026-11-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-xhorse-multiprog-vw-5c-5d-cle-concession",
+    "title": "VW, Skoda, Seat, Audi 5C/5D : transformer une clé d'origine neuve en clé concession avec Multi Prog",
+    "url": "https://obdexpresscouk.blogspot.com/2026/04/generate-original-vw-5c5d-dealer-key-by.html",
+    "source": "OBDexpress.co.uk",
+    "kind": "web",
+    "summary": "Avec le Xhorse Multi Prog (appareil « VW 5C Smart Model »), on lit et sauvegarde les données d'une clé d'origine 5C/5D, en soudant ou avec l'adaptateur MQB 5C/5D sans soudure, puis on les écrit dans une autre clé d'origine. La clé ainsi préparée doit ensuite être apprise dans la voiture avec un autre outil (VVDI2, Key Tool Plus ou MIDI). Respecter le schéma de branchement fourni.",
+    "date": "2026-04-21",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  },
+  {
+    "id": "c-hyundai-kia-reference-cle-vvdi-key-tool",
+    "title": "Hyundai et Kia : trouver la bonne référence de clé mains libres avec le VVDI Key Tool",
+    "url": "https://keyinnovations.com/blog/stop-guessing-hyundaikia-proximity-fob-part-numbers-your-vvdi-key-tool-knows-the-answer/",
+    "source": "Key Innovations",
+    "kind": "web",
+    "summary": "Les clés mains libres Hyundai et Kia se ressemblent d'une année ou d'une finition à l'autre mais ne sont pas interchangeables. Avec une clé qui marche, le Key Tool Max, Max Pro ou Plus donne les 5 derniers chiffres de la référence d'origine : Clonage transpondeur, lire la clé sur la bobine, puis « More ». Sans clé (toutes clés perdues), il faut demander la référence de la télécommande au service pièces d'une concession avec le numéro de châssis.",
+    "date": "2026-05-27",
+    "state": "new",
+    "by": "claude",
+    "at": 1794378144892
+  }
+]
