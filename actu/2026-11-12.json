@@ -1,0 +1,122 @@
+[
+  {
+    "id": "c-km100-fiat-2025-cles-lame",
+    "title": "Autel KM100 (9 novembre 2026) : clés à lame Fiat 2025 (500e, 600e, Tipo, Doblo, Ducato, Scudo) sans code",
+    "url": "http://blog.obdii365.com/2026/11/10/autel-km100-update-fiat-2025-blade-key-programming-function/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Autel a publié le 9 novembre 2026 une mise à jour Fiat et PSA pour le KM100. Côté Fiat, elle ajoute la lecture des données immo, la création de clé concession et l'apprentissage sans mot de passe pour les modèles à clé à lame, dont 500e, 500X, 600e, Tipo/Egea, Doblo, Ducato et Scudo/Ulysse 2025. Elle ajoute aussi la lecture immo du Strada 2026 et l'apprentissage sans mot de passe sur des Abarth à clé mains libres.",
+    "date": "2026-11-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-vag-immo4-akl-mode-service-g3",
+    "title": "VW, Audi, Skoda, Seat immo 4 (VDO NEC + 24Cxx) toutes clés perdues : mode service par l'EEPROM avec OBDSTAR G3",
+    "url": "http://blog.obdii365.com/2026/04/27/obdstar-g3-vag-immo4-all-keys-lost-via-service-mode/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Pour les compteurs VAG immo 4, l'article décrit la méthode jugée la plus sûre plutôt que le câble pogo pin, qui peut bloquer le compteur : on dessoude l'EEPROM (air chaud vers 320 °C, composants voisins protégés par de l'aluminium), on la lit avec le MP001 et l'adaptateur C4-02, puis l'OBDSTAR G3 génère un fichier de mode service qu'on réécrit dans la puce. Une fois la puce remise en place, le compteur passe en mode service sans clé d'origine : on lit les données immo et on fabrique une clé concession. Photographier le sens de la puce avant de la retirer et bien nettoyer le flux ensuite. Sur table, la voiture ne démarre pas faute de calculateur moteur, mais tout fonctionne une fois remonté.",
+    "date": "2026-04-27",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-octavia-2015-mqb-akl-g3-rh850",
+    "title": "Skoda Octavia 2015 MQB toutes clés perdues : compteur RH850 et calculateur moteur avec OBDSTAR G3",
+    "url": "http://blog.obdii365.com/2025/09/01/obdstar-g3-program-skoda-octavia-2015-mqb-all-keys-lost-with-rh850-adapter/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur a fait une Octavia 2015 MQB toutes clés perdues : décodage de la serrure HU66 (10 min), lecture du compteur avec le G3 et le kit RH850 (20 min), lecture du calculateur moteur au câble ECM (10 min), puis calcul gratuit des données de synchronisation par OBDSTAR (3 min). Il a utilisé une clé Xhorse XZ et facturé 700 euros. La voiture n'avait pas de mains libres, donc pas d'antivol de colonne à lire ; sur un modèle mains libres il faut aussi l'ELV et les câbles DQ, environ 40 minutes de plus.",
+    "date": "2025-09-01",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-audi-a5-bcm2-crypte-akl-apb131",
+    "title": "Audi A5 2013 toutes clés perdues, BCM2 crypté : lecture sur table avec Autel IM508 et APB131",
+    "url": "http://blog.obdii365.com/2024/11/14/program-audi-bcm2-encrypted-all-keys-lost-with-autel-im508-and-apb131/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Sur cette A5 2013, la lecture des données immo par l'OBD échoue (« impossible d'entrer en mode programmation »), signe que le BCM2 est crypté. Il faut sortir le BCM2 (dans le coffre, côté passage de roue), le souder à l'APB131 avec le XP400 (puce D70F3634, menu V850 verrouillé) puis calculer les données immo. On récupère le code CS, on fabrique une clé concession, on remonte le BCM2 et on fait l'apprentissage par l'OBD en entrant le CS. Sans APB131, la lecture reste possible avec la G-Box, mais c'est plus compliqué.",
+    "date": "2024-11-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-silca-ads2188-psa-stellantis",
+    "title": "Silca ADS2188 (Smart Pro) : plus de 130 Stellantis, dont 2008, 3008, Astra et Frontera récents, même toutes clés perdues",
+    "url": "https://www.silca.biz/en/global/events-and-news/news-about-us/2025-32-software-update-psa-ads2188",
+    "source": "Silca",
+    "kind": "web",
+    "summary": "La mise à jour ADS2188 pour le Smart Pro programme les clés à lame et mains libres de plus de 130 modèles Stellantis, y compris en toutes clés perdues ; télécommande et transpondeur sont programmés en même temps. Elle couvre des modèles 2026 comme la nouvelle Astra, le Frontera, les Peugeot 2008 et 3008 et la Fiat 600. Certains modèles demandent des câbles de contournement ou d'émulation Advanced Diagnostics. Il faut effacer les clés et télécommandes existantes avant d'en programmer de nouvelles.",
+    "date": "2025-12-15",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-sermi-passerelles-daf-conseil",
+    "title": "SERMI et passerelles de sécurité : DAF Conseil pointe le manque d'harmonisation entre marques",
+    "url": "https://www.auto-infos.fr/article/daf-conseil-appelle-les-reparateurs-independants-a-prendre-leur-avenir-en-main-face-aux-vehicules-connectes.294213",
+    "source": "Auto Infos",
+    "kind": "web",
+    "summary": "DAF Conseil ne conteste pas le principe du SERMI mais regrette qu'une même intervention demande une habilitation chez une marque et pas chez une autre, et demande que les textes européens précisent quelles opérations relèvent de la sécurité. L'article cite la généralisation des passerelles de sécurité, des connexions facturées environ 50 euros pour certaines opérations, et met en garde sur l'avenir de la prise OBD face au renforcement de la cybersécurité. Un groupement européen de fournisseurs de services à distance a été créé en avril 2026 sous l'égide de la FIGIEFA.",
+    "date": "2026-11-03",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-opel-demarrage-secours-cle-mains-libres",
+    "title": "Opel Astra, Mokka, Vivaro, Corsa… mains libres : où poser la clé pour le démarrage de secours",
+    "url": "https://dashboardsymbols.com/2025/02/three-updates-made-to-the-vauxhall-and-opel-back-up-start-page/amp",
+    "source": "Dashboard Symbols",
+    "kind": "web",
+    "summary": "Sur les Opel récentes (Astra 2021+, Mokka 2020+, Vivaro 2019+, comme Combo, Corsa, Crossland, Grandland et Zafira), on pose la clé, boutons vers l'extérieur, contre le repère de la colonne de direction, puis on appuie sur Start/Stop avec le pied sur le frein ou l'embrayage, en gardant la clé en place jusqu'au démarrage. Sur les Astra et Mokka d'avant 2021, l'emplacement est dans la console centrale : porte-gobelet avant s'il y en a deux, sinon juste derrière, clé boutons vers le haut.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-hyundai-i20-2016-id47-ajout-cle",
+    "title": "Hyundai i20 2016 (puce ID47) : quel outil marche pour ajouter une clé",
+    "url": "http://blog.obdii365.com/2021/05/26/program-hyundai-i20-2016-key-with-autel-lonsdor-xhorse-xtool/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur en France n'a pas réussi avec le VVDI Key Tool Plus sur une i20 de juin 2016 en ID47 : pas de lecture du PIN, et même avec le PIN l'ajout de clé échouait. D'autres retours confirment la réussite avec le Lonsdor K518, l'Xtool X100 Pad2, l'OBDSTAR X300 et l'Autel IM508/IM608, qui lit le PIN gratuitement. Un utilisateur a cloné la puce puis ajouté la télécommande à l'Autel en 10 minutes.",
+    "date": "2021-05-26",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-yaris-1-telecommande-techstream",
+    "title": "Toyota Yaris 1 (2003) : transpondeur au Techstream, mais télécommande à apprendre à la main",
+    "url": "https://toyotaownersclub.com/forums/topic/190190-yaris-t-sport-remote-key-programming-techstream",
+    "source": "Toyota Owners Club · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Sur une Yaris T-Sport 2003, le transpondeur a été programmé avec Techstream, mais Techstream ne proposait pas l'enregistrement de la télécommande et une télécommande adaptable n'a jamais fonctionné. La solution confirmée : une télécommande Tokai-Rika B01SA d'occasion, apprise avec la séquence manuelle (clé insérée puis retirée, deux ouvertures de porte en 40 secondes, contact mis puis coupé, puis appui lock + unlock 1,5 s suivi de lock 1 s). Si les serrures se verrouillent deux fois au lieu d'une à la fin, il faut recommencer.",
+    "date": "2019-10-23",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  },
+  {
+    "id": "c-megane2-carte-non-detectee-bobine",
+    "title": "Mégane II « carte non détectée » puis plus de démarrage : c'était la bobine, soudures refaites",
+    "url": "https://www.planeterenault.com/forum/megane-ii-carte-non-detectee-regle-t43611.html",
+    "source": "Planète Renault · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Sur une Mégane II 1.9 dCi, le message « carte non détectée » est apparu plusieurs jours, puis la voiture n'a plus démarré. Changer la pile n'a rien donné, ni une première retouche de la bobine. Le problème a été réglé en refaisant entièrement les soudures de la bobine.",
+    "date": "2014-03-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1794463512585
+  }
+]
