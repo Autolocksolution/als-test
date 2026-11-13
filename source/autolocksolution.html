@@ -574,6 +574,27 @@ tr.tap{cursor:pointer}
 .an-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .an-acts a,.an-acts button{height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--tint);font-weight:600;font-size:14px;display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
 .an-acts [aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.qz-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.qz-card h3{font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.25;margin:0 0 12px;overflow-wrap:anywhere}
+.qz-lab{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px}
+.qz-lab:first-child{margin-top:0}
+.qz-pick{display:flex;flex-wrap:wrap;gap:6px}
+.qz-pick .chip2{font-size:14px;padding:7px 12px}
+.qz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin-bottom:8px}
+.qz-top b{color:var(--ink);font-family:var(--f-mono);font-weight:500}
+.qz-bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-bottom:12px}
+.qz-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.qz-ans{display:flex;flex-direction:column;gap:8px}
+.qz-ans button{text-align:left;min-height:52px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:500;line-height:1.3;overflow-wrap:anywhere}
+.qz-ans button.ok{background:var(--in-bg);border-color:var(--in);color:var(--in);font-weight:700}
+.qz-ans button.ko{background:var(--out-bg);border-color:var(--out);color:var(--out)}
+.qz-ans button:disabled{cursor:default;opacity:1}
+.qz-exp{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--tint);font-size:15px;line-height:1.45}
+.qz-exp b{display:block;margin-bottom:2px}
+.qz-score{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1;margin:0 0 4px}
+.qz-rev{border-top:1px solid var(--line);padding:10px 0}
+.qz-rev p{margin:0 0 3px;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.qz-rev .g{color:var(--in);font-weight:600}.qz-rev .b{color:var(--out);text-decoration:line-through}.qz-rev .e{color:var(--muted)}
 .pm-list{display:flex;flex-direction:column;gap:8px}
 .pm-list button{display:flex;justify-content:space-between;align-items:center;height:56px;padding:0 16px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-family:var(--f-display);font-weight:600;font-size:19px}
 .pm-list em{font-style:normal;font-family:var(--f-mono);font-size:13px;color:var(--acc-ink)}
@@ -822,6 +843,7 @@ main{padding-top:10px}
     <div class="tools"><input type="search" id="aQ" placeholder="Rechercher une voiture, un outil…" aria-label="Rechercher dans les actus"></div>
     <div id="aBody"></div>
   </section>
+  <section id="quiz" hidden><div id="qzBody"></div></section>
   <section id="his" hidden>
     <div class="chips" id="hChips"></div>
     <p class="stats" id="hStats"></p>
@@ -1338,18 +1360,18 @@ const qtyOf=i=>pend[i.id]?pend[i.id].qty:i.qty;
 function render(){
   const hm=mode==="accueil";
   $("home").hidden=!hm;$("navHome").setAttribute("aria-selected",String(hm));
-  const st=mode==="stock",cp=mode==="comptes",dc=mode==="decodage",hs=mode==="historique",dv=mode==="devis",bs=mode==="base",pl=mode==="planning",ac=mode==="actu";
-  $("ttl").textContent=hm?"AutoLockSolution":st?"Stock":cp?"Comptes":dv?"Devis & factures":dc?"Décodage":bs?"Base de données":pl?"Planning":ac?"Actu":"Historique";
-  $("base").hidden=!bs;$("plan").hidden=!pl;$("actu").hidden=!ac;
-  $("navBase").setAttribute("aria-selected",String(bs));$("navPlus").setAttribute("aria-selected",String(dc||hs||pl||ac||bs||dv));
+  const st=mode==="stock",cp=mode==="comptes",dc=mode==="decodage",hs=mode==="historique",dv=mode==="devis",bs=mode==="base",pl=mode==="planning",ac=mode==="actu",qzm=mode==="quiz";
+  $("ttl").textContent=hm?"AutoLockSolution":st?"Stock":cp?"Comptes":dv?"Devis & factures":dc?"Décodage":bs?"Base de données":pl?"Planning":ac?"Actu":qzm?"Quiz":"Historique";
+  $("base").hidden=!bs;$("plan").hidden=!pl;$("actu").hidden=!ac;$("quiz").hidden=!qzm;
+  $("navBase").setAttribute("aria-selected",String(bs));$("navPlus").setAttribute("aria-selected",String(dc||hs||pl||ac||bs||dv||qzm));
   $("dvs").hidden=!dv;$("navDvs").setAttribute("aria-selected",String(dv));
   $("stkTabs").hidden=!st;$("stk").hidden=!st;
   $("cptTabs").hidden=!cp;$("cptSub").hidden=!cp||cTab==="idees";$("cpt").hidden=!cp;
   $("dec").hidden=!dc;$("his").hidden=!hs;
   $("navStock").setAttribute("aria-selected",String(st));$("navCpt").setAttribute("aria-selected",String(cp));
-  $("fab").hidden=!canWrite||hm||dc||hs||(bs&&false)||(st&&sCat==="urgent")||(cp&&cTab==="bilan");
+  $("fab").hidden=!canWrite||hm||dc||hs||qzm||(bs&&false)||(st&&sCat==="urgent")||(cp&&cTab==="bilan");
   $("fab").textContent=bs?"+ Ajouter un véhicule":pl?"+ Rendez-vous":ac?"+ Garder un lien":dv?(dvTab==="clients"?"+ Nouveau client":"+ Nouveau devis"):st?(curCat().fixed?"+ Ajouter une ligne":sCat==="aftermarket"?"+ Ajouter une clé":"+ Ajouter"):cTab==="recette"?"+ Intervention":"+ Ajouter";
-  hm?hmRender():st?sRender():cp?cRender():dv?dvRender():dc?dRender():bs?vRender():pl?pRender():ac?aRender():hRender();
+  hm?hmRender():st?sRender():cp?cRender():dv?dvRender():dc?dRender():bs?vRender():pl?pRender():ac?aRender():qzm?qzRender():hRender();
   $("orderBtn").hidden=!(st&&sCat==="urgent"&&loaded&&lowList().length);
   $("ordListBtn").hidden=!(st&&sCat==="urgent"&&loaded&&orders.length);
   if(orders.length)$("ordListBtn").textContent="Commandes"+(openOrders().length?" en cours ("+openOrders().length+")":"");
@@ -4005,13 +4027,94 @@ function plusOpen(){
   $("plusList").replaceChildren(
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("devis")}},h("span",null,"Devis & factures")),
     h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("base")}},h("span",null,"Base véhicules")),
-    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null));
+    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;goMode("actu")}},h("span",null,"Actu"),nNew?h("em",null,nNew+" à lire"):null),
+    h("button",{type:"button",onclick:()=>{$("plusScrim").hidden=true;qz.view="home";goMode("quiz")}},h("span",null,"Quiz")));
   $("plusScrim").hidden=false;
 }
 $("plusClose").addEventListener("click",()=>$("plusScrim").hidden=true);
 $("plusScrim").addEventListener("click",e=>{if(e.target===$("plusScrim"))$("plusScrim").hidden=true});
 const safeUrl=u=>/^https?:\/\/[^\s]+$/i.test((u||"").trim())?u.trim():"";
 const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return""}};
+
+/* ================= QUIZ ================= */
+/* Les questions sont dans quiz.js (chargé à la première ouverture). Le tirage privilégie les questions les moins vues,
+   pour que chaque partie soit différente ; ce compteur et les scores restent sur le téléphone. */
+const qz={view:"home",cat:"all",n:10,list:[],i:0,pick:null,score:0,wrong:[],err:false,busy:false};
+{const c=load("als-qz-cat"),n=Number(load("als-qz-n"));if(c)qz.cat=c;if([10,20,30].includes(n))qz.n=n}
+function qzLoad(){
+  if(window.ALS_QUIZ)return Promise.resolve();
+  return new Promise((ok,ko)=>{const sc=document.createElement("script");sc.src="quiz.js";sc.onload=()=>window.ALS_QUIZ?ok():ko(new Error("vide"));sc.onerror=()=>{sc.remove();ko(new Error("indisponible"))};document.head.append(sc)});
+}
+const qzKey=t=>{let x=5381;for(let i=0;i<t.length;i++)x=((x<<5)+x+t.charCodeAt(i))>>>0;return x.toString(36)};
+const qzJson=k=>{try{return JSON.parse(load(k)||"{}")||{}}catch(e){return{}}};
+const qzMix=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const qzPool=()=>window.ALS_QUIZ.q.filter(x=>qz.cat==="all"||x[0]===qz.cat);
+const qzCatL=id=>{const c=window.ALS_QUIZ.cats.find(x=>x[0]===id);return c?c[1]:id};
+function qzStart(only){
+  const seen=qzJson("als-qz-seen");
+  let pool=only||qzPool();
+  if(!only)pool=qzMix(pool).sort((a,b)=>(seen[qzKey(a[1])]||0)-(seen[qzKey(b[1])]||0)).slice(0,qz.n);
+  qz.list=qzMix(pool).map(x=>({c:x[0],q:x[1],good:x[2][0],ans:qzMix(x[2]),exp:x[3]}));
+  qz.i=0;qz.pick=null;qz.score=0;qz.wrong=[];qz.view="run";qzRender();scrollTo(0,0);
+}
+function qzAnswer(a){
+  if(qz.pick!==null)return;
+  const cur=qz.list[qz.i];qz.pick=a;
+  if(a===cur.good)qz.score++;else qz.wrong.push({...cur,pick:a});
+  const seen=qzJson("als-qz-seen"),k=qzKey(cur.q);seen[k]=(seen[k]||0)+1;store("als-qz-seen",JSON.stringify(seen));
+  qzRender();
+}
+function qzNext(){
+  if(qz.i<qz.list.length-1){qz.i++;qz.pick=null;qzRender();scrollTo(0,0);return}
+  const best=qzJson("als-qz-best"),pct=Math.round(qz.score/qz.list.length*100);
+  best[qz.cat]={last:pct,best:Math.max(pct,(best[qz.cat]||{}).best||0),n:((best[qz.cat]||{}).n||0)+1};store("als-qz-best",JSON.stringify(best));
+  qz.view="end";qzRender();scrollTo(0,0);
+}
+function qzRender(){
+  const box=$("qzBody");
+  if(!window.ALS_QUIZ){
+    if(qz.err){box.replaceChildren(h("div",{class:"empty"},h("strong",null,"Quiz indisponible"),"Les questions n'ont pas pu être chargées. Vérifiez le réseau.",h("div",{class:"acts",style:"justify-content:center;margin-top:12px"},h("button",{type:"button",class:"btn pri",onclick:()=>{qz.err=false;qzRender()}},"Réessayer"))));return}
+    box.replaceChildren(h("p",{class:"hint"},"Chargement des questions…"));
+    if(!qz.busy){qz.busy=true;qzLoad().then(()=>{qz.busy=false;if(mode==="quiz")qzRender()},()=>{qz.busy=false;qz.err=true;if(mode==="quiz")qzRender()})}
+    return;
+  }
+  const Q=window.ALS_QUIZ;
+  if(qz.cat!=="all"&&!Q.cats.some(c=>c[0]===qz.cat))qz.cat="all";
+  if(qz.view==="run"&&!qz.list.length)qz.view="home";
+  if(qz.view==="home"){
+    const best=qzJson("als-qz-best"),b=best[qz.cat],pool=qzPool().length;
+    const chip=(id,l,n)=>h("button",{type:"button",class:"chip2","aria-pressed":String(qz.cat===id),onclick:()=>{qz.cat=id;store("als-qz-cat",id);qzRender()}},l,h("span",{class:"q"},String(n)));
+    box.replaceChildren(h("div",{class:"qz-card"},
+      h("p",{class:"qz-lab"},"Thème"),
+      h("div",{class:"qz-pick"},chip("all","Tout mélangé",Q.q.length),Q.cats.map(c=>chip(c[0],c[1],Q.q.filter(x=>x[0]===c[0]).length))),
+      h("p",{class:"qz-lab"},"Nombre de questions"),
+      h("div",{class:"seg"},[10,20,30].map(n=>h("button",{type:"button","aria-pressed":String(qz.n===n),onclick:()=>{qz.n=n;store("als-qz-n",String(n));qzRender()}},String(n)))),
+      h("div",{class:"acts",style:"margin-top:16px"},h("button",{type:"button",class:"btn pri",id:"qzGo",onclick:()=>qzStart()},"Commencer"))),
+      h("p",{class:"hint"},b?"Dernier score sur ce thème : "+b.last+" % · meilleur : "+b.best+" % · "+b.n+" partie"+(b.n>1?"s":""):pool+" question"+(pool>1?"s":"")+" sur ce thème. Le tirage change à chaque partie."));
+    return;
+  }
+  if(qz.view==="run"){
+    const cur=qz.list[qz.i],done=qz.pick!==null,last=qz.i===qz.list.length-1;
+    box.replaceChildren(
+      h("div",{class:"qz-top"},h("span",null,"Question ",h("b",null,(qz.i+1)+" / "+qz.list.length)," · "+qzCatL(cur.c)),h("button",{type:"button",class:"btnlink",style:"text-decoration:underline",onclick:()=>{qz.view="home";qzRender()}},"Arrêter")),
+      h("div",{class:"qz-bar"},h("i",{style:"width:"+Math.round((qz.i+(done?1:0))/qz.list.length*100)+"%"})),
+      h("div",{class:"qz-card"},h("h3",null,cur.q),
+        h("div",{class:"qz-ans"},cur.ans.map(a=>h("button",{type:"button",disabled:done?"":null,class:done?(a===cur.good?"ok":a===qz.pick?"ko":null):null,onclick:()=>qzAnswer(a)},a))),
+        done?h("p",{class:"qz-exp"},h("b",null,qz.pick===cur.good?"Bonne réponse":"Raté"),cur.exp):null),
+      done?h("div",{class:"acts"},h("button",{type:"button",class:"btn pri",id:"qzNext",onclick:qzNext},last?"Voir le résultat":"Question suivante")):null);
+    return;
+  }
+  const tot=qz.list.length,pct=Math.round(qz.score/tot*100),wrong=qz.wrong;
+  box.replaceChildren(
+    h("div",{class:"qz-card"},h("p",{class:"qz-score"},qz.score+" / "+tot),
+      h("p",{class:"hint",style:"margin:0"},pct+" % · "+(pct===100?"Sans faute.":pct>=80?"Très bon niveau.":pct>=50?"Correct, quelques points à revoir.":"À retravailler : relisez les corrections ci-dessous.")),
+      h("div",{class:"acts",style:"margin-top:14px"},
+        h("button",{type:"button",class:"btn pri",onclick:()=>qzStart()},"Nouvelle partie"),
+        wrong.length?h("button",{type:"button",class:"btn",onclick:()=>qzStart(wrong.map(w=>[w.c,w.q,[w.good,...w.ans.filter(a=>a!==w.good)],w.exp]))},"Refaire mes erreurs"):null,
+        h("button",{type:"button",class:"btn",onclick:()=>{qz.view="home";qzRender();scrollTo(0,0)}},"Changer de thème"))),
+    wrong.length?h("div",{class:"qz-card"},h("p",{class:"qz-lab"},wrong.length+" erreur"+(wrong.length>1?"s":"")+" à revoir"),
+      wrong.map(w=>h("div",{class:"qz-rev"},h("p",null,h("b",null,w.q)),h("p",{class:"b"},w.pick),h("p",{class:"g"},w.good),h("p",{class:"e"},w.exp)))):null);
+}
 
 /* ================= BASE DE DONNÉES VÉHICULES ================= */
 const VH_SPECS=[["chip","Transpondeur"],["blade","Lame"],["ml","Mains libre"],["clone","Puce clonable ?"],["immo","Système immo"],

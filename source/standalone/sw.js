@@ -7,7 +7,7 @@ const V="als-__BUILD__";
    Changer ce nom (alslib-2…) le vide à la prochaine mise à jour. */
 const LIB="alslib-1";
 const APP="app.html";
-const SHELL=[APP,"app.webmanifest","als-192.png","als-512.png","als-180.png","ticket.js"];
+const SHELL=[APP,"app.webmanifest","als-192.png","als-512.png","als-180.png","ticket.js","quiz.js"];
 const OCR=new URL("ocr/",location.href).href;
 const ROOT=new URL("./",location.href).pathname;
 self.addEventListener("install",e=>{
