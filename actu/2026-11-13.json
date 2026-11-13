@@ -1,0 +1,62 @@
+[
+  {
+    "id": "c-psa-4a-akl-astuces-alarme-f14",
+    "title": "Peugeot 5008, 4008 et Citroën clé mains libres 4A toutes clés perdues : 5 astuces quand ça échoue",
+    "url": "http://blog.obdii365.com/2026/11/12/tips-for-psa-id4a-all-keys-lost-programming-failures/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Si l'alarme est active, débrancher la sirène dans le pare-boue avant droit ou retirer le fusible F14 de 5 A dans la boîte à fusibles intérieure. En toutes clés perdues, la première clé demande 20 à 30 minutes d'attente (pas en ajout, mais il faut alors une clé d'origine déjà apprise). Avec des clés Xhorse ou KeyDiy, une seule clé peut être programmée, contre deux d'origine, et une télécommande Xhorse doit être reconfigurée pour garder le mains libres. Un serrurier qui avait échoué sur une 5008 de 2023 avec plusieurs outils a réussi en lisant le calculateur moteur Delphi DCM7.1A pour obtenir le PIN ; selon lui, avec un maintien de batterie, l'attente de 30 minutes n'est plus nécessaire.",
+    "date": "2026-11-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794550244665
+  },
+  {
+    "id": "c-obdstar-fca-bcm-mb91f526-obd",
+    "title": "OBDSTAR : clés Fiat Ducato 2023+ par l'OBD sans démonter le BCM (MB91F526)",
+    "url": "http://blog.obdii365.com/2026/11/12/obdstar-fca-mb91f526-bcm-key-learning-via-obd/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "OBDSTAR annonce une prochaine mise à jour Fiat pour les véhicules équipés du BCM FCA MB91F526 : lecture de l'EEPROM, apprentissage de clé et création de clé concession directement par la prise OBD, sans dépose du BCM sur table. En Europe, le modèle concerné est le Fiat Ducato à partir de 2023 ; les autres modèles listés sont sud-américains. La fonction sera disponible sur les OBDSTAR X300 Classic G3, X300 Mini Fiat et X300 Pro4.",
+    "date": "2026-11-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794550244665
+  },
+  {
+    "id": "c-hyundai-ncf2951-copie-im508-apb113",
+    "title": "Hyundai clé mains libres NCF2951 : copie avec Autel IM508, XP400 Pro et adaptateur APB113",
+    "url": "http://www.key-programmer.org/2026/11/12/autel-im508-copy-hyundai-ncf2951-smart-key-via-apb113/",
+    "source": "key-programmer.org · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur a copié une clé mains libres Hyundai à puce NXP NCF2951 sans passer par la voiture. Il ouvre la clé d'origine, lit ses données avec l'IM508, le XP400 Pro et l'adaptateur APB113 (l'IM508 affiche le schéma de branchement), puis sauvegarde. Il écrit ensuite les données dans une nouvelle clé, d'origine ou Autel iKey.",
+    "date": "2026-11-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794550244665
+  },
+  {
+    "id": "c-vw-polo-pq26-bcm-j519-multiprog",
+    "title": "VW Polo (PQ26) : brochage du BCM J519 MPC5646B pour Xhorse Multi Prog, et l'astuce de la masse",
+    "url": "http://blog.vvdishop.com/vw-j519-bcm-pq26-pinout-to-xhorse-multi-prog/",
+    "source": "blog.vvdishop.com · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur du Multi Prog partage le schéma de branchement du BCM J519 (CENTRAL09) des VW sur plateforme PQ26, comme la Polo, avec processeur MPC5646B, pour le travail sur table. Son conseil pour une lecture stable : souder le fil de masse au plus près du plan de masse du processeur. Un fil de masse court évite les coupures de communication, les erreurs de checksum et les échecs de lecture ou d'écriture.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794550244665
+  },
+  {
+    "id": "c-autel-renault-akl-retire",
+    "title": "Autel IM508, IM608, KM100 : toutes clés perdues Renault retiré, ajout de clé rendu sur certains modèles seulement",
+    "url": "http://blog.obdii365.com/2025/01/16/autel-im508-im608-removed-renault-akl-function/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Autel a retiré dans toutes les régions la fonction toutes clés perdues Renault des OTOFIX IM1/IM2, IM508, IM508S, IM608 (Pro, II) et KM100, ainsi que la lecture du PIN Renault à 39 chiffres par le module HFM avec l'adaptateur APB131. Une mise à jour de février 2025 a rendu l'ajout de clé et la lecture du PIN sur une partie des Renault et Dacia, d'autres modèles n'ayant que l'ajout de clé sans lecture du PIN. Pour les toutes clés perdues Renault, le blog renvoie vers d'autres outils (OBDSTAR, Lonsdor, Xtool, Abrites, Xhorse).",
+    "date": "2025-01-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1794550244665
+  }
+]
