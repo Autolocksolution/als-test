@@ -1,0 +1,86 @@
+[
+  {
+    "id": "c-reparation-constructeurs-monetisent-logiciels",
+    "title": "Réparation : les constructeurs font payer l'accès aux logiciels, 50 à 150 € par intervention",
+    "url": "https://www.auto-infos.fr/article/reparation-automobile-comment-les-constructeurs-monetisent-leur-controle-des-logiciels.294384",
+    "source": "Auto Infos",
+    "kind": "web",
+    "summary": "Même quand un indépendant fait la réparation, il doit souvent payer le constructeur pour finir le travail (accès aux données, licence de diagnostic, codage ou appairage des pièces). Selon Autodistribution, cet accès coûte entre 50 et 150 € par intervention, parfois plus, avec des formules différentes selon les marques (à l'heure, à la journée, jetons, abonnement). L'article cite aussi des hausses très fortes des tarifs d'information technique chez certains constructeurs, jusqu'à 50 fois plus cher.",
+    "date": "2026-11-13",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-adpa-digital-omnibus-acces-donnees",
+    "title": "Accès aux données des voitures : l'ADPA craint un recul avec le « Digital Omnibus » européen",
+    "url": "https://www.auto-infos.fr/article/acces-aux-donnees-automobiles-l-adpa-redoute-un-recul-des-droits-de-la-reparation-independante.294210",
+    "source": "Auto Infos",
+    "kind": "web",
+    "summary": "L'association des éditeurs de données techniques (ADPA) alerte : le projet européen « Digital Omnibus » pourrait permettre aux constructeurs de refuser le partage des données au nom du secret des affaires, malgré le Data Act. Elle demande que les tarifs d'accès soient basés sur les coûts réels et suit la révision de l'annexe X du règlement d'homologation, qui touche l'accès à la prise OBD, l'authentification et le lien avec la certification SERMI. Une amélioration réglementaire n'est pas attendue avant trois ou quatre ans.",
+    "date": "2026-11-02",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-bmw-f15-bdc-085-vvdi2-echec",
+    "title": "BMW X5 F15 (BDC version 085) : le VVDI2 n'ajoute pas de clé par l'OBD",
+    "url": "http://blog.obdii365.com/2025/06/25/xhorse-vvdi2-failed-to-add-bmw-bdc2-key-via-obd-solution/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un utilisateur n'arrivait pas à déverrouiller le BDC d'une BMW F15 par l'OBD avec le Xhorse VVDI2 : l'outil demandait une mise à jour du firmware alors qu'il était déjà à jour. La cause : le BDC est en version logicielle 085, que Xhorse ne sait pas déverrouiller par l'OBD. Il faut alors démonter le BDC et travailler sur table, ou utiliser le Yanhua ACDP (module 31), qui fait l'ajout de clé et le toutes clés perdues par l'OBD sur cette version.",
+    "date": "2025-06-25",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-fiat-panda-500-hybride-obdstar-g3",
+    "title": "Fiat Panda et 500 hybrides 2020-2024 (clé à lame) : clé concession et ajout avec OBDSTAR G3",
+    "url": "http://blog.obdii365.com/2024/08/01/obdstar-x300-classic-g3-program-2020-2024-fiat-hybrid-key/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "OBDSTAR a ajouté les Panda hybride, 500 hybride, nouveau Doblò et Lancia Ypsilon 2020-2024 à clé à lame (BSI Delphi 70F3632/70F3633, ID46, type 3). Sur une Panda hybride 2022, l'outil lit les données immo (code PIN, IC et identifiants des clés) en quelques minutes, fabrique une clé concession à partir de ces données, puis programme la clé. Le code PIN lu à la première étape est redemandé pour programmer.",
+    "date": "2024-08-01",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-sandero-uch-continental-jci-g3",
+    "title": "Dacia Sandero 2013-2019 : remplacer l'UCH Continental par un Johnson Controls avec OBDSTAR G3",
+    "url": "http://blog.obdii365.com/2025/02/10/replace-renault-dacia-bcm-uch-with-obdstar-x300-classic-g3/",
+    "source": "OBDII365",
+    "kind": "web",
+    "summary": "Avec le G3 (le X300 DP Plus n'a pas cette fonction), on lit d'abord l'UCH d'origine pour récupérer le code PIN de 32 caractères, puis on monte l'UCH Johnson Controls, on le remet à zéro et on le programme avec ce PIN ; une seule clé est alors enregistrée et il faut ajouter la deuxième ensuite. La méthode vaut aussi pour d'autres Renault et Dacia (Clio 3 et 4, Captur, Logan, Duster, Mégane 3, Kangoo 2, Twingo 2, Trafic…), mais il faut vérifier la couverture du G3 avant. L'article précise que les outils Autel peuvent changer le VIN de l'UCH mais ne lisent plus le PIN sur ces modèles.",
+    "date": "2025-02-10",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-autel-mqb49-5c-5d-ajout-cle-apb113",
+    "title": "VW, Audi, Skoda, Seat MQB49 5C/5D : ajouter une clé avec Autel IM508/IM608 et l'APB113",
+    "url": "https://blog.obdexpress.co.uk/2026/03/20/autel-im508-im608-add-vw-mqb49-5c-5d-key-guide/",
+    "source": "OBDexpress",
+    "kind": "web",
+    "summary": "La clé d'origine doit être présente : on démonte sa carte électronique pour lire ses données immo avec le programmateur Autel et l'adaptateur APB113, puis on écrit ces données sur une nouvelle clé pour en faire une clé concession, avant l'apprentissage par l'OBD. Sur les modèles 2024 et plus, il faut d'abord déverrouiller la passerelle SFD. Pièges : identifier le type de carte de la clé avant de la câbler, noter où le fichier immo est enregistré, et laisser les autres clés hors du véhicule pendant l'apprentissage.",
+    "date": "2026-03-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  },
+  {
+    "id": "c-peugeot-2008-2025-ht-aes-abrites-pn020",
+    "title": "Peugeot 2008 2025 clé à lame HT-AES : PIN et toutes clés perdues avec Abrites PN020",
+    "url": "https://www.youtube.com/watch?v=mlbXr0PglkE",
+    "source": "AVDI FAN (YouTube)",
+    "kind": "video",
+    "summary": "La vidéo montre la lecture du code PIN d'une Peugeot 2008 de 2025 à clé à lame (transpondeur HT-AES) avec l'AVDI, l'émulateur ZN094 et la licence PN020. On lance l'apprentissage de clé dans le menu Peugeot en ligne, puis on pose l'émulateur sur l'antenne quand le logiciel le demande. Selon la description, la licence gère aussi le toutes clés perdues et le démarrage d'urgence. C'est une chaîne liée à Abrites, donc à visée promotionnelle.",
+    "date": "2025-10-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1794723726975
+  }
+]
