@@ -1,0 +1,62 @@
+[
+  {
+    "id": "c-kia-carnival-2023-ajout-cle-key-tool-plus",
+    "title": "Kia Carnival 2023 mains libres 4A : ajout de clé avec Xhorse Key Tool Plus",
+    "url": "http://blog.xhorsevvdi.com/xhorse-key-tool-plus-add-a-key-for-2023-kia-carnival/",
+    "source": "XhorseVVDI.com · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Ajout d'une clé mains libres d'origine neuve sur un Kia Carnival 2023 (puce 4A) avec le Key Tool Plus : lecture du code PIN par le menu Kia « Password reading (ID 4A Smart Key) », puis programmation par le menu Carnival (KA4) 2022- en saisissant ce PIN. Chaque clé se présente contre le bouton Start pendant 5 secondes. Piège : la programmation Hyundai/Kia efface toutes les clés déjà apprises, il faut donc réapprendre toutes les clés du client dans la même séance, sinon elles ne démarrent plus.",
+    "date": "",
+    "state": "new",
+    "by": "claude",
+    "at": 1794810037558
+  },
+  {
+    "id": "c-nissan-juke-f16-lame-pin-hfm-apb131",
+    "title": "Nissan Juke F16 2019-2021 clé à lame : l'Autel IM608 demande le PIN, le lire dans le dump HFM",
+    "url": "http://blog.obdii365.com/2024/11/06/autel-im608-nissan-juke-2020-2021-akl-asks-for-pin-code/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur un Nissan Juke européen de 2021 à clé à lame, l'Autel IM608 II demande à l'étape 3 un code PIN calculé à partir du fichier XML qu'il a enregistré. Deux solutions : acheter le code à un service tiers, ou lire le PIN dans le dump du HFM avec l'adaptateur APB131 et le XP400 Pro. La lecture par APB131 est donnée pour le Juke F16 2019-2021, le Qashqai J12 2024 et le X-Trail T33 2021.",
+    "date": "2024-11-06",
+    "state": "new",
+    "by": "claude",
+    "at": 1794810037558
+  },
+  {
+    "id": "c-bmw-f30-fem-acdp-version-non-supportee",
+    "title": "BMW Série 3 2013 (FEM) toutes clés perdues : Yanhua ACDP refuse la version, mettre à jour le FEM",
+    "url": "http://blog.obdii365.com/2026/03/12/yanhua-acdp-not-support-this-bmw-fem-bdc-version-solution/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur une BMW Série 3 de 2013 toutes clés perdues, le Yanhua Mini ACDP lit le module mais affiche « version logicielle non supportée » au prétraitement. Il faut d'abord passer le FEM dans une version compatible : avec l'ACDP, fonction Restore en 3 étapes (sauvegarde du codage, programmation du FEM en choisissant la mise à jour du firmware, réécriture du codage). On peut aussi le faire sur table avec un Autel IM508/IM608 (environ 10 minutes, bonne connexion internet), puis ajouter la clé. Toujours vérifier la version par l'OBD avant de démonter et tout sauvegarder.",
+    "date": "2026-03-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1794810037558
+  },
+  {
+    "id": "c-opel-astra-j-2013-akl-obdstar-x300",
+    "title": "Opel Astra J 2013 toutes clés perdues (clé HU100) : PIN puis ajout de clé avec OBDSTAR X300 DP Plus",
+    "url": "https://original-obdstar-tools.blogspot.com/2021/05/obdstar-x300-dp-plus-programs-2013-vauxhall-astra-j-Key.html",
+    "source": "OBDSTAR Tools (blog) · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Clé HU100 taillée au code, puis programmation par l'OBD avec l'X300 DP Plus : IMMO > Opel > Astra J 2010-2016 > Blade > Add key, en saisissant le code PIN déjà lu. Prévoir une attente d'environ 10 minutes de configuration, puis une seconde d'environ 45 secondes, avec ouverture et fermeture de la porte conducteur entre les étapes. Piège : le menu « Vauxhall » ne propose que Vivaro et Movano, il faut passer par le menu Opel. La nouvelle clé démarre et la télécommande fonctionne.",
+    "date": "2021-05-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1794810037558
+  },
+  {
+    "id": "c-clio5-captur2-pile-hs-ouvrir-demarrer",
+    "title": "Clio 5 et Captur 2 : ouvrir et démarrer avec une carte dont la pile est morte",
+    "url": "https://www.youtube.com/watch?v=pald6mmSHgg",
+    "source": "Captain V - Tutorial Maker (YouTube)",
+    "kind": "video",
+    "summary": "La vidéo montre comment sortir la clé de secours cachée dans la carte, puis retirer le cache plastique sous la poignée de porte en glissant la clé dessous et en tirant. La clé ouvre la serrure (tournée vers le haut) et la ferme (vers le bas). Pour remettre le cache, il faut tirer la poignée. À l'intérieur, on pose la carte à son emplacement, puis on appuie sur l'embrayage, le frein et le bouton de démarrage : la voiture démarre.",
+    "date": "2023-02-27",
+    "state": "new",
+    "by": "claude",
+    "at": 1794810037558
+  }
+]
