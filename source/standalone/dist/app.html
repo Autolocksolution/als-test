@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-+U2f4uhVaxhEUCthravcV1n+y/Mkk0mjVwUfU33Zqrg=' 'sha256-xyZue7LLv67z/Oc55plvMzmn3o2dqHgWGx5fwhzTrJs=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-V/b56KEz1wpSwO3uJaqlUwuT8/Fg6OUWADKcL1ejfes=' 'sha256-pGqlSFHCeNifj1E6pXJxP6hLxryzCiyXKAHWmTr97AM=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1185,7 +1185,7 @@ main{padding-top:10px}
     <p class="hint" id="stPushT"></p></div>
     <h3 class="h3">Trajets</h3>
     <div class="row2">
-      <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="7,0"></div>
+      <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="5,6"></div>
       <div class="f"><label for="stPrix">Prix du litre (€)</label><input id="stPrix" inputmode="decimal" placeholder="auto"></div>
     </div>
     <div class="f"><label for="stUsure">Usure en plus par km (€, facultatif)</label><input id="stUsure" inputmode="decimal" placeholder="0,10"><span class="hint" style="margin:2px 0 0">Pneus, huile, freins, entretien. À 0, seul le carburant est compté.</span></div>
@@ -1933,7 +1933,7 @@ function tollShare(e,date){
   return n?Math.round(tot/n):0;
 }
 /* ---- Trajets : distance (adresse.data.gouv.fr + OSRM) et coût d'après la conso ---- */
-const CONSO_DEF=7.0,PRIX_DEF=1.80;
+const CONSO_DEF=5.6,PRIX_DEF=1.80; /* Kangoo 1.5 dCi 2009 : ~5,6 L/100 mesurés (843 km, nov. 2026) */
 const numS=k=>{const v=parseNum(load(k)||"");return v>0?v:0};
 function realConso(){
   const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essence"&&e.full&&Number(e.litres)>0&&Number(e.odo)>0).sort((a,b)=>a.odo-b.odo);
@@ -4804,7 +4804,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261116-0933";
+const ALS_BUILD="20261116-1731";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",

@@ -1156,7 +1156,7 @@ main{padding-top:10px}
     <p class="hint" id="stPushT"></p></div>
     <h3 class="h3">Trajets</h3>
     <div class="row2">
-      <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="7,0"></div>
+      <div class="f"><label for="stConso">Conso (L/100 km)</label><input id="stConso" inputmode="decimal" placeholder="5,6"></div>
       <div class="f"><label for="stPrix">Prix du litre (€)</label><input id="stPrix" inputmode="decimal" placeholder="auto"></div>
     </div>
     <div class="f"><label for="stUsure">Usure en plus par km (€, facultatif)</label><input id="stUsure" inputmode="decimal" placeholder="0,10"><span class="hint" style="margin:2px 0 0">Pneus, huile, freins, entretien. À 0, seul le carburant est compté.</span></div>
@@ -1902,7 +1902,7 @@ function tollShare(e,date){
   return n?Math.round(tot/n):0;
 }
 /* ---- Trajets : distance (adresse.data.gouv.fr + OSRM) et coût d'après la conso ---- */
-const CONSO_DEF=7.0,PRIX_DEF=1.80;
+const CONSO_DEF=5.6,PRIX_DEF=1.80; /* Kangoo 1.5 dCi 2009 : ~5,6 L/100 mesurés (843 km, nov. 2026) */
 const numS=k=>{const v=parseNum(load(k)||"");return v>0?v:0};
 function realConso(){
   const l=entries.filter(e=>e.kind==="depense"&&e.cat==="essence"&&e.full&&Number(e.litres)>0&&Number(e.odo)>0).sort((a,b)=>a.odo-b.odo);
