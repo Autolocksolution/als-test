@@ -6,6 +6,8 @@
     a2:{section:"lame_m",group:"toy",name:"TOY48",ref:"SILCA TOY48",compat:"Toyota",qty:5,note:"",series:""},
     a3:{section:"lame_after",group:"hu",name:"Ebauche HU66",ref:"HU66",compat:"",qty:2,note:"Fixe",series:""}}};
   const LOG=window.__fblog=[];
+  /* comme Firestore : une clé « a.b » met à jour le champ b à l'intérieur de a, sans toucher au reste de a */
+  const applyUpd=(doc,data)=>{for(const k in data){if(!k.includes(".")){doc[k]=data[k];continue}const ps=k.split(".");let o=doc;for(let i=0;i<ps.length-1;i++){if(typeof o[ps[i]]!=="object"||o[ps[i]]===null)o[ps[i]]={};o=o[ps[i]]}o[ps[ps.length-1]]=data[k]}};
   let _pt=null;const persist=()=>{clearTimeout(_pt);_pt=setTimeout(()=>{try{localStorage.setItem("__fbdb",JSON.stringify(DB))}catch(e){}},400)};
   const AUTH={user:LS("__fbuser"),cbs:[]};
   const perm=()=>{const e=new Error("Missing or insufficient permissions.");e.code="permission-denied";return e};
@@ -43,7 +45,7 @@
       if(Object.keys(reads).some(p=>(VER[p]||0)!==reads[p])){LOG.push("txretry");continue}
       for(const [op,r,data] of writes){
         DB[r.col]=DB[r.col]||{};
-        if(op==="update"){if(!DB[r.col][r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});Object.assign(DB[r.col][r.id],data)}
+        if(op==="update"){if(!DB[r.col][r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});applyUpd(DB[r.col][r.id],data)}
         else DB[r.col][r.id]=data;
         bump(r.path);LOG.push("tx"+op+":"+r.path);
       }
@@ -68,7 +70,7 @@
     getDoc:async r=>{need();return mkDoc(r.col,r.id)},
     getDocs:async r=>{need();return mkCol(r.path)},
     setDoc:async(r,data,opts)=>{need();bad(data);DB[r.col]=DB[r.col]||{};DB[r.col][r.id]=opts&&opts.merge?Object.assign(DB[r.col][r.id]||{},data):JSON.parse(JSON.stringify(data));bump(r.path);persist();LOG.push("set:"+r.path);fire();await ack()},
-    updateDoc:async(r,data)=>{need();bad(data);if(!(DB[r.col]||{})[r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});Object.assign(DB[r.col][r.id],JSON.parse(JSON.stringify(data)));bump(r.path);persist();LOG.push("update:"+r.path);fire();await ack()},
+    updateDoc:async(r,data)=>{need();bad(data);if(!(DB[r.col]||{})[r.id])throw Object.assign(new Error("not-found"),{code:"not-found"});applyUpd(DB[r.col][r.id],JSON.parse(JSON.stringify(data)));bump(r.path);persist();LOG.push("update:"+r.path);fire();await ack()},
     deleteDoc:async r=>{need();if(DB[r.col])delete DB[r.col][r.id];bump(r.path);persist();LOG.push("delete:"+r.path);fire();await ack()},
     runTransaction:runTx,
     onSnapshot:(r,...a)=>{

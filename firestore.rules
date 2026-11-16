@@ -34,6 +34,18 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Demandes de rangement par Claude : l'appli dépose une note « new » à son nom ; seul le robot GitHub
+    // (SDK admin, hors règles) la passe à « done » ou « err ». L'appli ne peut donc ni rejouer ni falsifier un résultat.
+    match /ia/{id} {
+      allow read, delete: if membre();
+      allow create: if membre()
+        && request.resource.data.state == 'new'
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() < 5000;
+      allow update: if membre() && request.resource.data.state == resource.data.state;
+    }
+
     // Données métier : liste blanche de collections ; tout le reste est refusé.
     match /{col}/{doc=**} {
       allow read, write: if membre() && col in [

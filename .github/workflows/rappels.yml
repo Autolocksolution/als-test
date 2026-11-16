@@ -51,6 +51,8 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
           MODE: ${{ github.event.inputs.mode || 'normal' }}
           RUN_MIN: "170"
+          # Clé de l'API Claude (rangement automatique des notes dans la base véhicules). Absente : la fonction reste éteinte.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node send-reminders.mjs
       - name: Supprimer la clé
         if: always()

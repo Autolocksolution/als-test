@@ -52,6 +52,12 @@ const cases = [
   T("inconnu connecté lit photos", stranger, "photos/p1", "get", "DENY"),
   T("sans compte lit items", null, "items/a", "get", "DENY"),
   T("sans compte écrit items", null, "items/a", "create", "DENY", { a: 1 }),
+  T("membre dépose une note pour Claude", member, "ia/a", "create", "ALLOW", { text: "clio 4", photoIds: [], vehicleId: "", state: "new", by: member, at: 1 }),
+  T("membre dépose un résultat tout fait (robot seul)", member, "ia/b", "create", "DENY", { text: "x", state: "done", by: member, at: 1 }),
+  T("membre dépose une note au nom d'un autre", member, "ia/c", "create", "DENY", { text: "x", state: "new", by: "autre", at: 1 }),
+  { ...T("membre rejoue une note déjà traitée", member, "ia/d", "update", "DENY", { text: "x", state: "new", by: member, at: 1 }), resource: { data: { text: "x", state: "err", by: member, at: 1 } } },
+  { ...T("membre annule un ajout (état inchangé)", member, "ia/e", "update", "ALLOW", { text: "x", state: "done", by: member, at: 1, undone: true }), resource: { data: { text: "x", state: "done", by: member, at: 1 } } },
+  T("inconnu connecté lit les notes pour Claude", stranger, "ia/a", "get", "DENY"),
 ];
 const r = await fetch("https://firebaserules.googleapis.com/v1/projects/autlocksolution:test", { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + tok }, body: JSON.stringify({ source: { files: [{ name: "firestore.rules", content: rules }] }, testSuite: { testCases: cases.map(c => ({ expectation: c.expectation, request: c.request, ...(c.resource ? { resource: c.resource } : {}) })) } }) });
 const j = await r.json();

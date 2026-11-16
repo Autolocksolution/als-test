@@ -8,6 +8,7 @@
 import fs from "node:fs";
 import admin from "firebase-admin";
 import { parisNow, due, planOutbox } from "./plan.mjs";
+import { fileRequest, callClaude, apiMessage, DAY_MAX } from "./ia-lib.mjs";
 
 const keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(keyFile, "utf8"))) });
@@ -100,9 +101,58 @@ async function messages() {
   }
 }
 
+/* ---------- Rangement par Claude : demandes déposées par l'appli dans « ia » ---------- */
+// Dépôt PUBLIC : on n'écrit jamais au journal le contenu d'une note, seulement des compteurs.
+const IA_KEY = process.env.ANTHROPIC_API_KEY || "";
+const iaSeen = new Set();
+let iaQueue = Promise.resolve(), iaCache = { at: 0, list: [] };
+async function iaVehicles(onlyId) {
+  if (onlyId) { const d = await db.doc("vehicles/" + onlyId).get(); return d.exists ? [{ id: d.id, ...d.data() }] : []; }
+  if (Date.now() - iaCache.at > 10 * 60000) iaCache = { at: Date.now(), list: (await db.collection("vehicles").get()).docs.map(d => ({ id: d.id, ...d.data() })) };
+  return iaCache.list;
+}
+async function iaOne(req) {
+  const ref = db.doc("ia/" + req.id);
+  const end = (state, extra) => ref.update({ state, doneAt: Date.now(), ...extra }).catch(() => {});
+  try {
+    const day = await db.collection("ia").where("at", ">=", Date.now() - 86400e3).count().get();
+    if (day.data().count > DAY_MAX) return end("err", { msg: "Plafond du jour atteint (" + DAY_MAX + " demandes) : réessayez demain." });
+    const vehicles = await iaVehicles(req.vehicleId || "");
+    const r = await fileRequest(req, {
+      vehicles,
+      getPhoto: async id => { const d = await db.doc("photos/" + id).get(); return d.exists ? d.data().d : ""; },
+      ask: a => callClaude({ key: IA_KEY, ...a }),
+    });
+    if (r.state !== "done") { console.log("Rangement : demande non aboutie"); return end("err", { msg: r.msg }); }
+    // écriture champ par champ : ce qu'une autre personne modifie au même moment ailleurs sur la fiche est conservé
+    const up = {};
+    for (const k in r.prev.s) up["s." + k] = r.update.s[k];
+    for (const k in r.prev.t) up["t." + k] = r.update.t[k];
+    for (const k in r.prev.ph) up["ph." + k] = r.update.ph[k];
+    if (Object.keys(up).length) { await db.doc("vehicles/" + r.vehicleId).update({ ...up, at: Date.now() }); iaCache.at = 0; }
+    console.log("Rangement : fiche " + (Object.keys(up).length ? "complétée" : "déjà à jour"));
+    return end("done", { vehicleId: r.vehicleId, label: r.label, changes: r.changes.slice(0, 30), skipped: r.skipped.slice(0, 10), resume: r.resume, prev: r.prev });
+  } catch (e) {
+    console.error("Rangement en échec :", e && (e.status || e.code) || "erreur");
+    return end("err", { msg: e && e.status ? apiMessage(e) : "Le rangement n'a pas abouti : réessayez." });
+  }
+}
+function iaApply(snap) {
+  if (!IA_KEY) return;           // pas encore de clé : les notes restent en attente et seront rangées à l'activation
+  for (const d of snap.docs) {
+    if (iaSeen.has(d.id)) continue; iaSeen.add(d.id);
+    const req = { id: d.id, ...d.data() };
+    iaQueue = iaQueue.then(() => iaOne(req)).catch(() => {});
+  }
+}
+
 async function cleanup() {       // ménage : messages envoyés depuis plus de 3 jours
   try {
     const old = await db.collection("outbox").where("sentAt", "<", Date.now() - 3 * 86400e3).limit(100).get();
+    await Promise.all(old.docs.map(d => d.ref.delete()));
+  } catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
+  try {                          // demandes de rangement de plus de 30 jours
+    const old = await db.collection("ia").where("at", "<", Date.now() - 30 * 86400e3).limit(100).get();
     await Promise.all(old.docs.map(d => d.ref.delete()));
   } catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
 }
@@ -133,6 +183,7 @@ async function finish(code) {
   if (ending) return; ending = true;
   for (const s of stops) { try { s(); } catch (e) {} }
   await queue.catch(() => {});
+  await iaQueue.catch(() => {});
   report();
   process.exit(code);
 }
@@ -142,6 +193,7 @@ await Promise.all([
   listen(db.collection("devices"), loadDevices),
   listen(db.collection("rdv").where("date", ">=", today), snap => { rdvs = docs(snap); }),
   listen(db.collection("outbox").where("sent", "==", false), snap => { outbox = docs(snap); }),
+  listen(db.collection("ia").where("state", "==", "new"), iaApply),
 ]);
 await pass();
 say(said || "Rappels du planning : rien à envoyer");
@@ -150,11 +202,17 @@ await cleanup();
 if (!RUN_MIN) await finish(0);
 
 // Témoin de fonctionnement, lu par l'appli (Réglages > Notifications).
-const beat = () => db.doc("meta/robot").set({ at: Date.now() }).catch(() => {});
+const beat = () => db.doc("meta/robot").set({ at: Date.now(), ia: !!IA_KEY }).catch(() => {});   // ia : la clé Claude est en place
 await beat();
 console.log("Robot à l'écoute");
 const t0 = Date.now();
 setInterval(pass, TICK_MS);
 setInterval(beat, BEAT_MS);
 setInterval(() => { if (Date.now() - t0 >= RUN_MIN * 60000) finish(0); }, 5000);
+// Clé Claude ajoutée après le démarrage : l'appli demande un redémarrage (meta/robotCmd) pour que le robot la prenne en compte.
+// Seulement tant que la clé manque, et jamais avant 10 min de marche (en dessous, GitHub ne relance pas l'exécution suivante).
+if (!IA_KEY) stops.push(db.doc("meta/robotCmd").onSnapshot(snap => {
+  const at = snap.exists ? Number(snap.data().restart) || 0 : 0;
+  if (at > t0) setTimeout(() => finish(0), Math.max(0, t0 + 10.5 * 60000 - Date.now()));
+}, () => {}));
 for (const sig of ["SIGTERM", "SIGINT"]) process.on(sig, () => finish(0));

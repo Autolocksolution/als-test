@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-KlOnz9GkYOJvBaJ+aiurEXIckOa1BP76g+NkpxjopSw=' 'sha256-z/3YR+Ir+buvef4NMcRZSgg7HWq+KbKad5U1jdeLEI0=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-zVnqxEv+DbWXh1Ugs/XoQ0YyTBG5VhQhWbWH2oPk0o8=' 'sha256-mEKQ+u5TLtQT0GLjVhDMQVkx2P44fuSxFtK+aSy+z28=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -835,6 +835,17 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
 .nav button[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 16%,transparent)!important;color:var(--accent)!important}
 .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
 .toast{border-radius:999px;bottom:calc(152px + env(safe-area-inset-bottom,0px))}
+.ia-go{flex:none!important;width:100%;height:46px;margin:0 0 12px;border-color:color-mix(in srgb,var(--accent) 55%,var(--line))!important;color:var(--accent)}
+.vh-top .ia-go{margin:8px 0 0}
+.ia-off{display:flex;flex-direction:column;gap:6px;padding:12px 14px;margin-bottom:12px;border-radius:16px;border:1px solid var(--line);background:var(--warn-bg);color:var(--warn);font-size:14px}.ia-off .btn{flex:none;margin-top:4px;color:var(--ink)}
+.ia-h{font-size:11.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.ia-it{border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px;font-size:14px}
+.ia-it b{display:block;font-size:15px}.ia-it small{display:block;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.ia-it ul{margin:6px 0 0;padding-left:18px}.ia-it .sk{color:var(--warn)}.ia-it.err b{color:var(--out)}
+.ia-it .acts2{display:flex;gap:8px;margin-top:10px}.ia-it .acts2 button{height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:transparent;font-weight:600;font-size:13.5px}
+.ia-wait::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);border-top-color:transparent;margin-right:8px;vertical-align:-1px;animation:iaSpin .8s linear infinite}
+@keyframes iaSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ia-wait::before{animation:none}}
 /* Style C, 2e passe : chiffres en grand, icône en filigrane, boutons lumineux, logo */
 .bt{position:relative;overflow:hidden;min-height:118px;gap:10px 9px;align-content:space-between}
 .bt .msi:not(.wm){width:34px;height:34px;padding:7px;border-radius:11px;background:color-mix(in srgb,var(--tc,var(--accent)) 16%,transparent)}
@@ -945,6 +956,7 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
         <input id="vYear" inputmode="numeric" maxlength="4" placeholder="Année" aria-label="Année du véhicule">
       </div>
       <div class="vh-gens" id="vGens"></div>
+      <button type="button" class="btn ia-go" id="iaBtn" hidden>✨ Ranger une note avec Claude</button>
     </div>
     <div id="vBody"></div>
   </section>
@@ -1320,6 +1332,21 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
     </div>
   </form>
 </div>
+<div class="scrim" id="iaScrim" hidden>
+  <form class="sheet" id="iaForm" autocomplete="off">
+    <h2>Ranger avec Claude</h2>
+    <p class="hint" id="iaFor" style="margin:-6px 0 12px"></p>
+    <div class="ia-off" id="iaOff" hidden><b>Claude n'est pas encore activé</b><span>Il manque la clé du compte Claude (à ajouter une seule fois dans GitHub). Tes notes envoyées d'ici là seront rangées dès l'activation.</span><button type="button" class="btn" id="iaWake">J'ai ajouté la clé : activer</button></div>
+    <div class="f"><label for="iaText">Ta note, comme tu la dirais</label><textarea id="iaText" rows="5" maxlength="4000" placeholder="Clio 4 2016 carte, perte totale : lire le PIN par OBD avec l'Autel, attendre 15 min si antidémarrage affiché. Lishi VA2T."></textarea></div>
+    <div class="f"><div class="rphoto"><button type="button" class="btn" id="iaPhBtn">📷 Ajouter des photos</button><div class="phgrid" id="iaPhGrid"></div><p class="phhint">3 photos maximum : clé, boîtier, étiquette, prise OBD…</p></div></div>
+    <p class="hint" style="margin:0 0 12px">Claude complète la fiche du véhicule sans rien effacer et sans écrire deux fois la même chose. Ne mets pas de plaque, de nom ni de code PIN : ça, c'est l'Historique.</p>
+    <div class="acts">
+      <button type="submit" class="btn pri" id="iaSend">Ranger</button>
+      <button type="button" class="btn" id="iaCancel">Fermer</button>
+    </div>
+    <div id="iaList"></div>
+  </form>
+</div>
 <div class="scrim" id="rvScrim" hidden>
   <form class="sheet" id="rvForm" autocomplete="off">
     <h2 id="rvTitle">Nouveau rendez-vous</h2>
@@ -1487,6 +1514,7 @@ function render(){
   $("cptTabs").hidden=!cp;$("cptSub").hidden=!cp||cTab==="idees";$("cpt").hidden=!cp;
   $("dec").hidden=!dc;$("his").hidden=!hs;
   $("navStock").setAttribute("aria-selected",String(st));$("navCpt").setAttribute("aria-selected",String(cp));
+  $("iaBtn").hidden=!canWrite;
   $("fab").hidden=!canWrite||hm||dc||hs||qzm||(bs&&false)||(st&&sCat==="urgent")||(cp&&cTab==="bilan");
   $("fab").textContent=bs?"+ Ajouter un véhicule":pl?"+ Rendez-vous":ac?"+ Garder un lien":dv?(dvTab==="clients"?"+ Nouveau client":"+ Nouveau devis"):st?(curCat().fixed?"+ Ajouter une ligne":sCat==="aftermarket"?"+ Ajouter une clé":"+ Ajouter"):cTab==="recette"?"+ Intervention":"+ Ajouter";
   hm?hmRender():st?sRender():cp?cRender():dv?dvRender():dc?dRender():bs?vRender():pl?pRender():ac?aRender():qzm?qzRender():hRender();
@@ -4479,6 +4507,7 @@ function vFiche(g){
       yrs?h("span",{class:"vx-yrs"},yrs):null),
     g.photoId&&g.credit?(safeUrl(g.creditUrl)?h("a",{class:"vx-cred",href:safeUrl(g.creditUrl),target:"_blank",rel:"noopener"},g.credit):h("span",{class:"vx-cred"},g.credit)):null);
   out.push(hero);
+  if(canWrite)out.push(h("button",{type:"button",class:"btn ia-go",onclick:()=>iaOpen(g)},"✨ Compléter cette fiche avec Claude"));
   /* deux versions du même modèle : clé à lame / main libre */
   const pr=g.pair?vehicles.find(v=>v.id===g.pair):null;
   if(pr)out.push(h("div",{class:"vx-var",role:"group","aria-label":"Version de clé"},
@@ -4601,6 +4630,64 @@ $("vhDel").addEventListener("click",async()=>{
   if(!vDelArmed){vDelArmed=true;b.textContent="Confirmer la suppression";b.classList.add("sure");return}
   try{await db.doc("vehicles/"+vEditing.id).delete();vGen="";vhClose();toast("Fiche supprimée")}catch(e){toast("Suppression impossible")}
 });
+
+/* ================= RANGER AVEC CLAUDE =================
+   L'appli dépose la note (et les photos) dans « ia » ; le robot GitHub la fait ranger par Claude dans la fiche du véhicule,
+   puis écrit le résultat dans la même demande. La clé de l'API n'est jamais dans l'appli. */
+let ias=[],iaTarget=null,iaToasted=new Set(),iaT0=Date.now();
+const iaPics=mkPics("iaPhBtn","iaPhGrid","📷 Ajouter des photos");
+const iaMine=()=>ias.filter(r=>r.by===uid).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,6);
+function iaOpen(g){
+  if(!canWrite)return;
+  iaTarget=g||null;
+  $("iaFor").textContent=g?"Fiche : "+vLabel(g):"Claude retrouve la fiche du véhicule d'après ta note (marque, modèle, année).";
+  $("iaText").value="";iaPics.set([]);$("iaOff").hidden=true;
+  $("iaScrim").hidden=false;iaList();
+  if(db)db.doc("meta/robot").get().then(sn=>{const d=sn.exists?sn.data():null;$("iaOff").hidden=!!(d&&d.ia)}).catch(()=>{});
+}
+const iaClose=()=>{$("iaScrim").hidden=true;iaTarget=null};
+$("iaBtn").addEventListener("click",()=>iaOpen(null));
+$("iaCancel").addEventListener("click",iaClose);
+$("iaScrim").addEventListener("click",e=>{if(e.target===$("iaScrim"))iaClose()});
+$("iaWake").addEventListener("click",async()=>{try{await db.doc("meta/robotCmd").set({restart:Date.now(),by:uid});toast("Activation demandée : compte quelques minutes")}catch(e){toast("Demande impossible, réessaie")}});
+$("iaForm").addEventListener("submit",async ev=>{
+  ev.preventDefault();if(!db||!canWrite)return;
+  const text=$("iaText").value.trim();
+  if(!text&&!iaPics.list.length){toast("Écris une note ou ajoute une photo");return}
+  if(iaPics.list.length>3){toast("3 photos maximum");return}
+  $("iaSend").disabled=true;
+  try{
+    const photoIds=await iaPics.save();
+    await db.collection("ia").add({text,photoIds,vehicleId:iaTarget?iaTarget.id:"",state:"new",by:uid,at:Date.now()});
+    $("iaText").value="";iaPics.set([]);toast("Envoyé à Claude");
+  }catch(err){toast("Envoi impossible, réessaie")}
+  $("iaSend").disabled=false;
+});
+async function iaUndo(r){
+  const up={},p=r.prev||{};
+  for(const k in p.s||{})up["s."+k]=p.s[k];for(const k in p.t||{})up["t."+k]=p.t[k];for(const k in p.ph||{})up["ph."+k]=p.ph[k];
+  try{if(Object.keys(up).length)await db.doc("vehicles/"+r.vehicleId).update(up);await db.doc("ia/"+r.id).update({undone:true});toast("Ajout annulé")}catch(e){toast("Annulation impossible")}
+}
+function iaList(){
+  if($("iaScrim").hidden)return;
+  const L=iaMine();
+  $("iaList").replaceChildren(...(L.length?[h("div",{class:"ia-h"},"Tes dernières notes")]:[]),...L.map(r=>{
+    const quote=h("small",null,"« "+(r.text||"photo").slice(0,90)+((r.text||"").length>90?"…":"")+" »");
+    if(r.state==="new")return h("div",{class:"ia-it"},h("b",{class:"ia-wait"},Date.now()-(r.at||0)>120000?"En attente du robot…":"Claude range ta note…"),quote);
+    if(r.state==="err")return h("div",{class:"ia-it err"},h("b",null,"Pas rangé"),h("span",null,r.msg||"Réessaie."),quote,
+      h("div",{class:"acts2"},h("button",{type:"button",onclick:()=>{$("iaText").value=r.text||"";iaPics.set(r.photoIds||[]);$("iaText").focus()}},"Reprendre la note")));
+    const ch=r.changes||[],sk=r.skipped||[],g=vehicles.find(v=>v.id===r.vehicleId);
+    return h("div",{class:"ia-it"},h("b",null,(r.undone?"Annulé · ":ch.length?"Rangé · ":"Déjà sur la fiche · ")+(r.label||"")),
+      ch.length||sk.length?h("ul",null,...ch.map(c=>h("li",null,c)),...sk.map(c=>h("li",{class:"sk"},c))):h("span",null,"Rien de nouveau à ajouter."),quote,
+      h("div",{class:"acts2"},g?h("button",{type:"button",onclick:()=>{iaClose();goMode("base");vSelect(g)}},"Voir la fiche"):null,
+        ch.length&&!r.undone&&Date.now()-(r.doneAt||0)<86400000?h("button",{type:"button",onclick:()=>iaUndo(r)},"Annuler l'ajout"):null))}));
+}
+function iaSnap(list){
+  ias=list;
+  for(const r of ias){if(r.by!==uid||r.state==="new"||iaToasted.has(r.id)||(r.doneAt||0)<iaT0)continue;iaToasted.add(r.id);
+    toast(r.state==="done"?((r.changes||[]).length?"Rangé : ":"Déjà sur la fiche : ")+(r.label||""):"Claude n'a pas pu ranger la note")}
+  iaList();
+}
 
 /* ================= PLANNING ================= */
 let pDay=TODAY,rvEditing=null,rvDelArmed=false;
@@ -4826,6 +4913,7 @@ async function boot(){
     render();saveCache();
   },err=>{});
   db.collection("vehicles").onSnapshot(snap=>{vehicles=snap.docs.map(x=>({id:x.id,...x.data()}));render();saveCache()},err=>{});
+  try{db.collection("ia").onSnapshot(snap=>iaSnap(snap.docs.map(x=>({id:x.id,...x.data()}))),err=>{})}catch(e){}
   db.collection("rdv").onSnapshot(snap=>{rdv=snap.docs.map(x=>({id:x.id,...x.data()})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date||""));render();saveCache()},err=>{});
   db.collection("news").onSnapshot(snap=>{news=snap.docs.map(x=>({id:x.id,...x.data()}));render();saveCache()},err=>{});
   try{db.doc("meta/company").onSnapshot(snap=>{company=snap.exists?snap.data():null;render();saveCache()},err=>{})}catch(e){}
@@ -4890,7 +4978,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261116-1747";
+const ALS_BUILD="20261116-1805";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
