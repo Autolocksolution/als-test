@@ -1,0 +1,98 @@
+[
+ {
+  "id": "c-km100-clone-hyundai-kia-4a-at100",
+  "title": "Hyundai / Kia puce 4A : copie de secours sur puce AT100 avec Autel KM100",
+  "url": "http://blog.obdii365.com/2026/11/16/autel-km100-clone-hyundai-kia-4a-chip-using-at100/",
+  "source": "OBDII365",
+  "kind": "web",
+  "summary": "La dernière mise à jour Autel permet de cloner une puce 4A (Hitag AES) sur la super puce AT100, exemple sur une clé mains libres Hyundai/Kia. On lit la clé d'origine, on choisit Clone puis « 4A Transponder Cloning », on pose le KM100 près de la bobine d'antidémarrage et on met le contact plusieurs fois avec la clé (pile retirée pour une clé mains libres) jusqu'à la capture des données. Le KM100 calcule ensuite le SK et le code PIN, puis écrit l'AT100, qui sert au démarrage de secours.",
+  "date": "2026-11-16",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-obdstar-c4-11-ncf29xx",
+  "title": "OBDSTAR C4-11 : adaptateur pour clés NXP NCF29xx (VW MQB 5C/5D, BMW BDC3 et série U)",
+  "url": "https://www.obdstar.com/News_2896.html",
+  "source": "OBDSTAR",
+  "kind": "web",
+  "summary": "OBDSTAR sort l'adaptateur C4-11 pour lire et écrire les puces NXP de la série 29xx et ajouter des clés. Il vise les antidémarrages VW MQB 5C/5D et BMW BDC3 et série U. Avec la platine sans soudure NCF29xx, on lit et écrit les données de la clé sans souder sur le circuit, ce qui limite le risque de l'abîmer. La page ne précise pas avec quels appareils OBDSTAR il fonctionne.",
+  "date": "2026-11-12",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-audi-a6-elv-multi-prog",
+  "title": "Audi A6 toutes clés perdues : lire l'antivol de colonne (ELV) avec Xhorse Multi Prog",
+  "url": "http://blog.vvdishop.com/xhorse-multi-prog-read-audi-a6-elv-module/",
+  "source": "VVDIshop",
+  "kind": "web",
+  "summary": "Pour un Audi A6 en toutes clés perdues, le Multi Prog lit les données de l'antivol de colonne (ELV) avec l'option ESL-HC08GR16-V1, qui affiche le schéma de branchement. Il faut retirer un composant et mettre une résistance de 1 kOhm entre PTA0 et VCC. Le Multi Prog demande aussi de soulever une patte, ce qu'il faut toujours faire sur l'ELV Audi ; avec l'ancien VVDI Prog, ce n'était pas nécessaire.",
+  "date": "",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-audi-a5-2015-akl-bcm2-key-tool-plus",
+  "title": "Audi A5 2015 toutes clés perdues (BCM2) : nouvel adaptateur Xhorse, pas besoin de l'antivol",
+  "url": "http://blog.vvdishop.com/xhorse-key-tool-plus-program-2015-audi-a5-all-keys-lost-with-bcm2-adapter/",
+  "source": "VVDIshop · retour d'utilisateur",
+  "kind": "web",
+  "summary": "Un utilisateur a fait un Audi A5 2015 (immo BCM2, plateforme MLB première génération) en toutes clés perdues avec le Key Tool Plus. Le plus dur a été d'ouvrir le coffre de l'intérieur pour accéder au BCM2. Il a lu le module avec le nouvel adaptateur BCM2 Xhorse, qui évite de réécrire le BCM pour le passer en mode service. Sur l'A5, pas de données de synchro : inutile de lire l'antivol de colonne.",
+  "date": "",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-lonsdor-audi-a4-2011-immo5-obd",
+  "title": "Audi A4 2011 (immo 5, BCM2 non crypté) : ajout de clé par l'OBD avec Lonsdor K518 Pro",
+  "url": "https://www.lonsdor.org/londsor-k518-pro-adds-audi-a4-2011-immo5-key-by-obd/",
+  "source": "Lonsdor.org",
+  "kind": "web",
+  "summary": "Le Lonsdor K518 Pro a ajouté une clé sur un Audi A4 2011 équipé d'un BCM2 non crypté (antidémarrage de 5e génération). Les données immo se lisent par l'OBD, sans démonter le compteur, à condition d'avoir déjà une clé qui marche. L'ajout de clé s'est fait ensuite par l'OBD.",
+  "date": "2026-11-10",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-308-t9-adml-cle-non-detectee-pile",
+  "title": "Peugeot 308 T9 : « clé non détectée » et mains libres mort après changement de pile",
+  "url": "https://www.forum-peugeot.com/Forum/threads/soucis-avec-cl%C3%A9-adml.141189/",
+  "source": "Forum Peugeot · retour d'utilisateur",
+  "kind": "forum",
+  "summary": "Sur une 308 T9 de 2020, une clé mains libres affichait « clé non détectée » et n'ouvrait plus en mains libres, même après une pile neuve et la procédure de secours du manuel (clé posée dans le logement près de la prise OBD, contact par START/STOP). En mettant dans cette clé la pile de la deuxième clé, tout refonctionnait : la pile neuve était défectueuse. À tester avant de conclure à une clé HS ou de la reprogrammer.",
+  "date": "2025-12-24",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-neoriv-nxp-killer-carte-clio5",
+  "title": "Clio 5, Captur 2 et BMW BDC2 : cloner la clé complète (mains libres compris) avec le NXP Killer",
+  "url": "https://www.youtube.com/watch?v=eIMyfiWF4Ic",
+  "source": "Neoriv (YouTube)",
+  "kind": "video",
+  "summary": "Démonstration en direct par le distributeur français Neoriv du NXP Killer, qui copie les clés à puce NXP NCF29 et NCF79 : démarrage, centralisation et mains libres, sans rien programmer sur la voiture. Exemple sur une carte Clio 5 / Captur 2 puis une clé BMW BDC2 avec le KD-X4. Pièges cités : les cartes Renault d'origine sont collées et leur coque casse souvent, et la puce NXP est au bord du circuit, il ne faut pas l'arracher ; si le circuit est abîmé, on peut dessouder la puce et la lire sur une tête dédiée. Si le voyant est rouge, la tête de lecture est mal branchée ou le boîtier a un défaut.",
+  "date": "2026-10-31",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ },
+ {
+  "id": "c-xhorse-xm38-kia-style-reference",
+  "title": "Kia récentes : télécommande Xhorse XM38 type Kia, bien vérifier la référence avant de la générer",
+  "url": "http://blog.vvdishop.com/how-to-generate-and-program-xhorse-kia-style-smart-key/",
+  "source": "VVDIshop",
+  "kind": "web",
+  "summary": "Xhorse sort des clés mains libres XM38 au look Kia d'origine, générées avec un Key Tool (Remote Program, Kia, puis le modèle, ex. EV5 2023-2025 en 4 ou 7 boutons) avec une connexion internet. Point clé : les références de clés Kia sont nombreuses, il faut partir du VIN et de la référence exacte du système mains libres (KAS) du véhicule. Avec la bonne référence, la clé générée se programme ensuite normalement sur la voiture.",
+  "date": "",
+  "state": "new",
+  "by": "claude",
+  "at": 1794896189356
+ }
+]
