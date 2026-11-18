@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-DXlz3bzIIOi+cPiN9E6bvCxTix2w+pjV8+TjoLwriuw=' 'sha256-fSpQBbLvfLcKiZ84mKeiM5az7KX8yV+xg9q/aNKO4tg=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-YeHbiMTWPL6R41yhob8OGTq0771oT9Av63QthbvaOY4=' 'sha256-J5DD39RtzGfHCn2lz5GiqFWqQ1MpcDdL1uL6hO64MsE=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -125,6 +125,10 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .cal-d.today{border:2px solid var(--accent)}
 .cal-d.sel{background:var(--accent);color:var(--on-accent)}.cal-d.sel small{color:var(--on-accent)}
 #cpt .days+.cal-h{margin-top:16px}
+.lg-docs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lg-docs .btn{margin:0}
+.legal h3{font-size:16px;margin:14px 0 6px}.legal p,.legal li{font-size:14px;line-height:1.5;margin:0 0 10px}.legal ul{padding-left:20px;margin:0 0 10px}
+.legal .tablewrap{overflow-x:auto;margin:0 0 12px}.legal table{border-collapse:collapse;font-size:13px;width:100%}.legal th,.legal td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}.legal th{background:var(--tint)}
+.lg-gate label{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin:14px 0}.lg-gate input{width:22px;height:22px;flex:0 0 auto;margin-top:1px}
 .days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .day{background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .day.today{background:var(--today);border-color:var(--accent)}
@@ -897,6 +901,7 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
 .lg-link{background:none;border:0;color:var(--acc-ink);margin-top:14px;padding:8px;font-size:15px;text-decoration:underline}
 .lg-bad{min-height:20px;margin:10px 0 0;color:var(--out);font-size:14px}
 .lg-spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);margin:0 auto 14px;animation:lgsp .9s linear infinite}
+.lg-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:0 6px;margin:18px 0 0}.lg-legal .lg-link{font-size:13px;margin:0;padding:6px 4px;color:var(--muted)}
 @keyframes lgsp{to{transform:rotate(360deg)}}
 </style>
 <div id="lgScrim">
@@ -909,6 +914,7 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
     <button type="submit" class="btn pri" id="lgGo">Se connecter</button>
     <div class="lg-bad" id="lgBad" role="alert"></div>
     <button type="button" class="lg-link" id="lgForgot">Mot de passe oublié</button>
+    <p class="lg-legal"><button type="button" class="lg-link" data-legal="mentions">Mentions légales</button><button type="button" class="lg-link" data-legal="cgu">CGU</button><button type="button" class="lg-link" data-legal="cgv">CGV</button><button type="button" class="lg-link" data-legal="rgpd">Confidentialité</button></p>
   </form>
 </div>
 
@@ -1306,7 +1312,10 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
     <div class="acts" id="stOutBox" hidden><button type="button" class="btn" id="stOut">Se déconnecter</button></div>
     <p class="hint" id="stWho"></p>
     <h3 class="h3">Données</h3>
-    <div class="acts"><button type="button" class="btn" id="stBk">Sauvegarde et restauration</button></div>
+    <div class="acts"><button type="button" class="btn" id="stBk">Sauvegarde et restauration</button><button type="button" class="btn" id="stExport">Exporter mes données</button></div>
+    <p class="hint">L'export donne un fichier avec toutes les données de l'appli (sans les photos, gardées dans la sauvegarde de chaque nuit).</p>
+    <h3 class="h3">Documents légaux</h3>
+    <div class="lg-docs"><button type="button" class="btn" data-legal="mentions">Mentions légales</button><button type="button" class="btn" data-legal="cgu">CGU</button><button type="button" class="btn" data-legal="cgv">CGV</button><button type="button" class="btn" data-legal="rgpd">Confidentialité</button></div>
     <div class="acts" style="margin-top:14px"><button type="button" class="btn pri" id="stClose">Fermer</button></div>
   </div>
 </div>
@@ -4016,6 +4025,7 @@ $("bkBtn").addEventListener("click",()=>{stPaint();pushPaint();tripPaint();$("st
 $("stClose").addEventListener("click",()=>$("stScrim").hidden=true);
 $("stScrim").addEventListener("click",e=>{if(e.target===$("stScrim"))$("stScrim").hidden=true});
 $("stBk").addEventListener("click",()=>{$("stScrim").hidden=true;bkOpen()});
+$("stExport").addEventListener("click",()=>exportAll());
 let pushApi=null;
 let pushSeq=0;
 async function pushPaint(){
@@ -4390,6 +4400,63 @@ function moneyDetail(title,r,d){
 /* toute fenêtre qui s'ouvre passe au premier plan, même si une autre est déjà ouverte (ex. client depuis un devis) */
 try{const mo=new MutationObserver(ms=>{for(const m of ms){const el=m.target;if(el.classList&&el.classList.contains("scrim")&&!el.hidden&&el.nextElementSibling&&[...document.querySelectorAll(".scrim")].some(s=>s!==el&&!s.hidden&&(el.compareDocumentPosition(s)&Node.DOCUMENT_POSITION_FOLLOWING)))document.body.appendChild(el)}});
   document.querySelectorAll(".scrim").forEach(s=>mo.observe(s,{attributes:true,attributeFilter:["hidden"]}))}catch(e){}
+/* ===== Documents légaux : recopiés mot pour mot depuis le document (legal_sync.py), jamais réécrits ici ===== */
+/*LEGAL-START*/const LEGAL={"v": "e7ce5ea116", "s": {"mentions": {"t": "Mentions légales", "md": "| Rubrique | À mettre |  |  |\n| --- | --- | --- | --- |\n| Éditeur | AutoLockSolution, ABLA Salman, micro-entreprise |  |  |\n| SIRET | 93023051100022 |  |  |\n| Adresse | 8 allée de picaussel 11100 Narbonne |  |  |\n| Contact | salmanabla@outlook.fr · 06-27-29-70-77 |  |  |\n| Directeur de la publication | ABLA Salman |  |  |\n| TVA | TVA non applicable, art. 293 B du CGI (tant que tu es en franchise) |  |  |\n| Hébergeur de l'appli | GitHub Inc. (GitHub Pages), \\[adresse à vérifier\\] |  |  |\n| Hébergeur des données | Google (Firebase), \\[entité et adresse à vérifier\\] |  |  |"}, "cgu": {"t": "Conditions Générales d'Utilisation (CGU)", "md": "**Article 1 – Objet.** Les présentes CGU fixent les règles d'utilisation de l'application AutoLockSolution, éditée par AbLA Salman (voir Mentions légales). L'application aide les professionnels de la serrurerie automobile à gérer leur stock de clés, leurs interventions, leurs comptes, leurs devis et factures, leur planning et une base de fiches véhicules.\n\n**Article 2 – Acceptation.** Créer un compte vaut acceptation des CGU. Elles peuvent évoluer : l'utilisateur est prévenu dans l'application au moins 30 jours avant l'entrée en vigueur d'une nouvelle version.\n\n**Article 3 – Compte.** Le compte est personnel. L'utilisateur garde son mot de passe secret et prévient l'éditeur sans délai s'il pense qu'il a été utilisé par un tiers. Un abonnement peut comprendre plusieurs comptes (associés, salariés) selon l'offre choisie.\n\n**Article 4 – Usage autorisé.** L'utilisateur s'engage à :\n\n- utiliser l'application uniquement pour son activité professionnelle légale ;\n- vérifier l'identité du client et son droit sur le véhicule (pièce d'identité, carte grise) avant toute ouverture, reproduction ou programmation de clé ;\n- ne pas tenter de contourner la sécurité, ni surcharger le service (requêtes automatisées, robots).\n\n**Article 5 – Codes et informations sensibles.** Les codes PIN, codes de clé et données techniques sont fournis pour un usage professionnel. L'éditeur ne garantit pas leur exactitude : l'utilisateur vérifie avant d'intervenir sur un véhicule.\n\n**Article 6 – Fonctions d'IA****.** Le rangement automatique des fiches utilise Claude (Anthropic). Ses résultats peuvent contenir des erreurs et doivent être relus. L'usage est limité à \\[75\\] demandes par jour et par utilisateur.\n\n**Article 7 – Contenu de l'utilisateur.** Les données saisies (clients, interventions, photos) restent la propriété de l'utilisateur. Il peut les exporter à tout moment. L'utilisateur est responsable des données de ses propres clients qu'il enregistre (voir Politique de confidentialité).\n\n**Article 8 – Disponibilité.** L'éditeur fait son possible pour que l'application fonctionne en continu, y compris avec un réseau faible, mais ne peut garantir l'absence de panne. Une sauvegarde de la base est faite chaque nuit.\n\n**Article 9 – Suspension.** En cas de manquement grave aux CGU (fraude, usage illégal), l'éditeur peut suspendre le compte après avertissement, ou immédiatement en cas d'urgence.\n\n**Article 11 – Droit applicable.** Les CGU sont soumises au droit français. En cas de litige entre professionnels, le tribunal est celui de Narbonne."}, "cgv": {"t": "Conditions Générales de Vente (CGV)", "md": "**Article 1 – Champ d'application.** Les présentes CGV s'appliquent à tout abonnement à l'application AutoLockSolution souscrit par un professionnel.&#32;\n\n**Article 2 – Offres et prix.**\n\n| Offre | Contenu | Prix |\n| --- | --- | --- |\n| \\[Solo\\] | \\[1 compte, stock, comptes, devis/factures, planning\\] | \\[49€ / mois\\] |\n| \\[Équipe\\] | \\[jusqu'à 3 comptes + base véhicules + rangement par Claude\\] | \\[99€ / mois\\] |\n\nPrix en euros, TVA non applicable (art. 293 B du CGI) tant que l'éditeur est en franchise. Les prix peuvent changer : l'abonné est prévenu au moins 30 jours avant, et peut résilier avant l'application du nouveau prix.\n\n**Article 3 – Essai gratuit.** \\[Option : un essai gratuit de \\_\\_ jours est proposé. Sans résiliation avant la fin, l'abonnement démarre et le premier paiement est prélevé.\\]\n\n**Article 4 – Souscription.** L'abonnement est conclu quand l'abonné a coché l'acceptation des CGV et des CGU, puis validé son premier paiement. Une facture est envoyée par e-mail à chaque paiement.\n\n**Article 5 – Paiement.** Le paiement se fait par carte bancaire via \\[Stripe\\], chaque mois ou chaque année selon l'offre, à la date anniversaire. L'éditeur ne conserve jamais les numéros de carte. En cas d'échec de paiement, l'abonné est relancé ; sans régularisation sous \\[15\\] jours, l'accès est suspendu. .\n\n**Article 6 – Durée et résiliation.** L'abonnement est sans engagement : il se renouvelle automatiquement et peut être résilié à tout moment depuis l'application, en quelques clics. La résiliation prend effet à la fin de la période déjà payée ; aucun remboursement au prorata n'est dû.\n\n**Article 7 – Données après résiliation.** Après résiliation, l'abonné peut exporter ses données pendant \\[30\\] jours. Elles sont ensuite supprimées définitivement, sauf obligation légale de conservation.\n\n**Article 8 – Responsabilité.** L'éditeur fournit un outil de gestion ; il n'est pas responsable des interventions réalisées sur les véhicules, ni des erreurs dans les codes, fiches techniques ou résultats de l'intelligence artificielle. Sa responsabilité totale est limitée au montant payé par l'abonné au cours des 12 derniers mois.\n\n**Article 9 – Force majeure.** Aucune partie n'est responsable d'un manquement dû à un cas de force majeure (panne générale d'Internet, défaillance d'un hébergeur, catastrophe).\n\n**Article 10 – Réclamations.** Toute réclamation se fait par e-mail à \\[salmanabla@outlook.fr\\]. Réponse sous \\[7\\] jours ouvrés.\n\n**Article 11 – Droit applicable et litiges.** Droit français. Les parties cherchent d'abord un accord amiable. À défaut, le tribunal  est celui de \\[Narbonne\\]."}, "rgpd": {"t": "Politique de confidentialité (RGPD)", "md": "**Qui est responsable.** \\[ABLA Salman\\], AutoLockSolution, \\[salmanabla@outlookj.fr\\], est responsable des données des comptes abonnés. Pour les données des clients que l'abonné enregistre lui-même (noms, téléphones, plaques), l'abonné est responsable et AutoLockSolution agit comme sous-traitant : un contrat de sous-traitance (article 28 du RGPD) est annexé aux CGV.\n\n**Données traitées, pourquoi et combien de temps.**\n\n| Données | Pourquoi | Durée de conservation |\n| --- | --- | --- |\n| Compte : nom, e-mail, mot de passe (chiffré par Firebase, jamais visible) | Se connecter, sécuriser le compte | Durée de l'abonnement + \\[30\\] jours |\n| Facturation : nom de l'entreprise, adresse, SIRET, historique des paiements | Facturer, obligations comptables | 10 ans (Code de commerce) |\n| Clients de l'abonné : nom, téléphone, adresse, plaque, véhicule | Fournir le service (interventions, devis, planning) | Fixée par l'abonné ; supprimée \\[30\\] jours après résiliation |\n| Codes PIN et codes de clé | Historique des interventions | Masqués à l'affichage ; même durée que ci-dessus |\n| Photos (tickets, véhicules, clés) | Comptes et fiches véhicules | Même durée que ci-dessus |\n| Journal des modifications (qui a modifié quoi et quand) | Sécurité, retrouver une ligne supprimée | 1 an |\n| Jetons de notification (appareil) | Envoyer les rappels de rendez-vous | Jusqu'à désactivation |\n| Sauvegardes chiffrées | Restaurer en cas d'incident | \\[30\\] jours |\n|  |  |  |\n\nBase légale : l'exécution du contrat d'abonnement, les obligations légales (facturation) et l'intérêt légitime (sécurité, journal).\n\n**Qui reçoit les données (sous-traitants).**\n\n| Prestataire | Rôle | Lieu |\n| --- | --- | --- |\n| Google (Firebase) | Base de données, connexion, notifications | \\[région de la base à vérifier dans la console Firebase\\] |\n| GitHub (Microsoft) | Hébergement de l'appli, tâches automatiques, sauvegardes chiffrées | États-Unis |\n| Anthropic (Claude) | Rangement automatique des fiches véhicules, seulement quand l'utilisateur le demande | États-Unis |\n| \\[Stripe\\] | Paiement par carte | \\[UE / États-Unis\\] |\n\nLes transferts hors de l'Union européenne sont encadrés par les clauses contractuelles types de la Commission européenne ou le cadre UE–États-Unis de protection des données \\[à vérifier pour chaque prestataire\\]. Les données ne sont jamais vendues ni utilisées pour de la publicité.\n\n**Sécurité.** Accès limité aux comptes autorisés par des règles de sécurité, connexions en HTTPS, mots de passe chiffrés, blocage après plusieurs essais de connexion ratés, sauvegarde chiffrée chaque nuit, journal des modifications. En cas de fuite de données, la CNIL est prévenue sous 72 heures et les personnes concernées si le risque est élevé.\n\n**Tes droits.** Tu peux accéder à tes données, les corriger, les supprimer, les récupérer dans un fichier (portabilité), t'opposer à un traitement ou en demander la limitation. Écris à \\[salmanabla@outlook.fr\\] : réponse sous un mois. Tu peux aussi déposer une réclamation auprès de la CNIL (cnil.fr).\n\n**Cookies.** L'application n'utilise ni publicité ni mesure d'audience. Elle garde seulement sur l'appareil ce qui est nécessaire à son fonctionnement (connexion, réglages, fonctionnement hors ligne) : aucun bandeau de consentement n'est donc nécessaire \\[à revoir si tu ajoutes des statistiques\\]."}}};/*LEGAL-END*/
+const legalUnesc=t=>t.replace(/&#32;/g," ").replace(/\\([\[\]_*\\])/g,"$1");
+function legalInline(t){const out=[],re=/\*\*(.+?)\*\*/g;let m,last=0;
+  while((m=re.exec(t))){if(m.index>last)out.push(legalUnesc(t.slice(last,m.index)));out.push(h("b",null,legalUnesc(m[1])));last=re.lastIndex}
+  if(last<t.length)out.push(legalUnesc(t.slice(last)));return out}
+function legalBlocks(md){
+  const L=md.split("\n"),out=[];let i=0;
+  const cells=r=>r.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(c=>c.trim());
+  while(i<L.length){const l=L[i];
+    if(!l.trim()){i++;continue}
+    if(l.startsWith("|")){const rows=[];while(i<L.length&&L[i].startsWith("|"))rows.push(L[i++]);
+      let data=rows.filter(r=>!/^\|\s*-{3}/.test(r)).map(cells);data=data.filter((r,k)=>k===0||r.some(c=>c));
+      const keep=data[0].map((_,c)=>data.some(r=>r[c]));const pick=r=>r.filter((_,c)=>keep[c]);
+      out.push(h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,pick(data[0]).map(c=>h("th",null,legalInline(c))))),
+        h("tbody",null,data.slice(1).map(r=>h("tr",null,pick(r).map(c=>h("td",null,legalInline(c)))))))));continue}
+    if(l.startsWith("- ")){const it=[];while(i<L.length&&L[i].startsWith("- "))it.push(L[i++].slice(2));out.push(h("ul",null,it.map(x=>h("li",null,legalInline(x)))));continue}
+    out.push(h("p",null,legalInline(l)));i++}
+  return out}
+function legalOpen(k){const d=LEGAL.s&&LEGAL.s[k];if(!d)return;
+  const sc=h("div",{class:"scrim",style:"z-index:120",onclick:e=>{if(e.target===sc)sc.remove()}},h("div",{class:"sheet legal"},h("h2",null,d.t),...legalBlocks(d.md),
+    h("div",{class:"acts"},h("button",{type:"button",class:"btn pri",onclick:()=>sc.remove()},"Fermer"))));
+  document.body.append(sc)}
+window.legalOpen=legalOpen;
+document.addEventListener("click",e=>{const b=e.target&&e.target.closest&&e.target.closest("[data-legal]");if(b){e.preventDefault();legalOpen(b.dataset.legal)}});
+/* acceptation : à la première ouverture (et à chaque nouvelle version des textes), on doit cocher avant de continuer */
+let legalGateOn=false;
+async function legalGate(){
+  if(!db||!uid||legalGateOn||!LEGAL.v)return;
+  if(window.__ALS_SDK&&!window.__ALS_SDK.legal)return; /* tests avec le faux Firebase : pas de fenêtre, sauf demande */
+  let d={};try{const s=await db.doc("team/"+uid).get();d=s.exists?(s.data()||{}):{}}catch(e){return}
+  if(d.legal&&d.legal.v===LEGAL.v)return;
+  legalGateOn=true;
+  const cb=h("input",{type:"checkbox",id:"lgAccept"}),go=h("button",{type:"button",class:"btn pri",disabled:true},"Continuer");
+  cb.addEventListener("change",()=>{go.disabled=!cb.checked});
+  const sc=h("div",{class:"scrim",style:"z-index:110"},h("div",{class:"sheet lg-gate"},
+    h("h2",null,d.legal?"Les conditions ont changé":"Conditions d'utilisation"),
+    h("p",{class:"hint"},"Avant de continuer, lis et accepte les documents suivants :"),
+    h("div",{class:"lg-docs"},...[["mentions","Mentions légales"],["cgu","CGU"],["cgv","CGV"],["rgpd","Confidentialité"]].map(([k,t])=>h("button",{type:"button",class:"btn","data-legal":k},t))),
+    h("label",null,cb,h("span",null,"J'accepte les CGU, les CGV et la politique de confidentialité")),
+    h("div",{class:"acts"},go)));
+  go.addEventListener("click",async()=>{go.disabled=true;
+    try{await db.doc("team/"+uid).set({legal:{v:LEGAL.v,at:Date.now(),ua:(navigator.userAgent||"").slice(0,120)}},{merge:true});sc.remove();legalGateOn=false;toast("Merci, c'est enregistré")}
+    catch(e){go.disabled=false;toast("Pas de réseau : réessaie dans un instant")}});
+  document.body.append(sc);
+}
+/* export de toutes les données (droit à la portabilité) */
+async function exportAll(){
+  if(!db||OFFLINE){toast("Pas de réseau : export impossible pour l'instant");return}
+  const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
+  if(!dl){toast("Téléchargement indisponible ici");return}
+  toast("Préparation de l'export…");
+  const out={appli:"AutoLockSolution",exporteLe:new Date().toISOString(),par:myName||"",donnees:{}};
+  for(const c of ["entries","items","clients","docs","orders","vehicles","rdv","codes","ideas","news","journal"]){
+    try{const s=await db.collection(c).get();out.donnees[c]=s.docs.map(x=>({id:x.id,...x.data()}))}catch(e){out.donnees[c]="non lu"}}
+  try{await dl.save({filename:"autolocksolution-donnees-"+TODAY+".json",data:JSON.stringify(out,null,1)})}catch(e){toast("Export impossible")}
+}
 function vdOpen(title,blocks){
   const sc=h("div",{class:"scrim",onclick:e=>{if(e.target===sc)sc.remove()}},h("div",{class:"sheet"},h("h2",null,title),...blocks,
     h("div",{class:"acts"},h("button",{type:"button",class:"btn",onclick:()=>sc.remove()},"Fermer"))));
@@ -4901,6 +4968,7 @@ async function boot(){
   if(!db&&hadCache){OFFLINE=true;canWrite=true;$("ro").hidden=true;setSync(false,"Hors ligne");offBar();render();return}
   if(!db){setSync(false,"Hors synchro");loaded=true;canWrite=false;$("ro").hidden=false;$("ro").textContent="Synchronisation indisponible. Connectez-vous pour voir les données.";render();return}
   try{uid=user?await user.id():null}catch(e){}
+  setTimeout(()=>legalGate(),1200);
   try{const m=user&&user.me?await user.me():null;if(m&&m.name)myName=m.name}catch(e){}
   try{const w=user?await user.can("data.write"):null;canWrite=w!==false}catch(e){}
   lkSync();
@@ -5005,7 +5073,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261118-1921";
+const ALS_BUILD="20261118-1953";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -5028,7 +5096,7 @@ try{const st=G("syncT");if(st){const mo=new MutationObserver(()=>{const t=st.tex
 let dgSend=null;
 const wait=G("lgWait"),form=G("lgForm"),scrim=G("lgScrim"),msg=G("lgMsg");
 function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false;G("lgWaitT").textContent=t;G("lgRetry").hidden=!retry}
-function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
+function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{if(localStorage.getItem("als-kicked")){localStorage.removeItem("als-kicked");G("lgBad").textContent="Ton compte a été ouvert sur un autre téléphone : tu as été déconnecté ici."}}catch(e){}try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 /* Déjà connecté sur ce téléphone : on n'affiche pas « Connexion en cours… » par-dessus l'appli.
@@ -5288,7 +5356,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     e.preventDefault();
     if(lkPaint())return;
     const b=G("lgGo");b.disabled=true;G("lgBad").textContent="";
-    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk();try{localStorage.setItem("als-last-mail",G("lgMail").value.trim())}catch(e){}}
+    try{const cr=await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk();claimSession(cr&&cr.user);try{localStorage.setItem("als-last-mail",G("lgMail").value.trim())}catch(e){}}
     catch(err){
       const c=err&&err.code;
       if(c==="auth/invalid-credential"||c==="auth/wrong-password"||c==="auth/user-not-found"||c==="auth/too-many-requests")lkFail();
@@ -5354,8 +5422,32 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     try{const m=localStorage.getItem("als-last-mail");localStorage.clear();if(m)localStorage.setItem("als-last-mail",m)}catch(e){}
     location.reload();
   });
+  /* Un seul téléphone à la fois : chaque connexion par mot de passe inscrit un numéro de session dans la fiche
+     personnelle (team/{uid}.sid). Un téléphone dont le numéro n'est plus le dernier inscrit est déconnecté
+     (et ses données locales effacées). Les téléphones déjà connectés avant cette version ne sont éjectés
+     qu'à la prochaine connexion sur un autre appareil. */
+  const SID_K="als-sid",SIDAT_K="als-sid-at";
+  function claimSession(u){try{
+    if(!u)return;const sid=Math.random().toString(36).slice(2)+Date.now().toString(36),at=Date.now();
+    localStorage.setItem(SID_K,sid);localStorage.setItem(SIDAT_K,String(at));
+    F.setDoc(F.doc(fs,"team/"+u.uid),{sid,sidAt:at,sidUa:(navigator.userAgent||"").slice(0,120)},{merge:true}).catch(()=>{});
+  }catch(e){}}
+  let sessUnsub=null,kicking=false;
+  function watchSession(u){try{
+    if(sessUnsub)sessUnsub();
+    sessUnsub=F.onSnapshot(F.doc(fs,"team/"+u.uid),s=>{
+      const d=s&&s.exists()?s.data():null;if(!d||!d.sid||kicking)return;
+      let mine="",at=0;try{mine=localStorage.getItem(SID_K)||"";at=+(localStorage.getItem(SIDAT_K)||0)}catch(e){}
+      if(d.sid===mine||(d.sidAt||0)<=at)return;
+      kicking=true;
+      (async()=>{try{await Au.signOut(auth)}catch(e){}
+        try{indexedDB.deleteDatabase("als-cache")}catch(e){}
+        try{const m=localStorage.getItem("als-last-mail");localStorage.clear();if(m)localStorage.setItem("als-last-mail",m);localStorage.setItem("als-kicked","1")}catch(e){}
+        location.reload()})();
+    },()=>{});
+  }catch(e){}}
   Au.onAuthStateChanged(auth,u=>{
-    mark("compte");
+    mark("compte");if(u)watchSession(u);
     if(u){hideAll();if(fellBack){fellBack=false;start(u);try{window.__alsUpgrade&&window.__alsUpgrade()}catch(e){}return}if(!started)start(u)}
     else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });

@@ -11,6 +11,7 @@
 .lg-link{background:none;border:0;color:var(--acc-ink);margin-top:14px;padding:8px;font-size:15px;text-decoration:underline}
 .lg-bad{min-height:20px;margin:10px 0 0;color:var(--out);font-size:14px}
 .lg-spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);margin:0 auto 14px;animation:lgsp .9s linear infinite}
+.lg-legal{display:flex;flex-wrap:wrap;justify-content:center;gap:0 6px;margin:18px 0 0}.lg-legal .lg-link{font-size:13px;margin:0;padding:6px 4px;color:var(--muted)}
 @keyframes lgsp{to{transform:rotate(360deg)}}
 </style>
 <div id="lgScrim">
@@ -23,5 +24,6 @@
     <button type="submit" class="btn pri" id="lgGo">Se connecter</button>
     <div class="lg-bad" id="lgBad" role="alert"></div>
     <button type="button" class="lg-link" id="lgForgot">Mot de passe oublié</button>
+    <p class="lg-legal"><button type="button" class="lg-link" data-legal="mentions">Mentions légales</button><button type="button" class="lg-link" data-legal="cgu">CGU</button><button type="button" class="lg-link" data-legal="cgv">CGV</button><button type="button" class="lg-link" data-legal="rgpd">Confidentialité</button></p>
   </form>
 </div>

@@ -24,7 +24,7 @@ try{const st=G("syncT");if(st){const mo=new MutationObserver(()=>{const t=st.tex
 let dgSend=null;
 const wait=G("lgWait"),form=G("lgForm"),scrim=G("lgScrim"),msg=G("lgMsg");
 function showWait(t,retry){scrim.hidden=false;form.hidden=true;wait.hidden=false;G("lgWaitT").textContent=t;G("lgRetry").hidden=!retry}
-function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
+function showForm(){try{if(!G("lgMail").value)G("lgMail").value=localStorage.getItem("als-last-mail")||""}catch(e){}scrim.hidden=false;wait.hidden=true;form.hidden=false;G("lgBad").textContent="";try{if(localStorage.getItem("als-kicked")){localStorage.removeItem("als-kicked");G("lgBad").textContent="Ton compte a été ouvert sur un autre téléphone : tu as été déconnecté ici."}}catch(e){}try{window.__lkPaint&&window.__lkPaint()}catch(e){}setTimeout(()=>{try{(G("lgMail").value?G("lgPass"):G("lgMail")).focus()}catch(e){}},50)}
 function hideAll(){scrim.hidden=true}
 G("lgRetry").addEventListener("click",()=>location.reload());
 /* Déjà connecté sur ce téléphone : on n'affiche pas « Connexion en cours… » par-dessus l'appli.
@@ -284,7 +284,7 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     e.preventDefault();
     if(lkPaint())return;
     const b=G("lgGo");b.disabled=true;G("lgBad").textContent="";
-    try{await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk();try{localStorage.setItem("als-last-mail",G("lgMail").value.trim())}catch(e){}}
+    try{const cr=await Au.signInWithEmailAndPassword(auth,G("lgMail").value.trim(),G("lgPass").value);lkOk();claimSession(cr&&cr.user);try{localStorage.setItem("als-last-mail",G("lgMail").value.trim())}catch(e){}}
     catch(err){
       const c=err&&err.code;
       if(c==="auth/invalid-credential"||c==="auth/wrong-password"||c==="auth/user-not-found"||c==="auth/too-many-requests")lkFail();
@@ -350,8 +350,32 @@ if(signed)hideAll();else showWait("Connexion en cours…");
     try{const m=localStorage.getItem("als-last-mail");localStorage.clear();if(m)localStorage.setItem("als-last-mail",m)}catch(e){}
     location.reload();
   });
+  /* Un seul téléphone à la fois : chaque connexion par mot de passe inscrit un numéro de session dans la fiche
+     personnelle (team/{uid}.sid). Un téléphone dont le numéro n'est plus le dernier inscrit est déconnecté
+     (et ses données locales effacées). Les téléphones déjà connectés avant cette version ne sont éjectés
+     qu'à la prochaine connexion sur un autre appareil. */
+  const SID_K="als-sid",SIDAT_K="als-sid-at";
+  function claimSession(u){try{
+    if(!u)return;const sid=Math.random().toString(36).slice(2)+Date.now().toString(36),at=Date.now();
+    localStorage.setItem(SID_K,sid);localStorage.setItem(SIDAT_K,String(at));
+    F.setDoc(F.doc(fs,"team/"+u.uid),{sid,sidAt:at,sidUa:(navigator.userAgent||"").slice(0,120)},{merge:true}).catch(()=>{});
+  }catch(e){}}
+  let sessUnsub=null,kicking=false;
+  function watchSession(u){try{
+    if(sessUnsub)sessUnsub();
+    sessUnsub=F.onSnapshot(F.doc(fs,"team/"+u.uid),s=>{
+      const d=s&&s.exists()?s.data():null;if(!d||!d.sid||kicking)return;
+      let mine="",at=0;try{mine=localStorage.getItem(SID_K)||"";at=+(localStorage.getItem(SIDAT_K)||0)}catch(e){}
+      if(d.sid===mine||(d.sidAt||0)<=at)return;
+      kicking=true;
+      (async()=>{try{await Au.signOut(auth)}catch(e){}
+        try{indexedDB.deleteDatabase("als-cache")}catch(e){}
+        try{const m=localStorage.getItem("als-last-mail");localStorage.clear();if(m)localStorage.setItem("als-last-mail",m);localStorage.setItem("als-kicked","1")}catch(e){}
+        location.reload()})();
+    },()=>{});
+  }catch(e){}}
   Au.onAuthStateChanged(auth,u=>{
-    mark("compte");
+    mark("compte");if(u)watchSession(u);
     if(u){hideAll();if(fellBack){fellBack=false;start(u);try{window.__alsUpgrade&&window.__alsUpgrade()}catch(e){}return}if(!started)start(u)}
     else{clearTimeout(fbTimer);try{localStorage.removeItem("als-signed")}catch(e){}if(started||fellBack){location.reload();return}showForm()}
   });
