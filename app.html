@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-zVnqxEv+DbWXh1Ugs/XoQ0YyTBG5VhQhWbWH2oPk0o8=' 'sha256-mEKQ+u5TLtQT0GLjVhDMQVkx2P44fuSxFtK+aSy+z28=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-0moR+3Ch0Lr1rffhSujN6QwZ2OrzTHtuPXmJYZKNm1w=' 'sha256-QfBLL0/eOo8IPlrw2pBJGAexVr3GVP7dV+1lm/i3BbY=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,6 +111,20 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .sum strong{font-family:var(--f-display);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .sum .pos{color:var(--in)} .sum .neg{color:var(--out)} .sum .warn{color:var(--warn)}
 .sum .sub{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.3;background:none!important;padding:0!important}
+.cal-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:14px 2px 8px}
+.cal-h b{font-size:15px}.cal-h span{font-size:12px;color:var(--muted);text-align:right}
+.cal-b{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-wd{text-align:center;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.cal-d{aspect-ratio:1;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;font:inherit;min-width:0;cursor:pointer}
+.cal-d b{font-size:15px;line-height:1;font-variant-numeric:tabular-nums}
+.cal-d small{font-size:9px;line-height:1;color:var(--in);font-weight:700;max-width:100%;overflow:hidden;white-space:nowrap}
+.cal-d .cal-add{color:var(--muted);font-size:12px;font-weight:400}
+.cal-d .cal-dot{width:6px;height:6px;border-radius:50%;background:var(--warn)}
+.cal-d.past:not(.has){opacity:.45}
+.cal-d.has{background:var(--acc-soft);border-color:transparent}
+.cal-d.today{border:2px solid var(--accent)}
+.cal-d.sel{background:var(--accent);color:var(--on-accent)}.cal-d.sel small{color:var(--on-accent)}
+#cpt .days+.cal-h{margin-top:16px}
 .days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .day{background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .day.today{background:var(--today);border-color:var(--accent)}
@@ -2026,7 +2040,7 @@ function cPayUi(){
   if(show){const t=parseNum($("cAmt").value),c=parseNum($("cCash").value);$("cCashH").textContent=t>0&&c>=0&&c<=t?"Carte : "+money(Math.round((t-c)*100))+" · espèces : "+money(Math.round(c*100)):"Indiquez la part payée en espèces."}
 }
 function cMulUi(){const b=parseNum($("cAmt").value);$("cMulHint").textContent=cMul>1?(b>0?"Total enregistré : "+money(Math.round(b*cMul*100))+" ("+cMul+" × "+money(Math.round(b*100))+")":"Le montant saisi sera compté "+cMul+" fois."):"Ticket oublié ou pas de ticket au péage : le montant du ticket est compté plusieurs fois."}
-let cDupKey="",cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
+let cSel="",cDupKey="",cTab="recette",Y=now.getFullYear(),M=now.getMonth(),cEditing=null,cDelArmed=false,cPay="carte",cCat="essence",cScroll=true,cSt="prevu";
 function fmtTime(t){return String(t||"").replace(":","h")}
 const cents=e=>Math.round((Number(e.amount)||0)*100);
 const sum=list=>list.reduce((a,e)=>a+cents(e),0)
@@ -2125,17 +2139,30 @@ function cJournal(inYear){
   const rvCard=r=>{const who=r.by&&r.by!==uid?(names[r.by]?String(names[r.by]).split(" ")[0]:"ton associé"):"";
     return h("div",{class:"rv-in"},h("div",null,h("small",null,"📅 Rendez-vous du planning"+(r.time?" · "+r.time:"")+(who?" · ajouté par "+who:"")),h("b",null,r.title||"Rendez-vous"),r.note?h("span",null,r.note):null),
       canWrite?h("button",{type:"button",onclick:()=>r.done?rvToEntry(r):rvToggle(r)},r.done?"Saisir l'intervention":"Terminé → saisir"):null)};
-  const nd=new Date(Y,M+1,0).getDate(),ul=h("ul",{class:"days"});
-  for(let d=1;d<=nd;d++){
-    const rl=(rvDay[d]||[]).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99"));
-    const list=(byDay[d]||[]).sort((a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99")||(a.at||0)-(b.at||0)),k=key(Y,M,d);
-    const wd=new Date(Y,M,d).toLocaleDateString("fr-FR",{weekday:"short"}).replace(".","");
-    ul.append(h("li",{class:"day"+(k===TODAY?" today":"")+(list.length||rl.length?"":" empty")},
+  /* affichage complet seulement pour aujourd'hui, demain et le jour touché ; le reste du mois en petites bulles */
+  const nd=new Date(Y,M+1,0).getDate(),tm=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1),TOMO=key(tm.getFullYear(),tm.getMonth(),tm.getDate());
+  const dayData=d=>({rl:(rvDay[d]||[]).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99")),
+    list:(byDay[d]||[]).sort((a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99")||(a.at||0)-(b.at||0)),k:key(Y,M,d)});
+  const dayLi=(d,lbl)=>{const {rl,list,k}=dayData(d);
+    const wd=lbl||new Date(Y,M,d).toLocaleDateString("fr-FR",{weekday:"short"}).replace(".","");
+    return h("li",{class:"day"+(k===TODAY?" today":"")+(list.length||rl.length?"":" empty")},
       h("div",{class:"dh"},h("div",{class:"dn"},h("b",null,String(d)),h("span",null,wd)),list.some(counts)?h("span",{class:"dt"},money(sum(list.filter(counts)))):null,
+        k===cSel&&k!==TODAY&&k!==TOMO?h("button",{class:"plus",type:"button","aria-label":"Fermer ce jour",style:"font-size:16px",onclick:()=>{cSel="";render()}},"✕"):null,
         canWrite?h("button",{class:"plus",type:"button","aria-label":"Ajouter le "+d+" "+MONTHS[M].toLowerCase(),onclick:()=>cOpen(null,k)},"+"):null),
-      list.map(cEntry),rl.map(rvCard)));
-  }
-  out.push(ul);return out;
+      list.map(cEntry),rl.map(rvCard));};
+  const full=[];
+  for(let d=1;d<=nd;d++){const k=key(Y,M,d);if(k===TODAY)full.push([d,"aujourd'hui"]);else if(k===TOMO)full.push([d,"demain"])}
+  if(full.length)out.push(h("ul",{class:"days"},full.map(([d,l])=>dayLi(d,l))));
+  const grid=h("div",{class:"cal-b"},..."LMMJVSD".split("").map(c=>h("span",{class:"cal-wd"},c)));
+  const off=(new Date(Y,M,1).getDay()+6)%7;for(let i=0;i<off;i++)grid.append(h("span"));
+  for(let d=1;d<=nd;d++){const {rl,list,k}=dayData(d),ok=list.filter(counts),todo=list.some(e=>e.kind==="recette"&&stat(e)==="prevu")||rl.length,has=list.length||rl.length;
+    grid.append(h("button",{type:"button",class:"cal-d"+(has?" has":"")+(k===TODAY?" today":"")+(k===cSel?" sel":"")+(k<TODAY?" past":""),
+      "aria-label":d+" "+MONTHS[M].toLowerCase()+(has?" : "+(list.length+rl.length)+" ligne"+(list.length+rl.length>1?"s":""):canWrite?" : ajouter":""),
+      onclick:()=>{if(has||!canWrite){cSel=cSel===k?"":k;render();if(cSel)requestAnimationFrame(()=>{const el=document.querySelector("#cBody .sel-day");if(el)el.scrollIntoView({block:"center",behavior:"smooth"})})}else{cSel=k;cOpen(null,k)}}},
+      h("b",null,String(d)),ok.length?h("small",null,money0(sum(ok))):todo?h("i",{class:"cal-dot"}):canWrite&&k>=TODAY?h("small",{class:"cal-add"},"+"):null));}
+  out.push(h("div",{class:"cal-h"},h("b",null,MONTHS[M]),h("span",null,canWrite?"Touche un jour pour ajouter · un jour rempli pour voir le détail":"Touche un jour pour voir le détail")),grid);
+  if(cSel&&cSel.startsWith(pre)&&cSel!==TODAY&&cSel!==TOMO)out.push(h("ul",{class:"days sel-day",style:"margin-top:10px"},dayLi(+cSel.slice(8,10))));
+  return out;
 }
 async function setStatus(e,s){
   if(!db||!canWrite)return;
@@ -4978,7 +5005,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261116-1805";
+const ALS_BUILD="20261118-1247";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",

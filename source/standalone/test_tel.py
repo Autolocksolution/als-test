@@ -16,7 +16,7 @@ async def main():
             await page.fill("#cModel","Clio IV");await page.fill("#cAmt","120");await page.fill("#cPhone","06 12 34 56 78")
             ok(await page.get_attribute("#cCall","href")=="tel:0612345678" and await page.is_visible("#cCall"),"lien Appeler actif dès qu'un numéro est saisi")
             if SHOT: await page.screenshot(path=SHOT+"fiche.png")
-            await page.click("#cSave");await page.wait_for_function("entries.some(e=>e.phone==='06 12 34 56 78')")
+            await page.click("#cSave");await page.wait_for_function("entries.some(e=>e.phone==='06 12 34 56 78')&&document.getElementById('cScrim').hidden")
             ok(True,"numéro enregistré avec l'intervention")
             await page.evaluate("cClose&&0;render()")
             ok(await page.locator(".ent-m",has_text="06 12 34 56 78").count()>=1,"numéro affiché dans la liste des interventions")
