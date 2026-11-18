@@ -4008,7 +4008,7 @@ $("stPush").addEventListener("click",async()=>{
   try{const st=await pushApi.status();
     if(st.state==="on"){await pushApi.disable();toast("Notifications désactivées")}
     else{b.textContent="Activation en cours…";await pushApi.enable(t=>{b.textContent=t});toast("Notifications activées")}}
-  catch(e){toast(e&&e.message?e.message:"Activation impossible")}
+  catch(e){toast(e&&e.message&&/^Connexion trop lente/.test(e.message)?e.message:"Activation impossible : réessayez avec un meilleur réseau")}
   pushPaint();
 });
 $("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Test envoyé : la notification arrive dans quelques secondes")}catch(e){toast("Test impossible")}});

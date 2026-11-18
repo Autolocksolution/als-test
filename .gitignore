@@ -1,0 +1,13 @@
+# Secrets : ne jamais publier (le dépôt est public). Les clés vivent dans les secrets GitHub.
+.env
+.env.*
+*.key
+*-key.json
+sa.json
+serviceAccount*.json
+*firebase-adminsdk*.json
+cle.pem
+*.p12
+# Dépendances et fichiers locaux
+node_modules/
+.DS_Store

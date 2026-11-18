@@ -55,7 +55,7 @@
   }
   const A={initializeApp:c=>({c})};
   const Au={
-    getAuth:()=>({}),
+    getAuth:()=>({get currentUser(){return AUTH.user}}),
     onAuthStateChanged:(a,cb)=>{AUTH.cbs.push(cb);setTimeout(()=>cb(AUTH.user),30);return()=>{}},
     signInWithEmailAndPassword:async(a,e,p)=>{
       if(e==="a@x.fr"&&p==="good"){AUTH.user={uid:"U1",email:e,displayName:null};localStorage.setItem("__fbuser",JSON.stringify(AUTH.user));AUTH.cbs.forEach(cb=>cb(AUTH.user));return{user:AUTH.user}}

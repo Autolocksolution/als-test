@@ -1,0 +1,16 @@
+# Vérification automatique des dépendances : Dependabot propose chaque semaine les mises à jour
+# (bibliothèque firebase-admin du robot et actions GitHub utilisées par les tâches automatiques).
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/scripts"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5

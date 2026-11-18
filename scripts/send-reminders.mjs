@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import admin from "firebase-admin";
 import { parisNow, due, planOutbox } from "./plan.mjs";
-import { fileRequest, callClaude, apiMessage, DAY_MAX } from "./ia-lib.mjs";
+import { fileRequest, callClaude, apiMessage, quotaRefus } from "./ia-lib.mjs";
 
 const keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 admin.initializeApp({ credential: admin.credential.cert(JSON.parse(fs.readFileSync(keyFile, "utf8"))) });
@@ -115,8 +115,21 @@ async function iaOne(req) {
   const ref = db.doc("ia/" + req.id);
   const end = (state, extra) => ref.update({ state, doneAt: Date.now(), ...extra }).catch(() => {});
   try {
-    const day = await db.collection("ia").where("at", ">=", Date.now() - 86400e3).count().get();
-    if (day.data().count > DAY_MAX) return end("err", { msg: "Plafond du jour atteint (" + DAY_MAX + " demandes) : réessayez demain." });
+    // Plafonds : compteurs tenus par le robot seul (collection « iaq », fermée à l'appli), donc impossibles à remettre à zéro
+    // en effaçant des demandes. Une demande sans auteur valable est refusée.
+    const who = typeof req.by === "string" && req.by ? req.by : "";
+    if (!who) return end("err", { msg: "Demande refusée." });
+    const iso = new Date().toISOString(), jRef = db.doc("iaq/j-" + iso.slice(0, 10)), mRef = db.doc("iaq/m-" + iso.slice(0, 7));
+    const refus = await db.runTransaction(async t => {
+      const [j, m] = await Promise.all([t.get(jRef), t.get(mRef)]);
+      const jd = j.exists ? j.data() : {}, md = m.exists ? m.data() : {};
+      const r = quotaRefus(jd, md, who);
+      if (r) return r;
+      t.set(jRef, { total: (jd.total || 0) + 1, u: { ...(jd.u || {}), [who]: (((jd.u || {})[who]) || 0) + 1 } });
+      t.set(mRef, { total: (md.total || 0) + 1 });
+      return "";
+    });
+    if (refus) { console.log("Rangement : plafond atteint"); return end("err", { msg: refus }); }
     const vehicles = await iaVehicles(req.vehicleId || "");
     const r = await fileRequest(req, {
       vehicles,
@@ -153,6 +166,10 @@ async function cleanup() {       // ménage : messages envoyés depuis plus de 3
   } catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
   try {                          // demandes de rangement de plus de 30 jours
     const old = await db.collection("ia").where("at", "<", Date.now() - 30 * 86400e3).limit(100).get();
+    await Promise.all(old.docs.map(d => d.ref.delete()));
+  } catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
+  try {                          // traces du journal de plus d'un an
+    const old = await db.collection("journal").where("at", "<", Date.now() - 365 * 86400e3).limit(200).get();
     await Promise.all(old.docs.map(d => d.ref.delete()));
   } catch (e) { console.log("ménage ignoré :", e.code || "erreur"); }
 }

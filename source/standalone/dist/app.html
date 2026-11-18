@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-0moR+3Ch0Lr1rffhSujN6QwZ2OrzTHtuPXmJYZKNm1w=' 'sha256-QfBLL0/eOo8IPlrw2pBJGAexVr3GVP7dV+1lm/i3BbY=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-DXlz3bzIIOi+cPiN9E6bvCxTix2w+pjV8+TjoLwriuw=' 'sha256-fSpQBbLvfLcKiZ84mKeiM5az7KX8yV+xg9q/aNKO4tg=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4039,7 +4039,7 @@ $("stPush").addEventListener("click",async()=>{
   try{const st=await pushApi.status();
     if(st.state==="on"){await pushApi.disable();toast("Notifications désactivées")}
     else{b.textContent="Activation en cours…";await pushApi.enable(t=>{b.textContent=t});toast("Notifications activées")}}
-  catch(e){toast(e&&e.message?e.message:"Activation impossible")}
+  catch(e){toast(e&&e.message&&/^Connexion trop lente/.test(e.message)?e.message:"Activation impossible : réessayez avec un meilleur réseau")}
   pushPaint();
 });
 $("stPushTest").addEventListener("click",async()=>{try{await pushApi.test();toast("Test envoyé : la notification arrive dans quelques secondes")}catch(e){toast("Test impossible")}});
@@ -5005,7 +5005,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261118-1247";
+const ALS_BUILD="20261118-1921";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
@@ -5070,21 +5070,31 @@ if(signed)hideAll();else showWait("Connexion en cours…");
   const soon=p=>Promise.race([p,new Promise(r=>setTimeout(r,5000))]);
   const docSnap=s=>({id:s.id,exists:s.exists(),data:()=>s.data(),fromCache:!!(s.metadata&&s.metadata.fromCache)});
   const colSnap=q=>({docs:q.docs.map(d=>({id:d.id,data:()=>d.data()})),size:q.size,fromCache:!!(q.metadata&&q.metadata.fromCache)});
+  /* Journal (traces) : chaque ajout, modification et suppression des données métier est noté dans « journal »
+     (qui, quoi, quand ; copie complète de ce qui est supprimé pour pouvoir le retrouver).
+     Les règles Firestore n'autorisent que l'ajout : personne ne peut modifier ni effacer une trace depuis l'appli. */
+  const JRN=new Set(["entries","items","clients","docs","vehicles","rdv","codes","ideas","orders"]);
+  const jrn=(path,op,avant)=>{try{
+    const [col,id]=path.split("/");const u=auth.currentUser;if(!JRN.has(col)||!id||path.split("/").length!==2||!u)return;
+    const d={col,id,op,by:u.uid,at:Date.now()};if(avant)d.avant=strip(avant);
+    F.setDoc(F.doc(F.collection(fs,"journal")),d).catch(()=>{});
+  }catch(e){}};
   function docApi(path){
     const ref=F.doc(fs,path);
     return{
       id:ref.id,
       get:async()=>docSnap(await F.getDoc(ref)),
-      set:(data,opts)=>soon(opts?F.setDoc(ref,strip(data),opts):F.setDoc(ref,strip(data))),
-      update:data=>soon(F.updateDoc(ref,strip(data))),
-      delete:()=>soon(F.deleteDoc(ref)),
+      set:(data,opts)=>{jrn(path,"modif");return soon(opts?F.setDoc(ref,strip(data),opts):F.setDoc(ref,strip(data)))},
+      update:data=>{jrn(path,"modif");return soon(F.updateDoc(ref,strip(data)))},
+      delete:async()=>{let avant=null;try{const g=await Promise.race([F.getDoc(ref),new Promise(r=>setTimeout(r,3000))]);if(g&&g.exists())avant=g.data()}catch(e){}
+        jrn(path,"suppr",avant);return soon(F.deleteDoc(ref))},
       onSnapshot:(cb,err)=>F.onSnapshot(ref,s=>cb(docSnap(s)),e=>{if(err)err(e)})
     };
   }
   function colApi(path){
     const ref=F.collection(fs,path);
     return{
-      add:async data=>{const r=F.doc(ref);await soon(F.setDoc(r,strip(data)));return{id:r.id}},
+      add:async data=>{const r=F.doc(ref);jrn(path+"/"+r.id,"ajout");await soon(F.setDoc(r,strip(data)));return{id:r.id}},
       get:async()=>colSnap(await F.getDocs(ref)),
       onSnapshot:(cb,err)=>F.onSnapshot(ref,q=>cb(colSnap(q)),e=>{if(err)err(e)}),
       doc:id=>docApi(path+"/"+id)

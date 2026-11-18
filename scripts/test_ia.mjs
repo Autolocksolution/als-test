@@ -51,3 +51,16 @@ ok(r.state === "err", "demande vide refusée sans appel");
 r = await fileRequest({ text: "note", vehicleId: "c3", photoIds: ["bad", "ph2"] }, deps(['{"vehicleId":"c3","s":{},"t":{},"photos":[{"i":0,"section":"ecu"}],"resume":""}']));
 ok(r.update.ph.ecu[0] === "ph2", "photo illisible ignorée : l'indice suit les photos réellement envoyées");
 console.log("OK " + n + " vérifications");
+
+// ---- plafonds de demandes (compteurs tenus par le robot)
+{
+  const { quotaRefus, DAY_MAX, USER_DAY_MAX, MONTH_MAX } = await import("./ia-lib.mjs");
+  const a = (await import("node:assert/strict")).default;
+  a.equal(quotaRefus({}, {}, "U1"), "", "premier envoi accepté");
+  a.equal(quotaRefus({ total: 10, u: { U1: 3 } }, { total: 50 }, "U1"), "", "sous les plafonds : accepté");
+  a.match(quotaRefus({ total: 80, u: { U1: USER_DAY_MAX } }, { total: 80 }, "U1"), /ta limite du jour/, "plafond par personne");
+  a.equal(quotaRefus({ total: 80, u: { U1: USER_DAY_MAX } }, { total: 80 }, "U2"), "", "l'autre personne peut encore envoyer");
+  a.match(quotaRefus({ total: DAY_MAX, u: {} }, { total: DAY_MAX }, "U2"), /Plafond du jour/, "plafond du jour commun");
+  a.match(quotaRefus({}, { total: MONTH_MAX }, "U1"), /Plafond du mois/, "plafond du mois");
+  console.log("OK   plafonds : par personne, par jour, par mois");
+}

@@ -66,21 +66,31 @@ if(signed)hideAll();else showWait("Connexion en cours…");
   const soon=p=>Promise.race([p,new Promise(r=>setTimeout(r,5000))]);
   const docSnap=s=>({id:s.id,exists:s.exists(),data:()=>s.data(),fromCache:!!(s.metadata&&s.metadata.fromCache)});
   const colSnap=q=>({docs:q.docs.map(d=>({id:d.id,data:()=>d.data()})),size:q.size,fromCache:!!(q.metadata&&q.metadata.fromCache)});
+  /* Journal (traces) : chaque ajout, modification et suppression des données métier est noté dans « journal »
+     (qui, quoi, quand ; copie complète de ce qui est supprimé pour pouvoir le retrouver).
+     Les règles Firestore n'autorisent que l'ajout : personne ne peut modifier ni effacer une trace depuis l'appli. */
+  const JRN=new Set(["entries","items","clients","docs","vehicles","rdv","codes","ideas","orders"]);
+  const jrn=(path,op,avant)=>{try{
+    const [col,id]=path.split("/");const u=auth.currentUser;if(!JRN.has(col)||!id||path.split("/").length!==2||!u)return;
+    const d={col,id,op,by:u.uid,at:Date.now()};if(avant)d.avant=strip(avant);
+    F.setDoc(F.doc(F.collection(fs,"journal")),d).catch(()=>{});
+  }catch(e){}};
   function docApi(path){
     const ref=F.doc(fs,path);
     return{
       id:ref.id,
       get:async()=>docSnap(await F.getDoc(ref)),
-      set:(data,opts)=>soon(opts?F.setDoc(ref,strip(data),opts):F.setDoc(ref,strip(data))),
-      update:data=>soon(F.updateDoc(ref,strip(data))),
-      delete:()=>soon(F.deleteDoc(ref)),
+      set:(data,opts)=>{jrn(path,"modif");return soon(opts?F.setDoc(ref,strip(data),opts):F.setDoc(ref,strip(data)))},
+      update:data=>{jrn(path,"modif");return soon(F.updateDoc(ref,strip(data)))},
+      delete:async()=>{let avant=null;try{const g=await Promise.race([F.getDoc(ref),new Promise(r=>setTimeout(r,3000))]);if(g&&g.exists())avant=g.data()}catch(e){}
+        jrn(path,"suppr",avant);return soon(F.deleteDoc(ref))},
       onSnapshot:(cb,err)=>F.onSnapshot(ref,s=>cb(docSnap(s)),e=>{if(err)err(e)})
     };
   }
   function colApi(path){
     const ref=F.collection(fs,path);
     return{
-      add:async data=>{const r=F.doc(ref);await soon(F.setDoc(r,strip(data)));return{id:r.id}},
+      add:async data=>{const r=F.doc(ref);jrn(path+"/"+r.id,"ajout");await soon(F.setDoc(r,strip(data)));return{id:r.id}},
       get:async()=>colSnap(await F.getDocs(ref)),
       onSnapshot:(cb,err)=>F.onSnapshot(ref,q=>cb(colSnap(q)),e=>{if(err)err(e)}),
       doc:id=>docApi(path+"/"+id)

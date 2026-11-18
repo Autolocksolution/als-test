@@ -4,7 +4,18 @@
 // Ce fichier ne contient que la logique (testable sans réseau) ; le robot (send-reminders.mjs) fournit db et clé.
 
 export const MODEL = "claude-haiku-5-5";
-export const DAY_MAX = 150;          // plafond quotidien de demandes (garde-fou sur la dépense)
+export const DAY_MAX = 150;          // plafond quotidien de demandes, tous comptes confondus (garde-fou sur la dépense)
+export const USER_DAY_MAX = 75;      // plafond quotidien par personne
+export const MONTH_MAX = 2000;       // plafond mensuel (bien en dessous de 50 € avec ce modèle)
+
+// Vérifie les plafonds à partir des compteurs du jour et du mois ({ total, u: { uid: n } }) ; renvoie le refus ou "".
+export function quotaRefus(jour, mois, uid) {
+  const j = jour || {}, m = mois || {}, n = ((j.u || {})[uid]) || 0;
+  if ((m.total || 0) >= MONTH_MAX) return "Plafond du mois atteint (" + MONTH_MAX + " demandes) : ça repart le 1er du mois prochain.";
+  if ((j.total || 0) >= DAY_MAX) return "Plafond du jour atteint (" + DAY_MAX + " demandes) : réessayez demain.";
+  if (n >= USER_DAY_MAX) return "Tu as atteint ta limite du jour (" + USER_DAY_MAX + " demandes) : réessaie demain.";
+  return "";
+}
 export const PHOTO_MAX = 3;
 
 // Champs courts (fiche.s) et textes (fiche.t), avec leur intitulé dans l'appli.

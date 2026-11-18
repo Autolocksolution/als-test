@@ -8,7 +8,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-export const COLLECTIONS = ["items", "entries", "ideas", "codes", "photos", "clients", "docs", "orders", "vehicles", "rdv", "news", "meta"];
+export const COLLECTIONS = ["items", "entries", "ideas", "codes", "photos", "clients", "docs", "orders", "vehicles", "rdv", "news", "meta", "journal"];
 export const MAGIC = Buffer.from("ALSBK1", "ascii");
 export const IV_LEN = 12, TAG_LEN = 16, KEY_LEN = 32;
 const HEAD = MAGIC.length + IV_LEN;

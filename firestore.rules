@@ -46,6 +46,22 @@ service cloud.firestore {
       allow update: if membre() && request.resource.data.state == resource.data.state;
     }
 
+    // Journal (traces) : on peut seulement AJOUTER une trace à son propre nom ; jamais la modifier ni l'effacer.
+    match /journal/{id} {
+      allow read: if membre();
+      allow create: if membre()
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.op in ['ajout', 'modif', 'suppr']
+        && request.resource.data.col is string
+        && request.resource.data.at is number;
+      allow update, delete: if false;
+    }
+
+    // Compteurs de demandes à Claude (plafonds) : tenus par le robot seul, invisibles et intouchables depuis l'appli.
+    match /iaq/{id} {
+      allow read, write: if false;
+    }
+
     // Données métier : liste blanche de collections ; tout le reste est refusé.
     match /{col}/{doc=**} {
       allow read, write: if membre() && col in [
