@@ -1,0 +1,98 @@
+[
+  {
+    "id": "c-silca-ads2328-toyota-lame-akl",
+    "title": "Silca Smart Pro (ADS2328) : Yaris, Yaris Cross, Corolla et RAV4 à clé à lame H, toutes clés perdues",
+    "url": "https://a.storyblok.com/f/241607/x/e99d1bea3f/ads2328-toyota-12_2025_en.pdf",
+    "source": "Silca (fiche logiciel ADS2328)",
+    "kind": "web",
+    "summary": "Le logiciel ADS2328 du Smart Pro programme les clés à lame Toyota de type H (DST128, sécurité TIS) : Corolla 2018-2026, RAV4 et Hiace 2019-2026, Yaris et Yaris Cross 2020-2026. Le double se fait avec le câble ADC2000. Pour toutes clés perdues, il faut le câble ADC2016 et une connexion au serveur, sans clé fonctionnelle. La fiche date de décembre 2025 et vise le marché australien.",
+    "date": "2025-12-01",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-vag-mqb5c-akl-avdi-video",
+    "title": "VW T-Roc (MQB 5C) toutes clés perdues avec Abrites AVDI : la méthode pas à pas",
+    "url": "https://www.youtube.com/watch?v=uMG0Umuatyw",
+    "source": "AVDI FAN (YouTube)",
+    "kind": "video",
+    "summary": "Démonstration complète de la licence VN025 sur un T-Roc 5C : lecture du CS du calculateur moteur (ou passage en immo off pour les Bosch d'avant 2021), puis du CS de la boîte DSG en se branchant sur les fusibles avec le boîtier de distribution, puis lecture et écriture du compteur RH850 démonté. Il faut mettre les warnings sinon le compteur n'est pas détecté, et l'antivol de colonne (ELV) doit être débranché. La clé neuve (ici une adaptable) est préparée au Protag ; il faut aller vite pour la présenter à l'antenne.",
+    "date": "2026-10-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-clio4-clio5-lonsdor-hfm",
+    "title": "Clio IV et Clio V : ce que fait le Lonsdor K518 Pro (lecture HFM, passerelle)",
+    "url": "http://blog.obdii365.com/2025/02/17/program-renault-clio-iv-clio-v-key-with-lonsdor-k518-pro/",
+    "source": "blog.obdii365.com",
+    "kind": "web",
+    "summary": "Sur Clio IV, le K518 Pro fait l'ajout et toutes cartes perdues, mais il faut démonter le module mains libres (HFM, Renesas V850 D70F3633) et lire sa D-Flash avec un programmateur (VVDI Prog avec FLMD1, Multi Prog, Orange5, UPA ou XP400 Pro). Sur Clio V, l'ajout passe avec l'adaptateur passerelle Renault/Nissan 16+32. Pour Clio V toutes cartes perdues, l'article dit que ça marche rarement et conseille plutôt Abrites ou Smart Pro.",
+    "date": "2025-02-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-vag-mqb48-mqb49-5c-5d",
+    "title": "VW, Skoda, Seat, Audi : reconnaître MQB48, MQB49/5C et 5D avant de se lancer",
+    "url": "http://blog.obdii365.com/2026/01/19/difference-between-vag-mqb48-mqb49-5c-and-5d/",
+    "source": "blog.obdii365.com",
+    "kind": "web",
+    "summary": "MQB48 (environ 2015-2019, puce NEC35xx) : ajout et toutes clés perdues possibles avec les données de synchro. MQB49/5C (depuis fin 2019, RH850) : ajout avec une clé qui marche, toutes clés perdues très limité ; les données sont dans le compteur. 5D (Golf 8 récentes, ID.3/ID.4) : données dans le BCM (NEC et parfois EEPROM 95320), clé avec capteur d'accélération non compatible 5C, et il faut la clé d'origine pour en ajouter.",
+    "date": "2026-01-19",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-skoda-kodiaq-mqb48-lecture-cle",
+    "title": "Skoda Kodiaq 2018 (MQB48) : ajout de clé en lisant la clé, compteur protégé",
+    "url": "https://vvdikeytoolpluspad.blogspot.com/2025/11/add-2018-skoda-kodiaq-mqb-key-with-vvdi.html",
+    "source": "vvdikeytoolpluspad.blogspot.com",
+    "kind": "web",
+    "summary": "Le Key Tool Plus identifie le compteur mais ne peut pas lire l'immo par l'OBD car le processeur est protégé. La solution a été d'ouvrir une clé qui marche, de la modifier légèrement pour la lire avec le MLB Tool et l'adaptateur MQB48, puis d'ajouter la nouvelle clé taillée à la Dolphin. Toutes les clés ne s'ouvrent pas facilement, et l'auteur indique qu'il n'avait pas de solution pour les véhicules d'après 2020 en MQB49.",
+    "date": "2025-11-20",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-abrites-bmw-bdc2-ajout-banc",
+    "title": "BMW séries F et G (BDC2) : ajout de clé sur table avec Abrites BN020",
+    "url": "https://abrites.com/news/how-to-add-a-spare-key-to-bmw-f-series-and-g-series-vehicles",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "Le BDC2 se démonte et s'ouvre pour brancher le câble ZN095 sur la carte. On lit et sauvegarde les données (4 fichiers), on les réécrit, puis on lit une clé qui marche et on écrit la nouvelle clé au Protag. Après remontage, on tient la nouvelle clé contre l'antenne autour de la colonne environ 30 secondes, contact mis. Une clé fonctionnelle est obligatoire pour cette méthode.",
+    "date": "2025-04-17",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-hyundai-kia-autel-menu-diag",
+    "title": "Hyundai / Kia récents : contourner l'erreur « remote incapable » de l'Autel IM508 / IM608",
+    "url": "http://blog.obdii365.com/2025/03/25/autel-im508-im608-newer-hyundai-kia-smart-key-error-solution/",
+    "source": "blog.obdii365.com",
+    "kind": "web",
+    "summary": "Sur des Hyundai et Kia mains libres récents (exemple Santa Fe 2021-2022), le menu IMMO peut refuser la clé ou ne pas lire le PIN. L'astuce : passer par Diagnostic, sélection automatique, puis Fonctions rapides, Clés IMMO, Smart Key Unit (SMK), « Sauvegarde du code smart key » et enfin « Ajouter une clé ». Si le PIN ne se lit pas avec l'Autel, le lire d'abord avec un autre outil (Key Tool Max Pro par exemple), et garder une batterie stable.",
+    "date": "2025-03-25",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  },
+  {
+    "id": "c-308-p51-cle-non-detectee-batterie",
+    "title": "Peugeot 308 (2021+) : clé mains libres non détectée, c'était la batterie de servitude",
+    "url": "https://www.forum-peugeot.com/Forum/threads/cl%C3%A9-main-libre-non-d%C3%A9tect%C3%A9e.138984/page-2",
+    "source": "Forum Peugeot · retour d'utilisateur",
+    "kind": "forum",
+    "summary": "Sur une 308 P51, la clé mains libres n'était plus détectée et la voiture finissait par ne plus démarrer. Après recharge de la batterie, tout remarchait ; le garage a ensuite remplacé la batterie de servitude (sous l'accoudoir central) et le problème n'est pas revenu. Les membres signalent aussi que des clés laissées près de la voiture (détection jusqu'à environ 12 m) l'empêchent de se mettre en veille et vident la batterie : à vérifier avant de reprogrammer quoi que ce soit.",
+    "date": "2024-10-14",
+    "state": "new",
+    "by": "claude",
+    "at": 1795068955237
+  }
+]
