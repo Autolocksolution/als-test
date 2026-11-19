@@ -1,0 +1,42 @@
+# Bouton « Tout mettre dans l'épargne » sur une intervention réussie.
+import asyncio, subprocess, sys, os, time, types
+HERE=os.path.dirname(os.path.abspath(__file__))
+src=open(os.path.join(HERE,"test_boost.py"),encoding="utf-8").read().split("# ---------------------------------------------------------------- (a)")[0]
+T=types.ModuleType("T");T.__file__=os.path.join(HERE,"test_boost.py");exec(src,T.__dict__)
+from playwright.async_api import async_playwright
+ok=T.ok;SHOT=os.environ.get("EP_SHOT","")
+async def main():
+    srv=subprocess.Popen([sys.executable,"-m","http.server",str(T.PORT),"--bind","127.0.0.1"],cwd=os.path.join(HERE,"dist"),stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
+    try:
+        async with async_playwright() as pw:
+            b=await pw.chromium.launch();ctx,page,errs,csp=await T.open_app(b)
+            page.on("dialog",lambda d:asyncio.ensure_future(d.accept()))
+            await page.evaluate("""(async()=>{const r=await db.collection('entries').add({kind:'recette',date:TODAY,time:'10:00',amount:150,pay:'especes',model:'Mégane 3',city:'Narbonne',by:uid,at:Date.now(),status:'prevu'});window.__eid=r.id})()""")
+            await page.evaluate("goMode('comptes');cTab='recette';Y=now.getFullYear();M=now.getMonth();render()")
+            card=page.locator("#cBody .day.today")
+            await card.locator(".quick .qok",has_text="Réussi").click()
+            await page.wait_for_function("entries.find(e=>e.id===window.__eid&&e.status==='reussi')")
+            await page.wait_for_selector("#kScrim:not([hidden]) #kSave:not([hidden])")
+            ok("Tout mettre dans l'épargne (150,00" in await page.inner_text("#kSave"),"juste après « Réussi » : bouton « Tout mettre dans l'épargne » dans la fenêtre du choix de clé")
+            if SHOT: await page.locator("#kSheet").screenshot(path=SHOT+"cle.png")
+            await page.click("#kSave")
+            await page.wait_for_function("(e=>e&&e.saveAll&&e.aside)(entries.find(e=>e.id===window.__eid))")
+            await page.wait_for_function("document.getElementById('kSave').textContent.includes('mis dans l')")
+            ok(True,"un appui dans cette fenêtre : tout est dans l'épargne, le bouton passe en ✓")
+            await page.click("#kSave");await page.wait_for_function("(e=>e&&!e.saveAll)(entries.find(e=>e.id===window.__eid))")
+            await page.evaluate("kClose()")
+            await page.wait_for_selector("#cBody .quick .qsave")
+            ok(await page.locator("#cBody .quick .qsave",has_text="Tout mettre dans l'épargne").count()==1,"après « Réussi », le bouton « Tout mettre dans l'épargne » apparaît")
+            if SHOT: await page.locator("#cBody .day.today").screenshot(path=SHOT+"avant.png")
+            await page.click("#cBody .quick .qsave")
+            await page.wait_for_function("(e=>e&&e.saveAll&&e.aside)(entries.find(e=>e.id===window.__eid))")
+            ok(True,"un appui : toute l'intervention est dans l'épargne, comptée comme mise de côté")
+            ok(await page.evaluate("cashRes(entries.find(e=>e.id===window.__eid))")==15000,"les 150 € entiers comptent dans l'épargne")
+            await page.wait_for_selector("#cBody .quick .qok:has-text('mis dans l\\'épargne (tout)')")
+            if SHOT: await page.locator("#cBody .day.today").screenshot(path=SHOT+"apres.png")
+            await page.click("#cBody .quick .qok:has-text('mis dans l\\'épargne (tout)')")
+            await page.wait_for_function("(e=>e&&!e.saveAll&&!e.aside)(entries.find(e=>e.id===window.__eid))")
+            ok(True,"on peut l'annuler (après confirmation) : retour aux 30 %")
+            ok(not errs,"aucune erreur "+str(errs))
+    finally: srv.kill()
+asyncio.run(main())

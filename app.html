@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-YeHbiMTWPL6R41yhob8OGTq0771oT9Av63QthbvaOY4=' 'sha256-J5DD39RtzGfHCn2lz5GiqFWqQ1MpcDdL1uL6hO64MsE=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-qTCzOCuX+XxhN64s+1gO9jq8BcvEtFc8n8ibDBO9qeI=' 'sha256-dnhlyI8mD3QWARajvlkcMVgpTJnA4qBz27BYevqrXL0=' 'sha256-Z6b2TiQwIWGcGkT9sCAs6AsnjCIv7Z9kAEMwYxhJEn0=' 'sha256-49wYUav6/LmupgB9WZOebQgbL7n55H+YtTaRwx2ERKM=' https://www.gstatic.com 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: blob: data:; frame-src https://*.firebaseapp.com https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="AutoLock"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#2F7F7A"><style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style><link rel="manifest" href="app.webmanifest"><link rel="apple-touch-icon" href="als-180.png"><script>window.ALS_OCR="ocr/"</script><script>if(!window.claude){window.__alsReady=new Promise(function(r){window.__alsResolve=r})}</script>
 <title>AutoLockSolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -206,7 +206,8 @@ textarea.mono{font-family:var(--f-mono);font-size:18px;letter-spacing:.06em}
 .st-prevu{background:var(--warn-bg);color:var(--warn)}
 .quick{display:flex;gap:8px;padding:0 12px 10px}
 .quick button{flex:1;height:42px;border-radius:8px;border:1px solid var(--line);background:var(--tint);font-weight:600}
-.quick .qok{color:var(--in)} .quick .qko{color:var(--out)}
+.ksave{width:100%;margin:0 0 10px;color:var(--accent);font-weight:700}.ksave.on{color:var(--in)}
+.quick .qsave{color:var(--accent);font-weight:700}.quick .qok{color:var(--in)} .quick .qko{color:var(--out)}
 .quick .qcall{flex:1;height:42px;border-radius:8px;border:1px solid var(--line);background:var(--tint);font-weight:600;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink);white-space:nowrap}
 .hmodel{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden}
 .hmodel summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:54px;cursor:pointer}
@@ -1067,7 +1068,7 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
       </div>
       <div class="f"><label for="cNote" style="display:flex;justify-content:space-between;align-items:center;gap:8px">Notes (envoyées dans l'historique si réussi)<button type="button" class="micbtn" id="cMic" aria-label="Dicter la note">🎤 Dicter</button></label><textarea id="cNote" rows="3" maxlength="600" placeholder="Méthode, outil, code, piège à éviter…"></textarea></div>
       <div class="f"><div class="rphoto"><button type="button" class="btn" id="cPhBtn">📷 Ajouter des photos (clé, boîtier, étiquette)</button><div class="phgrid" id="cPhGrid"></div><p class="phhint">Depuis la photothèque ou l'appareil photo, plusieurs à la fois.</p></div>
-      <label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> Tout mis dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
+      <label class="chk2"><input type="checkbox" id="cFay"> Encaissé par Fayss (sa boîte)</label><label class="chk2"><input type="checkbox" id="cSaveAll"> 💰 Tout mettre dans l'épargne</label><span class="hint" style="margin:2px 0 0">Coché tout seul si la note contient « carte fayss », « fayc » ou « faycal ».</span></div>
       <div class="row2">
         <div class="f"><label for="cPlate">Immatriculation</label><input id="cPlate" maxlength="14" autocapitalize="characters" placeholder="AB-123-CD"><span class="hint" id="cPlateHint" style="margin:2px 0 0" role="status" hidden></span></div>
         <div class="f"><label for="cPin">Code PIN</label><input id="cPin" maxlength="24"></div>
@@ -1416,6 +1417,7 @@ body{background:radial-gradient(130% 55% at 50% 0%,color-mix(in srgb,var(--ink) 
   <div class="sheet" id="kSheet">
     <h2>Quelle clé as-tu utilisée ?</h2>
     <p class="hint" id="kFor"></p>
+    <button type="button" class="btn ksave" id="kSave" hidden></button>
     <div class="f" style="margin-bottom:8px"><input type="search" id="kQ" placeholder="Chercher dans tout le stock…" aria-label="Chercher dans le stock"></div>
     <div class="chips kchips" id="kCats" role="tablist" aria-label="Catégories"></div>
     <div class="chips kchips ksub" id="kSubs" role="tablist" aria-label="Sous-catégories" hidden></div>
@@ -2104,6 +2106,12 @@ const SAVE_FROM="2026-10-15";
 /* saveAll : toute l'intervention va dans l'épargne (carte ou espèces, quelle que soit la date) */
 const cashRes=e=>e.kind!=="recette"||stat(e)!=="reussi"?0:e.saveAll?cents(e):cashC(e)>0&&(e.date||"")>=SAVE_FROM?Math.round(cashC(e)*RESERVE):0;
 const resTot=l=>l.reduce((a,e)=>a+cashRes(e),0);
+async function setSaveAll(e,on){
+  if(!db||!canWrite)return;
+  try{await db.doc("entries/"+e.id).update(on?{saveAll:true,aside:true,asideAt:Date.now()}:{saveAll:false,aside:false,asideAt:null});
+    toast(on?"Noté : "+money(cents(e))+" mis dans l'épargne":"Retiré de l'épargne")}
+  catch(err){toast("Modification refusée")}
+}
 async function setAside(e,on){
   if(!db||!canWrite)return;
   try{await db.doc("entries/"+e.id).update({aside:!!on,asideAt:on?Date.now():null});toast(on?"Noté : "+money(cashRes(e))+" mis de côté":"Remis à faire")}
@@ -2197,7 +2205,10 @@ function cEntry(e){
         h("div",{class:"ent-r"},
           h("div",{class:"ent-a"+(s==="reussi"?"":" dim")+(s==="abandon"?" strike":""),style:s==="reussi"?"color:var(--in)":""},(s==="reussi"?"+":"")+money(cents(e))),
           h("div",null,h("span",{class:"pay"+(cashC(e)>0?" cash":"")},payLbl(e)),h("span",{class:"st st-"+s},s==="reussi"?"Réussi":s==="abandon"?"Abandon":"À faire")))),
-      s==="reussi"&&e.saveAll?h("div",{class:"quick"},h("span",{class:"qok",style:"padding:6px 10px;border-radius:8px"},"✓ "+money(cashRes(e))+" mis dans l'épargne (tout)")):s==="reussi"&&cashC(e)>0&&cashRes(e)>0&&canWrite?h("div",{class:"quick"},h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)")):null,
+      s==="reussi"&&(e.saveAll||cents(e)>0)?h("div",{class:"quick"},
+        e.saveAll?(canWrite?h("button",{type:"button",class:"qok",onclick:()=>{if(confirm("Retirer cette intervention de l'épargne ?"))setSaveAll(e,false)}},"✓ "+money(cents(e))+" mis dans l'épargne (tout)"):h("span",{class:"qok",style:"padding:6px 10px;border-radius:8px"},"✓ "+money(cents(e))+" mis dans l'épargne (tout)"))
+        :canWrite?[cashC(e)>0&&cashRes(e)>0?h("button",{type:"button",class:e.aside?"qok":"qko",onclick:()=>setAside(e,!e.aside)},e.aside?"✓ "+money(cashRes(e))+" mis de côté (30 %)":"☐ Mettre "+money(cashRes(e))+" de côté (30 %)"):null,
+          h("button",{type:"button",class:"qsave",onclick:()=>setSaveAll(e,true)},"💰 Tout mettre dans l'épargne")]:null):null,
       s==="prevu"&&canWrite?h("div",{class:"quick"},telNum(entPhone(e))?h("a",{class:"qcall",href:"tel:"+telNum(entPhone(e))},"📞 Appeler"):null,h("button",{type:"button",class:"qok",onclick:()=>setStatus(e,"reussi")},"✓ Réussi"),h("button",{type:"button",class:"qko",onclick:()=>setStatus(e,"abandon")},"✕ Abandon")):null);
   }
   let title,meta;
@@ -2912,8 +2923,15 @@ let kEntry=null;
 function kOpen(e){
   kEntry=e;
   $("kFor").textContent="Pour : "+([e.model,e.year].filter(Boolean).join(" · ")||"ce véhicule")+". Le stock de la clé choisie baisse de 1.";
-  $("kQ").value="";kSub="";kRender();$("kScrim").hidden=false;
+  $("kQ").value="";kSub="";kRender();kSavePaint();$("kScrim").hidden=false;
 }
+/* juste après « Réussi » : tout mettre dans l'épargne en un appui, avant de choisir la clé */
+function kSavePaint(){const e=kEntry&&entries.find(x=>x.id===kEntry.id)||kEntry,b=$("kSave");
+  if(!e||e.kind!=="recette"||!(cents(e)>0)||!canWrite){b.hidden=true;return}
+  b.hidden=false;b.classList.toggle("on",!!e.saveAll);
+  b.textContent=e.saveAll?"✓ "+money(cents(e))+" mis dans l'épargne (tout)":"💰 Tout mettre dans l'épargne ("+money(cents(e))+")";}
+$("kSave").addEventListener("click",async()=>{const e=kEntry&&entries.find(x=>x.id===kEntry.id);if(!e)return;
+  await setSaveAll(e,!e.saveAll);kEntry={...kEntry,saveAll:!e.saveAll};setTimeout(kSavePaint,250)});
 function kClose(){$("kScrim").hidden=true;kEntry=null}
 /* sélection en 2 temps : catégorie (puce) puis sous-catégorie ; la recherche fouille tout le stock.
    « Récentes » = pièces déjà utilisées sur des interventions, les plus récentes d'abord. */
@@ -5073,7 +5091,7 @@ setInterval(()=>{try{if(refreshToday())render();else remindRender()}catch(e){}},
 /* ===== AutoLockSolution : mode autonome (Firebase) =====
    Remplace window.claude quand la page est ouverte hors de Claude.
    Fournit : db (Firestore), user (Firebase Auth), downloads (partage iOS / téléchargement). sample = absent. */
-const ALS_BUILD="20261118-1953";
+const ALS_BUILD="20261119-1214";
 const SDK_V="10.14.1",SDK_BASE="https://www.gstatic.com/firebasejs/"+SDK_V+"/";
 const CFG={
   apiKey:"AIzaSyCAnJg9b_5_eRs8F3Li36FX7kevmiUZbq4",
