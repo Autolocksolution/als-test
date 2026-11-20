@@ -1,0 +1,74 @@
+[
+  {
+    "id": "c-bmw-mg1-isn-autel-gbox3",
+    "title": "BMW B48/B58 (DME Bosch MG1/MD1 verrouillé) : lire l'ISN avec Autel IM508/IM608 et G-box3",
+    "url": "http://www.key-programmer.org/2026/11/18/read-bmw-mg1cs201-locked-ecu-isn-with-autel-im508-and-gbox3/",
+    "source": "key-programmer.org",
+    "kind": "web",
+    "summary": "Tutoriel pour lire sur table un calculateur moteur BMW Bosch MG1/MD1 verrouillé (exemple : B48 MG1CS201, TC298TP) avec Autel IM508S/IM608 II, XP400 Pro et G-box3. Il faut obligatoirement la G-box3 : la G-box2 ne marche pas pour l'ISN. On entre la référence Bosch dans « Connexion directe », on suit le schéma de câblage (masse, CAN-L, CAN-H, 12 V) puis on lit l'EEPROM et la Flash. L'ISN se trouve dans l'EEPROM, à envoyer pour obtenir le code.",
+    "date": "2026-11-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  },
+  {
+    "id": "c-toyota-cle-bloquee-eoneboss-tlk1",
+    "title": "Toyota mains libres : réutiliser une clé d'origine supprimée ou bloquée avec EoneBoss TLK-1",
+    "url": "http://blog.obdii365.com/2026/11/18/how-to-add-a-locked-toyota-smart-keys-using-eoneboss-tlk1/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Sur un Toyota Highlander 2021, le client voulait faire réapprendre sa clé d'origine supprimée : la méthode classique (toucher le logo avec la clé valide puis la nouvelle) échoue, la clé ne se synchronise jamais. Avec le TLK-1, on lit une clé, on la programme à la voiture comme une nouvelle clé, puis on pose la clé bloquée sur l'appareil pour qu'il la mette à jour. Il suffit ensuite de mettre le contact avec cette clé pour la synchroniser, et elle fonctionne. Toujours tester les fonctions et la télécommande à la fin.",
+    "date": "2026-11-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  },
+  {
+    "id": "c-psa-md1cs003-unlock-comparatif",
+    "title": "Calculateur PSA Bosch MD1CS003 verrouillé : OBDSTAR G3, Flex et Dimsport comparés",
+    "url": "http://blog.obdii365.com/2026/11/18/psa-md1cs003-unlock-with-obdstar-vs-flex-vs-dimsport/",
+    "source": "OBDII365 · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un technicien polonais a déverrouillé des calculateurs moteur PSA Bosch MD1CS003 avec trois outils. OBDSTAR G3 : mode boot glitch avec l'adaptateur C4-06, une résistance à retirer et un fil à connecter, environ 5 minutes. Flex sans Korhex : un fil, environ 13 minutes. Dimsport The Genius en mode HVR : deux fils, environ 5 minutes, déverrouillage complet compris.",
+    "date": "2026-11-18",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  },
+  {
+    "id": "c-toyota-8a-occasion-cgdi-k2-km100",
+    "title": "Clé mains libres Toyota 8A d'occasion : le CGDI K2 la déverrouille, l'Autel KM100 refuse",
+    "url": "http://www.key-programmer.org/2026/11/16/cgdi-k2-vs-autel-km100-to-unlock-2022-toyota-sienna-8a-smart-key/",
+    "source": "key-programmer.org · retour d'utilisateur",
+    "kind": "web",
+    "summary": "Un atelier a testé deux outils pour remettre à zéro une clé mains libres 8A d'occasion bloquée (Toyota Sienna 2022). L'Autel KM100 a répondu que ce type d'immo n'était pas encore pris en charge. Le CGDI K2 (moins de 200 $) a déverrouillé la clé, qui peut ainsi être réutilisée.",
+    "date": "2026-11-16",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  },
+  {
+    "id": "c-yaris-2021-akl-lonsdor-peps",
+    "title": "Toyota Yaris 2021+ toutes clés mains libres perdues par l'OBD avec Lonsdor K518 Pro",
+    "url": "https://lonsdor-k518-k518ise.blogspot.com/2025/12/adding-key-to-2023-toyota-yaris-with.html",
+    "source": "Blog Lonsdor K518 (revendeur)",
+    "kind": "web",
+    "summary": "Sur une Yaris 2023, le Lonsdor K518 Pro branché à l'OBD passe par Toyota > Yaris > 2021- > Smart key > PEPS (CAN) > « All smart key lost ». L'outil prévient qu'il va initialiser le boîtier PEPS ; on valide. On tient ensuite la nouvelle clé près du bouton Start/Stop environ 30 secondes : trois bips signalent la fin. Tester ensuite verrouillage, déverrouillage et démarrage mains libres.",
+    "date": "2025-12-12",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  },
+  {
+    "id": "c-abrites-toyota-corolla-2025-id-box-b6",
+    "title": "Abrites : toutes clés perdues Corolla 2025 et Hilux 2026, reset ID-Code Box pour clés B6",
+    "url": "https://abrites.com/news/updates-for-toyota-models-2026-hilux-2025-corolla-support-improved-id-code-box-reset-and-hybrid-module-ecu-adaptation",
+    "source": "Abrites",
+    "kind": "web",
+    "summary": "La licence TN023 gère désormais les toutes clés perdues sur Toyota Corolla 2025 et Hilux 2026. Le reset de l'ID-Code Box (TN017) est amélioré pour les véhicules à clé mains libres B6, suivi de l'adaptation du module hybride, du calculateur moteur et du Smart System. C'est inclus sans surcoût pour les détenteurs de TN017 avec abonnement annuel actif.",
+    "date": "2026-07-28",
+    "state": "new",
+    "by": "claude",
+    "at": 1795154600209
+  }
+]
