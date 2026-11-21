@@ -1,0 +1,98 @@
+[
+ {
+  "id": "c-mobilians-sermi-signalements-2026-11",
+  "title": "Mobilians : 15 signalements de blocages, dont 5 sur SERMI (fonctions antivol)",
+  "url": "https://www.auto-infos.fr/article/donnees-techniques-mobilians-recense-les-obstacles-qui-empechent-les-garages-de-reparer.294465",
+  "source": "Auto Infos",
+  "kind": "web",
+  "summary": "Entre le 2 août et le 15 novembre 2026, Mobilians a reçu 15 signalements de garages sur 11 marques, dont 5 sur le dispositif SERMI (accès aux fonctions liées à l'antivol). Les blocages cités : fonctions de codage ou d'apprentissage indisponibles, restrictions sur certaines opérations antivol, logiciels constructeurs incompatibles avec les interfaces. Les dossiers (captures d'écran, photos) seront transmis à l'UTAC pour vérifier le respect du règlement européen 2018/858. Le questionnaire reste ouvert à tous les professionnels, adhérents ou non.",
+  "date": "2026-11-19",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-yanhua-ncf29-copie-sans-soudure",
+  "title": "Yanhua Smart Key Reader : copier une clé mains libres NXP NCF29 sans soudure",
+  "url": "http://blog.obdexpress.co.uk/2026/11/09/nxp-ncf29-key-copying-with-yanhua-smart-key-reader/",
+  "source": "OBDexpress.co.uk",
+  "kind": "web",
+  "summary": "Méthode en 7 étapes pour cloner une clé à puce NXP NCF29 avec le lecteur Yanhua, sans souder de fils. On vérifie la clé d'origine et la clé vierge (bouton T), on fixe le circuit sur la base avec la broche 1 de la puce à l'avant gauche, puis on verrouille le support de test QNF32 sur la puce. Lecture de l'originale (R), écriture sur la vierge (W), puis contrôle : l'identifiant de la copie doit être identique. L'article ne donne pas la liste des véhicules.",
+  "date": "2026-11-09",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-data-act-caruso-2026",
+  "title": "Data Act un an après : 16 constructeurs sur 28 ne permettent aucun usage testé",
+  "url": "https://www.auto-infos.fr/article/data-act-un-an-apres-les-constructeurs-freinent-toujours-l-acces-aux-donnees-automobiles.293957",
+  "source": "Auto Infos",
+  "kind": "web",
+  "summary": "Selon l'étude Caruso (septembre 2025 à juillet 2026), 9 constructeurs sur 28 n'appliquent pas ou presque pas le Data Act européen et 16 ne permettent aucun des 15 usages testés (diagnostic à distance, entretien, suivi). Les tarifs d'accès aux données vont de la gratuité à plus de 30 € par véhicule et par mois. Dix organisations européennes demandent plus de contrôles et une loi propre à l'automobile. L'article rappelle que le Data Act ne garantit pas l'accès aux fonctions embarquées du véhicule.",
+  "date": "2026-10-14",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-vols-2025-journalauto",
+  "title": "Vols de véhicules 2025 en France : 125 200 vols et matériel vendu 4 000 à 5 000 €",
+  "url": "https://journalauto.com/services/vols-de-vehicules-une-criminalite-de-plus-en-plus-structuree/",
+  "source": "Journal de l'Automobile",
+  "kind": "web",
+  "summary": "125 200 véhicules volés en France en 2025 (ministère de l'Intérieur), en baisse de 9 %, dont 44 104 voitures selon France Assureurs. Le matériel de vol (antennes relais, clés universelles, télécommandes de piratage) se trouve en libre-service pour 4 000 à 5 000 €. La fraude au leasing progresse, avec changement d'identité du véhicule. Selon Coyote, 40 % des véhicules retrouvés à l'étranger étaient dans des ateliers de « maquillage », surtout en Belgique et en Allemagne.",
+  "date": "2026-03-31",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-tip-yaris-2012-2020-akl-lonsdor",
+  "title": "Toyota Yaris 2012-2020 mains libres, toutes clés perdues avec Lonsdor K518",
+  "url": "https://blog.obdexpress.co.uk/2023/11/09/lonsdor-k518-program-2012-2020-toyota-yaris-all-keys-lost/",
+  "source": "OBDexpress.co.uk",
+  "kind": "web",
+  "summary": "Sur une Yaris 2012 à bouton Start, toutes clés perdues : sauvegarde de l'EEPROM par l'outil (environ 3 minutes), puis création d'une clé de secours avec l'émulateur LKE (la K518 Pro peut le faire directement). On pose le LKE à la verticale sur le bouton Start pour mettre le contact, puis « Add smart key » : chaque nouvelle clé s'enregistre près du bouton Start dans les 30 secondes après le bip. Pièges : pile de clé bien chargée, placement précis du LKE. Si la télécommande ne marche pas, synchroniser l'ID code box avec l'antivol de colonne.",
+  "date": "2023-11-09",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-tip-qashqai-2019-akl-obdstar",
+  "title": "Nissan Qashqai 2017+ mains libres, toutes clés perdues avec OBDSTAR X300",
+  "url": "https://obd2-key-programmer.blogspot.com/2022/02/program-nissan-qashqai-2019-all-keys.html",
+  "source": "obd2-key-programmer (blog)",
+  "kind": "web",
+  "summary": "Qashqai 2019 sans clé : porte ouverte au Lishi Nissan, puis OBDSTAR X300 Pro4 (ou X300 DP Plus) par l'OBD, menu Qashqai « 2017 onwards », avec le PIN à 20 chiffres. Attention : toutes les clés sont effacées (4 maximum), programmer d'abord la clé d'origine si on l'a. On appuie 5 secondes sur Start puis on pose chaque clé sur le bouton jusqu'au bip. Clé de type 7A Hitag AES en 434 MHz. Le billet ne dit pas comment obtenir le PIN.",
+  "date": "2022-02-03",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-tip-fiat-500e-abrites-rh850",
+  "title": "Fiat 500e 2020+ : clés par lecture du BCM RH850 avec Abrites (ZN085, FN023)",
+  "url": "https://abrites.com/blog/cinquecento-the-brightest-flame-burns-quickest-or-does-it",
+  "source": "Abrites",
+  "kind": "web",
+  "summary": "Abrites décrit la programmation de clés sur Fiat 500e 2020+ : lecture du processeur RH850 du BCM avec le programmateur ZN085, préparation de la clé avec PROTAG, puis apprentissage comme sur les autres Fiat (licence FN023). L'éditeur conseille des clés vierges Atmel ATA5702, car la préparation peut poser problème. Il précise que tous les cas n'ont pas encore été explorés.",
+  "date": "2023-11-03",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ },
+ {
+  "id": "c-tip-golf4-vcds-cles-telecommandes",
+  "title": "VW Golf IV : clés et télécommandes au VCDS, attention à la fréquence 433 MHz",
+  "url": "https://www.elektroda.com/rtvforum/topic3302022.html",
+  "source": "Elektroda · retour d'utilisateur",
+  "kind": "forum",
+  "summary": "Golf IV 1.6 de 1998, solution confirmée par l'auteur. Le PIN à 4 chiffres a été lu dans l'EEPROM 24C02 du compteur. Transpondeur : module 17 (compteur), connexion avec le PIN, adaptation canal 21, nombre de clés, puis présenter chaque clé jusqu'à l'extinction du témoin. Télécommande : module 46 ou 35, canal 01 (parfois 21), nombre total de télécommandes (4 maximum), puis appui sur Ouvrir de chacune dans les 15 secondes. Piège : l'auteur avait acheté une télécommande en 434 MHz, il faut du 433 MHz.",
+  "date": "2017-02-14",
+  "state": "new",
+  "by": "claude",
+  "at": 1795241335579
+ }
+]
